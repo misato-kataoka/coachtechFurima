@@ -39,7 +39,7 @@
 ```
 
 ## ER図
-![Image](https://github.com/user-attachments/assets/5549558c-44aa-44ae-837d-0dd970c2307d)
+
 
 ## 使用技術
 
