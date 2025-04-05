@@ -39,8 +39,8 @@ class RegisterRequest extends FormRequest
             'password.required'=>'パスワードを入力してください',
             'password.min' => 'パスワードは8文字以上で入力してください。',
             'password_confirmation.required' => 'パスワードの確認は必須です。',
-            'password_confirmation.min' => 'パスワードの確認は8文字以上で入力してください。',
-            'password_confirmation.same' => '確認用パスワードはパスワードと一致する必要があります。'
+            'password_confirmation.min' => 'パスワードのは8文字以上で入力してください。',
+            'password_confirmation.same' => 'パスワードと一致しません'
         ];
     }
 }

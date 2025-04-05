@@ -1,44 +1,54 @@
 body {
     font-family: Arial, sans-serif;
     margin: 0;
+    padding: 0;
 }
 
 .container {
-    padding: 2em;
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
     text-align: center;
-    width: 900px;
-    margin: 0 auto;
 }
 
 h1 {
+    text-align: center;
     margin-bottom: 1.5em;
     font-size: 30px;
 }
 
 .form-group {
-    margin-bottom: 1em;
+    margin-bottom: 15px;
     text-align: left;
 }
 
 label {
     display: block;
-    margin-bottom: 0.5em;
+    margin-bottom: 5px;
     font-weight: bold;
 }
 
-input {
+input[type="text"],
+input[type="password"] {
     width: 90%;
     height: 40px;
-    padding: 0.75em;
+    padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
     margin-bottom: 20px;
+    box-sizing: border-box;
+}
+
+.form__error {
+    display: block;
+    margin-bottom: 5px;
+    color: red;
 }
 
 .submit-btn {
     background-color: #ff4d4d;
     color: white;
-    padding: 0.75em;
+    padding: 10px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -58,4 +68,24 @@ input {
 .register-link a:hover {
     text-decoration: underline;
     /* ホバー時に下線を追加 */
+}
+
+/* メディアクエリによるレスポンシブ対応 */
+@media (max-width: 600px) {
+    .container {
+        padding: 15px;
+        /* スマホ用のパディング */
+    }
+
+    h1 {
+        font-size: 1.5em;
+        /* タイトルのフォントサイズ */
+    }
+
+    input[type="text"],
+    input[type="password"],
+    .submit-btn {
+        padding: 8px;
+        /* スマホ用のパディング */
+    }
 }

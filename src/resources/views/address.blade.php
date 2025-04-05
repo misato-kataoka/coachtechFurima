@@ -1,31 +1,22 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>プロフィール設定</title>
-    <link rel="stylesheet" href="mypage.css">
-</head>
-<body>
-    <header>
-        <div class="logo">
-            <h1>COACHTECH</h1>
-        </div>
-        <div class="search">
-            <input type="text" placeholder="なにをお探しですか？">
-        </div>
-        <nav>
-            <a href="#">ログアウト</a>
-            <a href="#">マイページ</a>
-            <a href="#">出品</a>
-        </nav>
-    </header>
-    <main>
+@extends('layouts.app')
+
+@section('css')
+<link rel="stylesheet" href="{{ asset('css/address.css') }}">
+@endsection
+
+@section('content')
         <h2>プロフィール設定</h2>
         <div class="profile-pic">
-            <div class="image-placeholder">画像を選択する</div>
+            <input type="file" id="imageUpload" accept="image/*" style="display: none;" onchange="previewImage(event)" />
+            <label for="imageUpload" class="image-placeholder"></label>
+            <span class="image-label" onclick="document.getElementById('imageUpload').click();">画像を選択する</span>
+            <div class="image-preview-container">
+                <img id="imagePreview" src="" alt="選択した画像のプレビュー" style="display: none;" />
+            </div>
         </div>
-        <form>
+        <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
+            @csrf
+
             <label for="username">ユーザー名</label>
             <input type="text" id="username" name="username" value="{{ old('username') }}" />
                 <div class="form__error">
@@ -60,6 +51,22 @@
 
             <button type="submit">更新する</button>
         </form>
-    </main>
-</body>
-</html>
+@endsection
+
+@section('javascript')
+<script>
+    function previewImage(event) {
+        // 画像ファイルが選択された場合
+        const input = event.target;
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imagePreview = document.getElementById('imagePreview');
+                imagePreview.src = e.target.result; // 画像のデータURLを設定
+                imagePreview.style.display = 'block'; // 画像を表示
+            }
+            reader.readAsDataURL(input.files[0]); // 画像ファイルを読み込む
+        }
+    }
+</script>
+@endsection

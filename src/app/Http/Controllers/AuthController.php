@@ -7,6 +7,8 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 class AuthController extends Controller
 {
@@ -16,8 +18,10 @@ class AuthController extends Controller
             'email'=>$request->email,
             'password'=>Hash::make($request->password)
         ]);
+        event(new Registered($user));
         Auth::login($user);
-        return redirect('/address');
+        return redirect()->route('verification.notice');
+        //return redirect('/address');
     }
 
     public function showRegistrationForm()
@@ -42,5 +46,13 @@ class AuthController extends Controller
     {
         Auth::logout(); // ログアウト処理
         return redirect('auth.login'); // ログインページへリダイレクト
+    }
+
+    // メール認証の処理
+    public function verify(EmailVerificationRequest $request)
+    {
+        $request->fulfill();
+
+        return redirect('/address')->with('verified', 'メールアドレスが認証されました。');
     }
 }
