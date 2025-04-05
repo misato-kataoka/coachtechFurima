@@ -1,0 +1,16 @@
+.header {
+    background: #000;
+}
+
+.header__inner {
+    margin: 0 auto;
+    padding: 15px;
+    max-width: 1230px;
+}
+
+.header__logo img {
+    max-height: 30px;
+    display: inline-block;
+    vertical-align: left;
+    margin-left: 10px;
+}
