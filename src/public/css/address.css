@@ -31,6 +31,7 @@ main {
 
 .profile-pic {
     display: flex;
+    align-items: center;
     justify-content: center;
     margin: 20px 0;
 }
@@ -43,22 +44,15 @@ main {
     height: 100px;
     text-align: center;
     line-height: 100px;
+    overflow: hidden;
     cursor: pointer;
 }
 
-.image-preview-container {
-    margin-top: 10px;
-    /* プレビューとの間隔 */
-}
-
-#imagePreview {
-    border-radius: 50%;
-    width: 100px;
-    height: 100px;
+.image-placeholder img {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    /* 画像をトリミングして陪審する */
-    display: none;
-    /* 初期では非表示 */
+    border-radius: 50%;
 }
 
 .image-label {
