@@ -12,6 +12,11 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 class AuthController extends Controller
 {
+    public function index()
+    {
+        return view('item_list');
+    }
+
     public function storeUser(RegisterRequest $request){
         $user=User::create([
             'username'=>$request->username,

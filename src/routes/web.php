@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ItemController;
 use Illuminate\Foundation\Auth\EmailVerificationNoticeController;
 
 
@@ -18,6 +19,7 @@ use Illuminate\Foundation\Auth\EmailVerificationNoticeController;
 |
 */
 
+Route::get('/', [ItemController::class, 'index'])->name('items.index');
 //ユーザー登録のルート
     Route::post('/register', [AuthController::class, 'storeUser']);
     Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
@@ -43,6 +45,6 @@ Route::post('/email/verification-notification', function () {
     return 'メール再送信の処理（サンプル）'; // 再送信の処理を実装
 })->middleware(['auth'])->name('verification.resend');
 
-    Route::middleware('auth')->group(function () {
-    
-    });
+//Route::middleware('auth')->group(function () {
+   // Route::get('/', [ItemController::class, 'index'])->name('items.index');
+  //  });

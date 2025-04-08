@@ -32,7 +32,6 @@
                         <a class="header-nav__link" href="/mypage">マイページ</a>
                         <a href="#">出品</a>
                     </nav>
-
                     @endif
                 </ul>
                 </nav>
