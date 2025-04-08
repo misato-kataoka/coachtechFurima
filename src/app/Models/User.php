@@ -18,9 +18,12 @@ class User extends Authenticatable implements MustVerifyEmailContract
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'username',
         'email',
         'password',
+        'post_code',
+        'address',
+        'building',
     ];
 
     /**
@@ -41,4 +44,28 @@ class User extends Authenticatable implements MustVerifyEmailContract
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    //リレーション: あるユーザーはいくつものItemを出品できる (1対多)
+    public function items()
+    {
+        return $this->hasMany(Item::class, 'user_id');
+    }
+
+    //リレーション: あるユーザーはいくつものLike情報を持つ (1対多)
+    public function likes()
+    {
+        return $this->hasMany(Like::class, 'user_id');
+    }
+
+    //リレーション: 購入者としての注文 (1対多)
+    public function buyerOrders()
+    {
+        return $this->hasMany(Order::class, 'buyer_id');
+    }
+
+    //リレーション: 販売者としての注文 (1対多)
+    public function sellerOrders()
+    {
+        return $this->hasMany(Order::class, 'seller_id');
+    }
 }
