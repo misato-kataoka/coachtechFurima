@@ -19,20 +19,28 @@ use Illuminate\Foundation\Auth\EmailVerificationNoticeController;
 |
 */
 
-Route::get('/', [ItemController::class, 'index'])->name('items.index');
-//ユーザー登録のルート
-    Route::post('/register', [AuthController::class, 'storeUser']);
-    Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
-//ログイン処理のルート
-    Route::post('/login', [AuthController::class, 'loginUser']);
-// 住所確認ページのルート
-    Route::get('/address', [RegisterController::class, 'address'])->name('address');
-//ログインページのルート
-    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('/mypage/profile', [UserController::class, 'update'])->name('profile.update');
-// mypage へのルート
-Route::get('/mypage', [UserController::class, 'show'])->name('mypage');
+// ユーザー登録のルート
+Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [AuthController::class, 'storeUser']);
 
+// ログインページのルート
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'loginUser']);
+
+// マイページへのルート
+Route::middleware('auth')->group(function () {
+    Route::get('/mypage', [UserController::class, 'show'])->name('mypage');
+    Route::post('/mypage/profile', [UserController::class, 'update'])->name('profile.update');
+
+// トップページルート
+    Route::middleware('auth')->group(function () {
+    Route::get('/', [ItemController::class, 'index'])->name('home');
+});
+
+// 住所確認ページのルート（認証なしの場合）
+Route::get('/address', [RegisterController::class, 'address'])->name('address');
+
+// メール確認関連のルート
 Route::get('/email/verify', [EmailVerificationNoticeController::class, '__invoke'])
     ->middleware(['auth', 'verified'])
     ->name('verification.notice');
@@ -44,7 +52,4 @@ Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verify'])
 Route::post('/email/verification-notification', function () {
     return 'メール再送信の処理（サンプル）'; // 再送信の処理を実装
 })->middleware(['auth'])->name('verification.resend');
-
-//Route::middleware('auth')->group(function () {
-   // Route::get('/', [ItemController::class, 'index'])->name('items.index');
-  //  });
+});

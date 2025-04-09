@@ -7,7 +7,7 @@
 @section('content')
     <div class="container">
         <h1>ログイン</h1>
-            <form class="form" action="/login" method="post">
+            <form class="form" action="{{ route('login') }}" method="post">
             @csrf
                 <div class="form-group">
                     <label for="email">メールアドレス</label>

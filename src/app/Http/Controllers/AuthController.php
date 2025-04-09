@@ -12,10 +12,10 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 class AuthController extends Controller
 {
-    public function index()
-    {
-        return view('item_list');
-    }
+    //public function index()
+    //{
+    //    return view('item_list');
+    //}
 
     public function storeUser(RegisterRequest $request){
         $user=User::create([
@@ -42,10 +42,18 @@ class AuthController extends Controller
 
     public function loginUser(LoginRequest $request){
         $credentials=$request->only('email', 'password');
-        if(Auth::attempt($credentials)){
-            return redirect()->intended('/');
+
+        if (Auth::attempt($credentials)) {
+            // 認証に成功した場合、リダイレクト先を指定
+            return redirect()->route('home');// ここでルート名を指定
         }
+
+        // 認証に失敗した場合、エラーメッセージをセッションにフラッシュしてログインページにリダイレクト
+        return back()->withErrors([
+            'email' => 'ログイン情報が登録されていません。',
+        ])->withInput();
     }
+
 
     public function logout()
     {

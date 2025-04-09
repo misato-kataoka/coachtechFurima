@@ -1,16 +1,75 @@
 .header {
     background: #000;
+    padding: 10px 20px;
 }
 
 .header__inner {
-    margin: 0 auto;
+    /*margin: 0 auto;
     padding: 15px;
-    max-width: 1230px;
+    max-width: 1230px;*/
+            display: flex;
+            /* フレックスボックスを使用 */
+            align-items: center;
+            /* 縦方向の中央揃え */
+            justify-content: space-between;
+            /* 左右の要素間にスペースを均等に配置 */
+
 }
 
 .header__logo img {
     max-height: 30px;
-    display: inline-block;
+    display: flex;
     vertical-align: left;
     margin-left: 10px;
+}
+
+.header-nav {
+    display: flex;
+    /* フレックスボックスを使用 */
+    list-style: none;
+    /* リストスタイルを無効に */
+    padding: 0;
+    /* パディングをリセット */
+    margin: 0;
+    /* マージンをリセット */
+}
+
+.header-nav__link {
+    margin-left: 20px;
+    /* アイテム間のスペース */
+    text-decoration: none;
+    /* 下線を無くす */
+    color: white;
+    /* リンクの色 */
+}
+
+.header-nav__link:hover {
+    color: rgb(238, 201, 201);
+    /* ホバー時の文字色 */
+}
+
+.header-nav__button {
+    background-color: white;
+    /* ボタンの背景色 */
+    color: black;
+    /* ボタンのテキスト色 */
+    border: none;
+    /* ボーダーなし */
+    padding: 5px 10px;
+    /* ボタン内の余白 */
+    cursor: pointer;
+    /* マウスを合わせたときのカーソルを変更 */
+    border-radius: 4px;
+    /* 角を丸く */
+}
+
+.header-nav__button:hover {
+    background-color: rgb(238, 201, 201);
+    /* ホバー時の背景色 */
+}
+
+.search {
+    margin-right: 20px;
+    max-height: 25px;
+    /* 検索ボックスと他の要素の間のスペース */
 }

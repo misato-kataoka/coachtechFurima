@@ -15,6 +15,6 @@ class ItemController extends Controller
     public function index(Request $request)
     {
         $products = Item::paginate(8); // 1ページに8件の商品
-        return view('items.index', compact('products'));
+        return view('item_list', compact('products'));
     }
 }

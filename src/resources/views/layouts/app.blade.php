@@ -24,14 +24,18 @@
                     <div class="search">
                         <input type="text" placeholder="なにをお探しですか？">
                     </div>
-                    <nav>
+                    <li>
                         <form class="form" action="/logout" method="post">
                             @csrf
                             <button class="header-nav__button">ログアウト</button>
                         </form>
+                    </li>
+                    <li>
                         <a class="header-nav__link" href="/mypage">マイページ</a>
-                        <a href="#">出品</a>
-                    </nav>
+                    </li>
+                    <li>
+                        <a class="header-nav__link" href="#">出品</a>
+                    </li>
                     @endif
                 </ul>
                 </nav>

@@ -1,6 +1,6 @@
 .container {
     max-width: 1200px;
-    margin: 0 auto;
+    margin: auto;
     padding: 20px;
 }
 
@@ -11,7 +11,7 @@ h3 {
 
 .product-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     /* スマートフォン対応 */
     gap: 20px;
 }
@@ -19,19 +19,26 @@ h3 {
 .product-card {
     background-color: #f0f0f0;
     border-radius: 8px;
+    overflow: hidden;
     padding: 10px;
     text-align: center;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .product-image {
-    width: 100%;
+    max-width: 100%;
     height: auto;
     border-radius: 4px;
 }
 
 .product-title {
     margin: 10px 0 0;
+    font-size: 1.2em;
+        /* フォントサイズを指定 */
+        margin-top: 10px;
+        /* 上部マージン */
+        color: #333;
+        /* テキストカラー */
 }
 
 .pagination {
