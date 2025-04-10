@@ -17,83 +17,83 @@ class ItemsTableSeeder extends Seeder
     {
         Item::create([
                 'user_id' => 1,
-                'image' => 'storage/images/Armani+Mens+Clock.jpg',
-                'product_name' => '腕時計',
+                'image' => 'Armani+Mens+Clock.jpg',
+                'item_name' => '腕時計',
                 'brand' => 'アルマーニ',
                 'price' => '15000',
                 'description' => 'スタイリッシュなデザインのメンズ腕時計',
             ]);
             Item::create([
                 'user_id'       => 2,
-                'image' => 'storage/images/HDD+Hard+Disk.jpg',
-                'product_name' => 'HDD',
+                'image' => 'HDD+Hard+Disk.jpg',
+                'item_name' => 'HDD',
                 'brand' => 'BUFFALO',
                 'price' => '5000',
                 'description' => '高速で信頼性の高いハードディスク',
             ]);
             Item::create([
                 'user_id' => 1,
-                'image' => 'storage/images/onion.jpg',
-                'product_name' => '玉ねぎ3束',
+                'image' => 'onion.jpg',
+                'item_name' => '玉ねぎ3束',
                 'brand' => 'JA',
                 'price' => '300',
                 'description' => '新鮮な玉ねぎ3束のセット',
             ]);
             Item::create([
                 'user_id' => 1,
-                'image' => 'storage/images/LeatherShoes.jpg',
-                'product_name' => '革靴',
+                'image' => 'LeatherShoes.jpg',
+                'item_name' => '革靴',
                 'brand' => 'リーガル',
                 'price' => '4000',
                 'description' => 'クラシックなデザインの革靴',
             ]);
             Item::create([
                 'user_id' => 2,
-                'image' => 'storage/images/Laptop.jpg',
-                'product_name' => 'ノートPC',
+                'image' => 'Laptop.jpg',
+                'item_name' => 'ノートPC',
                 'brand' => 'DELL',
                 'price' => '45000',
                 'description' => '高性能なノートパソコン',
             ]);
             Item::create([
                 'user_id' => 1,
-                'image' => 'storage/images/Mic.jpg',
-                'product_name' => 'マイク',
+                'image' => 'Mic.jpg',
+                'item_name' => 'マイク',
                 'brand' => 'YAMAHA',
                 'price' => '8000',
                 'description' => '高音質のレコーディング用マイク',
             ]);
             Item::create([
                 'user_id' => 2,
-                'image' => 'storage/images/Purse.jpg',
-                'product_name' => 'ショルダーバッグ',
+                'image' => 'Purse.jpg',
+                'item_name' => 'ショルダーバッグ',
                 'brand' => 'FURLA',
                 'price' => '3500',
                 'description' => 'おしゃれなショルダーバッグ',
             ]);
             Item::create([
                 'user_id' => 2,
-                'image' => 'storage/images/Tumbler.jpg',
-                'product_name' => 'タンブラー',
+                'image' => 'Tumbler.jpg',
+                'item_name' => 'タンブラー',
                 'brand' => 'サーモス',
                 'price' => '500',
                 'description' => '使いやすいタンブラー',
             ]);
             Item::create([
                 'user_id' => 1,
-                'image' => 'storage/images/CoffeeGrinder.jpg',
-                'product_name' => 'コーヒーミル',
+                'image' => 'CoffeeGrinder.jpg',
+                'item_name' => 'コーヒーミル',
                 'brand' => 'カリタ',
                 'price' => '4000',
                 'description' => '手動のコーヒーミル',
             ]);
             Item::create([
                 'user_id' => 2,
-                'image' => 'storage/images/cosmetics.jpg',
-                'product_name' => 'メイクセット',
+                'image' => 'cosmetics.jpg',
+                'item_name' => 'メイクセット',
                 'brand' => '資生堂',
                 'price' => '2500',
-                'description' => '便利なメイクアップ背tメイクアップセット',
+                'description' => '便利なメイクアップセット',
             ]);
 
     }

@@ -5,21 +5,56 @@
 @endsection
 
 @section('content')
-<div class="container">
-    <h2>おすすめ</h2>
-    <h3><a href="/?tab=mylist" class="tab-link">マイリスト</a></h3>
-
-    <div class="product-grid">
-        @foreach ($products as $product)
-            <div class="product-card">
-                <img src="{{ $product->image_url }}" alt="商品画像" class="product-image">
-                <h4 class="product-title">{{ $product->name }}</h4>
-            </div>
-        @endforeach
+    <div class="header-container">
+        <span class="caption">おすすめ</span>
+        <span class="caption">
+            <a href="/?tab=mylist" class="tab-link">マイリスト</a>
+        </span>
     </div>
+    <div class="border-line"></div>
+
+<div class="container">
+        @if ($items->isEmpty())
+            <div class="no-items-message">商品がありません。</div>
+        @else
+            <div class="item-grid">
+                @foreach ($items as $item)
+                    <div class="item-card">
+                        <a href="{{ route('item.detail', ['id' => $item->id]) }}">
+                            <img src="{{ $item->image }}" alt="商品画像" class="item-image">
+                            <h4 class="item-title">{{ $item->item_name }}</h4>
+                        </a>
+                    </div>
+                @endforeach
+            </div>
+        @endif
 
     <div class="pagination">
-        {{ $products->links() }} <!-- Laravelのページネーション -->
+    @if ($items->onFirstPage())
+        <div class="previous" disabled>前へ</div>
+    @else
+        <a href="{{ $items->previousPageUrl() }}" class="previous">前へ</a>
+    @endif
+
+    @for ($i = 1; $i <= $items->lastPage(); $i++)
+        @if ($items->getCollection()->isNotEmpty() && $i === $items->currentPage())
+            <div class="active">
+                <span>{{ $i }}</span>
+            </div>
+        @elseif($items->getCollection()->count() > 0 && $items->url($i) == $items->url($items->currentPage()))
+            <div class="active">
+                <span>{{ $i }}</span>
+            </div>
+        @else
+            <a href="{{ $items->url($i) }}" class="other">{{ $i }}</a>
+        @endif
+    @endfor
+
+    @if ($items->hasMorePages())
+        <a href="{{ $items->nextPageUrl() }}" class="next">次へ</a>
+    @else
+        <div class="next" disabled>次へ</div>
+    @endif
     </div>
 </div>
 @endsection

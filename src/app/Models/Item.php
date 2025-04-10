@@ -14,11 +14,16 @@ class Item extends Model
     protected $fillable = [
         'user_id',
         'image',
-        'product_name',
+        'item_name',
         'brand',
         'price',
         'description',
     ];
+
+    public function getImageAttribute($value)
+    {
+        return asset('storage/images/' . $value);
+    }
 
     //リレーション: アイテムは1人のユーザーに属する (多対1)
     public function user()

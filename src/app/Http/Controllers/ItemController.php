@@ -14,7 +14,13 @@ class ItemController extends Controller
 {
     public function index(Request $request)
     {
-        $products = Item::paginate(8); // 1ページに8件の商品
-        return view('item_list', compact('products'));
+        $items = Item::paginate(8); // 1ページに8件の商品
+        return view('item_list', compact('items'));
+    }
+
+    public function show($id)
+    {
+    $item = Item::findOrFail($id); // IDに基づいて商品を取得
+    return view('item_detail', compact('item')); // item_detail ビューに渡す
     }
 }

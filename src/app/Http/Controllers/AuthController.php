@@ -44,8 +44,7 @@ class AuthController extends Controller
         $credentials=$request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
-            // 認証に成功した場合、リダイレクト先を指定
-            return redirect()->route('home');// ここでルート名を指定
+            return redirect()->route('home');
         }
 
         // 認証に失敗した場合、エラーメッセージをセッションにフラッシュしてログインページにリダイレクト

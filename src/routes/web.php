@@ -27,6 +27,9 @@ Route::post('/register', [AuthController::class, 'storeUser']);
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'loginUser']);
 
+// 商品詳細のルート 
+Route::get('/item/{id}', [ItemController::class, 'show'])->name('item.detail');
+
 // マイページへのルート
 Route::middleware('auth')->group(function () {
     Route::get('/mypage', [UserController::class, 'show'])->name('mypage');

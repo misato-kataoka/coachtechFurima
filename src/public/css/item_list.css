@@ -1,48 +1,161 @@
 .container {
     max-width: 1200px;
     margin: auto;
-    padding: 20px;
+    padding: 20px 0;
 }
 
-h2,
+.header-container {
+    display: flex;
+    /* フレックスボックスを使用して横並びにする*/
+    justify-content: left;
+    margin:0 10px;
+    align-items: center;
+    /* 縦方向に中央揃え */
+}
+
+.caption {
+    margin-top: 30px;
+    margin-left: 40px;
+    font-size: 20px;
+
+}
+
+.tab-link {
+    text-decoration: none;
+    color: red;
+    /* リンクの色 */
+}
+
+.tab-link:hover {
+    text-decoration: underline;
+    /* ホバー時に下線を表示 */
+}
+
+.border-line {
+    border-bottom: 3px solid #ccc;
+    width: 100%;
+    position: relative;
+    left: 0;
+    right: 0;
+    margin: 20px 0;
+}
+
+/*h2,
 h3 {
     text-align: center;
-}
+}*/
 
-.product-grid {
+.item-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     /* スマートフォン対応 */
     gap: 20px;
 }
 
-.product-card {
+.no-items-message {
+    text-align: center;
+    font-size: 25px;
+    color: #666;
+    margin: 20px 0;
+}
+
+.item-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     background-color: #f0f0f0;
     border-radius: 8px;
     overflow: hidden;
     padding: 10px;
     text-align: center;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    height: 240px;
+    aspect-ratio: 1 / 1; /* 正方形にする */
+    width: 100%;
 }
 
-.product-image {
+.item-image {
     max-width: 100%;
     height: auto;
-    border-radius: 4px;
 }
 
-.product-title {
+.item-title {
     margin: 10px 0 0;
-    font-size: 1.2em;
-        /* フォントサイズを指定 */
-        margin-top: 10px;
-        /* 上部マージン */
-        color: #333;
-        /* テキストカラー */
+    font-size: 1.2em;/* フォントサイズを指定 */
+    margin-top: 10px;
+    color: #333;
+    text-align: center;
 }
 
 .pagination {
+    height: 35px;
+    width: 500px;
+    margin: 20px auto 0;
     display: flex;
     justify-content: center;
-    margin: 20px 0;
+    align-items: center;
+}
+
+/* ページネーションのリンクスタイル */
+.pagination a {
+    margin: 10px;
+    /* 各リンクの左右の間隔 */
+    padding: 8px 12px;
+    /* リンクの内側の余白 */
+    background-color: #e7e7e7;
+    /* 背景色 */
+    color: #333;
+    /* テキスト色 */
+    text-decoration: none;
+    /* 下線を無くす */
+    border-radius: 8px;
+    /* 角を丸く */
+    transition: background-color 0.3s;
+    /* ホバー時のスムーズな色変更 */
+}
+
+/* ホバー時のスタイル */
+.pagination a:hover {
+    background-color: #d4d4d4;
+    /* ホバー時の背景色 */
+}
+
+/* 現在のページ番号のスタイル */
+.pagination .active {
+    background-color: #96bfec;
+    /* 現在のページの背景色 */
+    color: #333;
+    /* 現在のページの文字色 */
+    margin: 10px;
+    /* 各リンクの左右の間隔 */
+    padding: 8px 12px;
+    /* リンクの内側の余白 */
+    text-decoration: none;
+    /* 下線を無くす */
+    border-radius: 8px;
+    /* 角を丸く */
+    transition: background-color 0.3s;
+    /* ホバー時のスムーズな色変更 */
+}
+
+.pagination .active:hover {
+    background-color: #a89ded;
+    /* ホバー時の背景色 */
+}
+
+/* 小さな画面（スマホ）のスタイル */
+@media (max-width: 600px) {
+    .pagination {
+        flex-direction: column;
+        /* 縦並びに変更 */
+    }
+
+    .pagination a {
+        margin: 5px 0;
+        /* 上下の間隔を設定 */
+        width: 100%;
+        /* 幅を100%に */
+        text-align: center;
+        /* テキストを中央揃え */
+    }
 }
