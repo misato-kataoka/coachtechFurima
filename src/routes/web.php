@@ -23,11 +23,16 @@ use Illuminate\Foundation\Auth\EmailVerificationNoticeController;
 Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [AuthController::class, 'storeUser']);
 
+//ログアウト機能
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
 // ログインページのルート
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'loginUser']);
 
-// 商品詳細のルート 
+
+
+// 商品詳細のルート
 Route::get('/item/{id}', [ItemController::class, 'show'])->name('item.detail');
 
 // マイページへのルート

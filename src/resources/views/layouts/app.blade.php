@@ -25,16 +25,16 @@
                         <input type="text" placeholder="なにをお探しですか？">
                     </div>
                     <li>
-                        <form class="form" action="/logout" method="post">
+                        <form class="form" action="{{ route('logout') }}" method="post">
                             @csrf
-                            <button class="header-nav__button">ログアウト</button>
+                            <button type="submit" class="header-nav__link" style="background: none; border: none; padding: 0;">ログアウト</button>
                         </form>
                     </li>
                     <li>
                         <a class="header-nav__link" href="/mypage">マイページ</a>
                     </li>
                     <li>
-                        <a class="header-nav__link" href="#">出品</a>
+                        <button class="header-nav__button" href="#">出品</button>
                     </li>
                     @endif
                 </ul>
