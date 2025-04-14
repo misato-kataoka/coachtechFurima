@@ -19,9 +19,13 @@ use Illuminate\Foundation\Auth\EmailVerificationNoticeController;
 |
 */
 
-// ユーザー登録のルート
-Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
-Route::post('/register', [AuthController::class, 'storeUser']);
+// ユーザー登録のルートAuth->Registerに変更
+Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register.form');
+Route::post('/register', [RegisterController::class, /*'storeUser'*/'register'])->name('register');
+
+// 住所入力ページへのルート
+Route::get('/address', [RegisterController::class, 'showAddressForm'])->name('address.form')->middleware('auth'); // 認証済みユーザーのみ
+Route::post('/address', [RegisterController::class, 'storeAddress'])->name('address.store')->middleware('auth'); // 住所情報保存のルート
 
 //ログアウト機能
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -30,7 +34,11 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'loginUser']);
 
+// 商品一覧のルート（GETリクエスト）  
+Route::get('/items', [ItemController::class, 'index'])->name('item.list');
 
+//商品検索のルート
+Route::get('/item/search', [ItemController::class, 'search'])->name('item.search');
 
 // 商品詳細のルート
 Route::get('/item/{id}', [ItemController::class, 'show'])->name('item.detail');
@@ -48,6 +56,7 @@ Route::middleware('auth')->group(function () {
 // 住所確認ページのルート（認証なしの場合）
 Route::get('/address', [RegisterController::class, 'address'])->name('address');
 
+/*
 // メール確認関連のルート
 Route::get('/email/verify', [EmailVerificationNoticeController::class, '__invoke'])
     ->middleware(['auth', 'verified'])
@@ -59,5 +68,5 @@ Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verify'])
 
 Route::post('/email/verification-notification', function () {
     return 'メール再送信の処理（サンプル）'; // 再送信の処理を実装
-})->middleware(['auth'])->name('verification.resend');
+})->middleware(['auth'])->name('verification.resend');*/
 });

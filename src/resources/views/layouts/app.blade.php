@@ -22,7 +22,10 @@
                 <ul class="header-nav">
                     @if (Auth::check())
                     <div class="search">
-                        <input type="text" placeholder="なにをお探しですか？">
+                        <form action="{{ route('item.search') }}" method="GET">
+                            <input type="text" name="query" placeholder="なにをお探しですか？" value="{{ request('query') }}">
+                            <button type="submit">検索</button>
+                        </form>
                     </div>
                     <li>
                         <form class="form" action="{{ route('logout') }}" method="post">

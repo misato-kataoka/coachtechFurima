@@ -6,6 +6,8 @@
 
 @section('content')
 <h2>プロフィール設定</h2>
+<form action="{{ route('address.store') }}" method="POST"  enctype="multipart/form-data">
+    @csrf
 <div class="profile-pic">
     <label for="imageUpload" class="image-placeholder">
         <img id="imagePreview" src="" alt="選択した画像のプレビュー" style="display: none;" />
@@ -13,8 +15,7 @@
     <input type="file" id="imageUpload" accept="image/*" style="display: none;" onchange="previewImage(event)" />
     <span class="image-label" onclick="document.getElementById('imageUpload').click();">画像を選択する</span>
 </div>
-<form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
-    @csrf
+
 
     <label for="username">ユーザー名</label>
         <input type="text" id="username" name="username" value="{{ old('username') }}" />

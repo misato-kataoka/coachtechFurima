@@ -26,14 +26,20 @@ class AuthController extends Controller
         ]);
         event(new Registered($user));
         Auth::login($user);
-        return redirect()->route('verification.notice');
-        //return redirect('/address');
+        //return redirect()->route('verification.notice');
+        return redirect('/address');
+    }
+
+    public function showAddressForm(){
+        return view('address');
     }
 
     public function showRegistrationForm()
     {
         return view('auth.register');
     }
+
+    
 
     public function showLoginForm()
     {
