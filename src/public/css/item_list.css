@@ -7,7 +7,7 @@
 .header-container {
     display: flex;
     /* フレックスボックスを使用して横並びにする*/
-    justify-content: left;
+    justify-content: flex-start;
     margin:0 10px;
     align-items: center;
     /* 縦方向に中央揃え */
@@ -149,9 +149,9 @@ h3 {
 
 /* PCサイズ (1400px以上) のスタイル */
 @media (min-width: 1400px) {
-    .header__inner {
-        padding: 10px 40px;/* より広い余白を適用 */
-    }
+    .header-container {
+            padding: 10px 40px;
+        }
 
     .search {
         max-width: 300px;/* 検索ボックスの最大幅を指定 */
@@ -160,22 +160,27 @@ h3 {
 
 /* タブレットサイズ (768px - 850px) のスタイル */
 @media (max-width: 850px) and (min-width: 768px) {
-    .header__inner {
+    .header-container {
         flex-direction: column;/* 縦に並べる */
         align-items: flex-start;/* 左揃え */
     }
 
-    .search {
-        width: 100%;/* 幅を100%に設定 */
-        margin-top: 10px;/* 上部のマージンを追加 */
-    }
-
-    .header-nav {
-        flex-direction: row;/* 横並びを維持 */
-        margin-top: 10px;/* 上部のマージンを追加 */
+    .caption {
+        margin-left: 0;
+        font-size: 18px;
+        margin-top: 10px;
     }
 
     .header-nav__link {
         margin-left: 10px;/* アイテム間のスペースを減らす */
     }
+
+    .item-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        }
+
+    .pagination {
+        width: 100%;
+        flex-wrap: wrap;
+        }
 }

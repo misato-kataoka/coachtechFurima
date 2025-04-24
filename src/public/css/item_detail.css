@@ -1,3 +1,12 @@
+.item-detail-container {
+    width: 90%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
 .item-card {
     display: flex;
     flex-direction: column;
@@ -7,14 +16,57 @@
 
 .item-title {
     margin-top: 10px;
-    /* 画像との間隔 */
     text-align: center;
-    /* 中央揃え */
+    font-size: 24px;
 }
 
 .item-image {
     max-width: 100%;
-    /* 画像の最大幅 */
     height: auto;
-    /* 高さは自動 */
+}
+
+.item-brand {
+    font-size: 18px;
+    color: #666;
+}
+
+.item-price {
+    font-size: 20px;
+    color: #e63946;
+    margin: 10px 0;
+}
+
+.item-description {
+    margin-top: 20px;
+}
+item-info {
+    margin-top: 20px;
+}
+
+.comment {
+    border: 1px solid #eee;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.buy-button {
+    background-color: #f1faee;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.buy-button:hover {
+    background-color: #a8dadc;
 }

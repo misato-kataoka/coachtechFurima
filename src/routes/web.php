@@ -24,8 +24,8 @@ Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->na
 Route::post('/register', [RegisterController::class, /*'storeUser'*/'register'])->name('register');
 
 // 住所入力ページへのルート
-Route::get('/address', [RegisterController::class, 'showAddressForm'])->name('address.form')->middleware('auth'); // 認証済みユーザーのみ
-Route::post('/address', [RegisterController::class, 'storeAddress'])->name('address.store')->middleware('auth'); // 住所情報保存のルート
+Route::get('/address/form', [RegisterController::class, 'showAddressForm'])->name('address.form')->middleware('auth'); // 認証済みユーザーのみ
+Route::post('/address/form', [RegisterController::class, 'storeAddress'])->name('address.store')->middleware('auth'); // 住所情報保存のルート
 
 //ログアウト機能
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -34,24 +34,31 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'loginUser']);
 
-// 商品一覧のルート（GETリクエスト）  
+// 商品一覧のルート（GETリクエスト）
 Route::get('/items', [ItemController::class, 'index'])->name('item.list');
 
 //商品検索のルート
 Route::get('/item/search', [ItemController::class, 'search'])->name('item.search');
 
+// マイリストに追加するためのルート  
+Route::post('/user_item_lists', [UserItemListController::class, 'store'])->name('user_item_lists.store'); 
+Route::get('/mylist', [ItemController::class, 'myList'])->name('item.mylist');
+
 // 商品詳細のルート
 Route::get('/item/{id}', [ItemController::class, 'show'])->name('item.detail');
+
+//コメントを保存するためのルート
+Route::post('/comments', [ItemItemController::class, 'store'])->name('comments.store');
+
+// トップページルート
+Route::middleware('auth')->group(function () {
+    Route::get('/', [ItemController::class, 'index'])->name('home');
+});
 
 // マイページへのルート
 Route::middleware('auth')->group(function () {
     Route::get('/mypage', [UserController::class, 'show'])->name('mypage');
     Route::post('/mypage/profile', [UserController::class, 'update'])->name('profile.update');
-
-// トップページルート
-    Route::middleware('auth')->group(function () {
-    Route::get('/', [ItemController::class, 'index'])->name('home');
-});
 
 // 住所確認ページのルート（認証なしの場合）
 Route::get('/address', [RegisterController::class, 'address'])->name('address');

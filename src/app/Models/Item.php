@@ -59,6 +59,11 @@ class Item extends Model
         return $this->hasMany(Like::class, 'item_id');
     }
 
+    public function comments()  
+    {  
+        return $this->hasMany(Comment::class);  
+    }  
+
     //リレーション: アイテムはいくつかの注文を持つ (1対多)
     public function orders()
     {

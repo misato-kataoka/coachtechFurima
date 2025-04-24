@@ -18,9 +18,12 @@ class CreateOrdersTable extends Migration
             $table->unsignedBigInteger('buyer_id');
             $table->unsignedBigInteger('seller_id');
             $table->unsignedBigInteger('item_id');
-            $table->unsignedBigInteger('payment_method_id');
             $table->string('status');
             $table->timestamps();
+        });
+
+        Schema::table('orders', function (Blueprint $table) {
+            $table->string('payment_method')->nullable();
         });
     }
 

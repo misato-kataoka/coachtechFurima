@@ -8,7 +8,7 @@
     <div class="header-container">
         <span class="caption">おすすめ</span>
         <span class="caption">
-            <a href="/?tab=mylist" class="tab-link">マイリスト</a>
+            <a href="{{ route('item.mylist') }}" class="tab-link">マイリスト</a>
         </span>
     </div>
     <div class="border-line"></div>
