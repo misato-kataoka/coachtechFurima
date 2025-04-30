@@ -1,23 +1,33 @@
 .item-detail-container {
     width: 90%;
-    max-width: 800px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+    border: none;
+    display: flex;
 }
 
 .item-card {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    /* 中央揃え */
+    flex-direction: row;
+}
+
+.item-image-container {
+    width: 50%;
+    /* 左側の幅を50%に設定 */
+}
+
+.item-info-container {
+    width: 50%;
+    /* 右側の幅を50%に設定 */
+    padding: 20px;
+    /* 右側に内側のパディングを追加 */
 }
 
 .item-title {
     margin-top: 10px;
-    text-align: center;
-    font-size: 24px;
+    text-align: left;
+    font-size: 30px;
 }
 
 .item-image {
@@ -31,9 +41,65 @@
 }
 
 .item-price {
-    font-size: 20px;
-    color: #e63946;
+    font-size: 30px;
     margin: 10px 0;
+}
+
+.likes-and-comments {
+    display: flex;
+    align-items: center;
+    margin: 20px 30px;
+}
+
+.likes {
+    margin: auto 20px;
+}
+
+.like-button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.like-button:hover {
+    opacity: 0.8;
+}
+
+.like-icon {
+    width: 28px;
+    height: 28px;
+    vertical-align: middle;
+    /* ボタンのテキストと画像を整列させる */
+}
+
+.like-count {
+    margin-top: 4px;
+    font-size: 14px;
+    color: inherit;
+}
+
+.comments-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 20px;
+}
+
+.comment-icon {
+    width: 28px;
+    height: 28px;
+}
+
+.comment-count {
+    margin-left: 5px;
+    /* アイコンとの間に少しスペースを追加 */
+    font-size: 14px;
+    color: inherit;
 }
 
 .item-description {
@@ -58,15 +124,48 @@ textarea {
     border-radius: 5px;
 }
 
-.buy-button {
-    background-color: #f1faee;
+.buy-button,
+.comment-submit-button{
+    background-color: #f45f5f;
+    color: white;
     border: none;
     padding: 10px 15px;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
+    transition: background-color 0.3s;
+    width: 100%;
+    max-width: 100%;
 }
 
-.buy-button:hover {
-    background-color: #a8dadc;
+.buy-button:hover,
+.comment-submit-button:hover {
+    background-color: #f8a791;
+}
+
+.back-button {
+    display: inline-block;
+    text-align: center;
+    background-color: #e3dbdb;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+    max-width: 100%;
+    margin-top: 10px;
+}
+
+.back-button:hover {
+    background-color: #c0c0c0;
+}
+
+.comment-submit-button:disabled {
+    background-color: #c0c0c0;
+    /* 無効時の明るいグレー */
+    cursor: not-allowed;
+    /* ポインターを禁止マークに */
 }

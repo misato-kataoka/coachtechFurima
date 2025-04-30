@@ -15,6 +15,11 @@ class Category extends Model
         'category_name',
     ];
 
+    public function itemCategoryConditions()  
+    {  
+        return $this->hasMany(ItemCategoryCondition::class);  
+    }
+
     //リレーション: カテゴリは複数のアイテムとの関連を持つ (多対多)
     // item_category_conditionテーブルを経由
     public function items()

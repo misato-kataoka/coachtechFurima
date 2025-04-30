@@ -31,26 +31,35 @@ class Item extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function categoryConditions()
+    {
+        return $this->hasMany(ItemCategoryCondition::class);
+        //return $this->belongsTo(ItemCategoryCondition::class);
+    }  
+
     //リレーション: 多対多（中間テーブルで複数のカテゴリ・コンディションと関連づけ）
     // item_category_conditionテーブルを経由
     public function categories()
     {
-        return $this->belongsToMany(
+        /*return $this->belongsToMany(
             Category::class,
             'item_category_condition',
             'item_id',
             'category_id'
-        );
+            );*/
+            return $this->hasManyThrough(Category::class, ItemCategoryCondition::class);
+       
     }
 
     public function conditions()
     {
-        return $this->belongsToMany(
+        /*return $this->belongsToMany(
             Condition::class,
             'item_category_condition',
             'item_id',
             'condition_id'
-        );
+        );*/
+        return $this->hasManyThrough(Condition::class, ItemCategoryCondition::class);
     }
 
     //リレーション: アイテムは複数のいいねを持つ (1対多)

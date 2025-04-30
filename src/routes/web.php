@@ -40,15 +40,20 @@ Route::get('/items', [ItemController::class, 'index'])->name('item.list');
 //商品検索のルート
 Route::get('/item/search', [ItemController::class, 'search'])->name('item.search');
 
+// 商品詳細のルート
+Route::get('/item/{id}', [ItemController::class, 'show'])->name('item.show');
+
 // マイリストに追加するためのルート  
 Route::post('/user_item_lists', [UserItemListController::class, 'store'])->name('user_item_lists.store'); 
 Route::get('/mylist', [ItemController::class, 'myList'])->name('item.mylist');
 
-// 商品詳細のルート
-Route::get('/item/{id}', [ItemController::class, 'show'])->name('item.detail');
+
+
+//いいね機能に関するルート
+Route::post('/item/{id}/like', [ItemController::class, 'like'])->name('item.like');
 
 //コメントを保存するためのルート
-Route::post('/comments', [ItemItemController::class, 'store'])->name('comments.store');
+Route::post('/comments', [ItemController::class, 'store'])->name('comments.store');
 
 // トップページルート
 Route::middleware('auth')->group(function () {

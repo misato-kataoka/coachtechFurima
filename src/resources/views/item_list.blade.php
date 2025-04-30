@@ -20,7 +20,7 @@
             <div class="item-grid">
                 @foreach ($items as $item)
                     <div class="item-card">
-                    <a href="{{ route('item.detail', ['id' => $item->id]) }}">
+                    <a href="{{ route('item.show', ['id' => $item->id]) }}">
                         <img src="{{ $item->image }}" alt="商品画像" class="item-image"/>
                         <div class="item-title">{{ $item->item_name }}</div>
                     </a>

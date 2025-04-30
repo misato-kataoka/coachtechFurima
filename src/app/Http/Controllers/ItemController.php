@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CommentRequest;
 use App\Http\Requests\ExhibitionRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Item;
+use App\Models\Like;
 use App\Models\UserItemList;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -49,8 +51,12 @@ class ItemController extends Controller
 
     public function show($id)
     {
-    $item = Item::with('comments.user')->findOrFail($id); // IDに基づいて商品を取得
-    return view('item_detail', compact('item')); // item_detail ビューに渡す
+    $item = Item::with('comments.user', 'categoryConditions.category', 'categoryConditions.condition')->findOrFail($id); 
+    $likesCount = Like::where('item_id', $id)->count();
+
+    // ユーザーが既にいいねしているかを確認  
+        $userLiked = Like::where('item_id', $id)->where('user_id', auth()->id())->exists();
+    return view('item_detail', compact('item', 'likesCount', 'userLiked')); // item_detail ビューに渡す
     }
 
     public function addToMyList(Request $request, $itemId)  
@@ -92,4 +98,33 @@ class ItemController extends Controller
 
         return redirect()->back()->with('success', 'コメントが送信されました。');  
     }
+//いいね機能
+    public function like(Request $request, $id)  
+    {  
+        if (!Auth::check()) {  
+            return redirect()->route('item.show', $id)->with('error', 'ログインが必要です。');  
+        }  
+
+        $like = Like::where('user_id', Auth::id())->where('item_id', $id)->first();  
+
+        if ($like) {  
+            // すでにいいねがある場合は削除  
+            $like->delete();  
+            return redirect()->route('item.show', $id)->with('status', 'いいねを解除しました。');  
+        } else {  
+            // いいねを新規追加  
+            Like::create([  
+                'user_id' => Auth::id(),  
+                'item_id' => $id,  
+            ]);  
+            return redirect()->route('item.show', $id)->with('status', 'いいねしました。');  
+        }  
+    }
+
+public function getLikes($id)  
+{  
+    // アイテムに対するいいねの数を取得  
+    $likeCount = Like::where('item_id', $id)->count();  
+    return response()->json(['likes' => $likeCount]);  
+}  
 }
