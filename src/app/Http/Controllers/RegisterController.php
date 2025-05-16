@@ -86,6 +86,26 @@ class RegisterController extends Controller
         // 完了メッセージと共にトップページにリダイレクト  
         return redirect('/')->with('success', '登録が完了しました。');  
     }
+
+    public function edit($item_id)
+    {   
+        $user = Auth::user();
+
+        return view('auth.address', compact('user', 'item_id'));
+    }
+
+    public function update(Request $request, $item_id)
+    {
+        $user = Auth::user();
+        $user->username = $request->input('username');
+        $user->post_code = $request->input('post_code');
+        $user->address = $request->input('address');
+        $user->building = $request->input('building');
+        $user->save();
+
+        return redirect()->route('purchase.index')->with('success', '住所が更新されました。');
+    }
+}
     /* セッションからユーザー情報を取得
     $user = Auth::user();
     if (!$user) {
@@ -101,4 +121,3 @@ class RegisterController extends Controller
     // 完了後、トップ画面にリダイレクト
     return redirect('/')->with('success', '登録が完了しました。');
     }*/
-}

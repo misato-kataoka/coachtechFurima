@@ -5,6 +5,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\OrdersController;
 use Illuminate\Foundation\Auth\EmailVerificationNoticeController;
 
 
@@ -24,8 +25,8 @@ Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->na
 Route::post('/register', [RegisterController::class, /*'storeUser'*/'register'])->name('register');
 
 // 住所入力ページへのルート
-Route::get('/address/form', [RegisterController::class, 'showAddressForm'])->name('address.form')->middleware('auth'); // 認証済みユーザーのみ
-Route::post('/address/form', [RegisterController::class, 'storeAddress'])->name('address.store')->middleware('auth'); // 住所情報保存のルート
+Route::get('/address/form', [RegisterController::class, 'showAddressForm'])->name('address.form'); // 認証済みユーザーのみ
+Route::post('/address/form', [RegisterController::class, 'storeAddress'])->name('address.store')/*->middleware('auth')*/; // 住所情報保存のルート
 
 //ログアウト機能
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -54,6 +55,14 @@ Route::post('/item/{id}/like', [ItemController::class, 'like'])->name('item.like
 
 //コメントを保存するためのルート
 Route::post('/comments', [ItemController::class, 'store'])->name('comments.store');
+
+//商品購入画面へのルート
+Route::get('/purchase/{item_id}', [OrdersController::class, 'show'])->middleware('auth')->name('purchase.show');
+Route::post('/orders/store', [OrderController::class, 'store'])->name('orders.store');
+
+//住所変更のためのルート
+Route::get('/purchase/address/{item_id}', [RegisterController::class, 'edit'])->name('address.edit')->middleware('auth');
+Route::put('/purchase/address/update/{item_id}', [RegisterController::class, 'update'])->name('address.update')->middleware('auth');
 
 // トップページルート
 Route::middleware('auth')->group(function () {

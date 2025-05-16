@@ -5,8 +5,8 @@
 @endsection
 
 @section('content')
-<h2>プロフィール設定</h2>
-<form action="{{ route('address.store') }}" method="POST"  enctype="multipart/form-data">
+<h2>{{ isset($user) ? 'プロフィール修正' : 'プロフィール登録' }}</h2>
+<form action="{{ isset($user) ? route('address.update', ['item_id' => $item_id]) : route('address.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
 <div class="profile-pic">
     <label for="imageUpload" class="image-placeholder">
@@ -16,7 +16,6 @@
     <span class="image-label" onclick="document.getElementById('imageUpload').click();">画像を選択する</span>
 </div>
 
-
     <label for="username">ユーザー名</label>
         <input type="text" id="username" name="username" value="{{ old('username') }}" />
             <div class="form__error">
@@ -25,16 +24,16 @@
                 @enderror
             </div>
 
-    <label for="postal_code">郵便番号</label>
-        <input type="text" id="postal_code" name="postal_code" value="{{ old('postal_code') }}" />
+    <label for="post_code">郵便番号</label>
+        <input type="text" id="post_code" name="post_code" value="{{ old('post_code', $user->post_code) }}" />
             <div class="form__error">
-                @error('postal_code')
+                @error('post_code')
                 {{ $message }}
                 @enderror
             </div>
 
     <label for="address">住所</label>
-        <input type="text" id="address" name="address" value="{{ old('address') }}" />
+        <input type="text" id="address" name="address" value="{{ old('address',$user->address) }}" />
             <div class="form__error">
                 @error('address')
                 {{ $message }}
@@ -42,14 +41,14 @@
             </div>
 
     <label for="building_name">建物名</label>
-        <input type="text" id="building_name" name="building_name" value="{{ old('building_name') }}" />
+        <input type="text" id="building_name" name="building_name" value="{{ old('building') }}" />
             <div class="form__error">
-                @error('building_name')
+                @error('building')
                 {{ $message }}
                 @enderror
             </div>
 
-    <button type="submit">更新する</button>
+    <button type="submit">{{ isset($user) ? '更新する' : '登録する' }}</button>
 </form>
 @endsection
 

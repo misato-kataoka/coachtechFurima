@@ -3,14 +3,24 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Item;
 use App\Models\Order;
 
 class OrdersController extends Controller
 {
+    public function show($item_id)
+    {
+        // 商品情報を取得
+        $item = Item::findOrFail($item_id);
+
+        // 商品購入ページを表示
+        return view('purchase', compact('item'));
+    }
+
     public function store(Request $request)
     {
         $request->validate([
-            'payment_method' => 'required|in:card,convenience',  
+            'payment_method' => 'required|in:card,convenience',
             // 他のバリデーションルール
         ]);
 

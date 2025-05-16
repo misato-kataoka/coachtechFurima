@@ -33,7 +33,9 @@
             </div>
         </div>
 
-        <button class="buy-button">購入手続きへ</button>
+        <form action="{{ url('/purchase/' . $item->id) }}" method="GET">
+            <button type="submit" class="buy-button">購入手続きへ</button>
+        </form>
         <a href="{{ url('/') }}" class="back-button">戻る</a> <!-- 戻るボタン -->
 
         <div class="item-description">
