@@ -54,7 +54,7 @@ Route::get('/mylist', [ItemController::class, 'myList'])->name('item.mylist');
 Route::post('/item/{id}/like', [ItemController::class, 'like'])->name('item.like');
 
 //コメントを保存するためのルート
-Route::post('/comments', [ItemController::class, 'store'])->name('comments.store');
+Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
 
 //商品購入画面へのルート
 Route::get('/purchase/{item_id}', [OrdersController::class, 'show'])->middleware('auth')->name('purchase.show');
@@ -73,6 +73,16 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/mypage', [UserController::class, 'show'])->name('mypage');
     Route::post('/mypage/profile', [UserController::class, 'update'])->name('profile.update');
+    Route::get('/profile', [UserController::class, 'profile'])->name('user.profile'); // プロフィールページ
+});
+
+//商品登録のルート
+Route::middleware(['auth'])->group(function () {
+    Route::get('/items', [ItemController::class, 'index'])->name('items.index'); // 商品リスト
+    Route::get('/sell', [ItemController::class, 'create'])->name('items.create');
+    Route::post('/items', [ItemController::class, 'store'])->name('items.store'); // 商品の作成処理
+    Route::get('/items/{id}', [ItemController::class, 'show'])->name('items.show'); // 商品詳細
+});
 
 // 住所確認ページのルート（認証なしの場合）
 Route::get('/address', [RegisterController::class, 'address'])->name('address');
@@ -89,5 +99,5 @@ Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verify'])
 
 Route::post('/email/verification-notification', function () {
     return 'メール再送信の処理（サンプル）'; // 再送信の処理を実装
-})->middleware(['auth'])->name('verification.resend');*/
-});
+})->middleware(['auth'])->name('verification.resend');
+});*/

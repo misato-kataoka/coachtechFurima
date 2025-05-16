@@ -8,6 +8,8 @@ use App\Http\Requests\ExhibitionRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Item;
+use App\Models\Condition;
+use App\Models\Category;
 use App\Models\Like;
 use App\Models\UserItemList;
 use Illuminate\Support\Facades\Hash;
@@ -40,7 +42,12 @@ class ItemController extends Controller
         return view('item_list', compact('items', 'query'));
     }
 
-
+    public function create()
+    {
+        $conditions = Condition::all();
+        $categories = Category::all();
+    return view('sell', compact('conditions', 'categories'));
+    }
     /*public function myList()  
     {  
         // セッションやデータベースから商品を取得する  
@@ -85,18 +92,34 @@ class ItemController extends Controller
 
     public function store(Request $request)  
     {  
+        // アイテムの保存処理を呼び出す  
+        $item = $this->saveItem($request);  
+
+        // カテゴリーの関連付け  
+        $item->categories()->attach($request->category_ids);  
+
+        return redirect()->route('items.index')->with('success', '商品が出品されました。');  
+    }  
+
+    private function saveItem(Request $request)  
+    {  
         $request->validate([  
-            'content' => 'required|string',  
-            'item_id' => 'required|exists:items,id',  
+            'item_name' => 'required|string|max:255',  
+            'brand' => 'nullable|string|max:255',  
+            'description' => 'required|string',  
+            'price' => 'required|numeric',  
+            'condition_id' => 'required|exists:conditions,id',  
+            // 他のバリデーションを追加  
         ]);  
 
-        Comment::create([  
-            'user_id' => auth()->id(),  
-            'item_id' => $request->item_id,  
-            'content' => $request->content,  
+        return Item::create([  
+            'name' => $request->item_name,  
+            'brand' => $request->brand,  
+            'description' => $request->description,  
+            'price' => $request->price,  
+            'condition_id' => $request->condition_id,  
+            // 他のカラムを追加  
         ]);  
-
-        return redirect()->back()->with('success', 'コメントが送信されました。');  
     }
 //いいね機能
     public function like(Request $request, $id)  

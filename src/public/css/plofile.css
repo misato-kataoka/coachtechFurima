@@ -1,0 +1,84 @@
+.profile-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.user-info {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.user-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    /* 丸型にする */
+}
+
+.edit-profile-button {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    /* ボタンの色 */
+    color: white;
+    /* 文字色 */
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.tab-button {
+    padding: 10px 20px;
+    margin: 0 5px;
+    cursor: pointer;
+    background-color: #f1f1f1;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.tab-button.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.product-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    /* 横に並べる */
+}
+
+.product-card {
+    width: calc(25% - 20px);
+    /* 最大4列 */
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.product-image {
+    width: 100%;
+    height: auto;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.product-name {
+    font-size: 1.2rem;
+    margin-top: 10px;
+}
+
+/* ページネーションのスタイル */
+.pagination {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    /* 中央に配置 */
+}

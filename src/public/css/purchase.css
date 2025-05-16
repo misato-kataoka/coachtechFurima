@@ -150,6 +150,29 @@ select:focus {
 }
 
 /* レスポンシブデザイン */
+@media (min-width: 1400px) and (max-width: 1540px) {
+    .container {
+        flex-direction: row;
+        padding: 30px;
+    }
+
+    .left-column {
+        flex: 1;
+        margin-right: 20px;
+    }
+
+    .order-summary {
+        flex-basis: 300px;
+        margin-left: 0;
+    }
+
+    .product-info,
+    .payment-method,
+    .shipping-info {
+        margin-bottom: 30px;
+    }
+}
+
 @media (max-width: 850px) and (min-width: 768px) {
     .container {
         flex-direction: column;

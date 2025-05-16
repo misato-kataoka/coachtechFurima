@@ -1,0 +1,70 @@
+/* mypage.css */
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+.border-line {
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 20px;
+}
+
+.container {
+    padding: 0 20px;
+}
+
+.item-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    /* 最大4列 */
+    gap: 20px;
+}
+
+.item-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    text-align: center;
+}
+
+.item-image {
+    width: 100%;
+    height: auto;
+}
+
+.item-title {
+    margin: 10px 0;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination .disabled {
+    color: #aaa;
+}
+
+.pagination .active {
+    font-weight: bold;
+    color: #007bff;
+    /* 現在のページの色 */
+}
+
+.pagination .other {
+    margin: 0 5px;
+    text-decoration: none;
+}
+
+.pagination a {
+    color: #007bff;
+    /* リンクの色 */
+}
+
+.pagination a:hover {
+    text-decoration: underline;
+    /* ホバー時の効果 */
+}
