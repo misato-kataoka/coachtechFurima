@@ -6,6 +6,8 @@
 
 body {
     font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
 .search input {
@@ -31,6 +33,7 @@ main {
 
 .profile-pic {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     margin: 20px 0;
@@ -46,6 +49,10 @@ main {
     line-height: 100px;
     overflow: hidden;
     cursor: pointer;
+}
+
+#imageUpload {
+    display: none;
 }
 
 .image-placeholder img {
@@ -68,8 +75,9 @@ main {
 form {
     display: flex;
     flex-direction: column;
-    max-width: 400px;
-    margin: auto;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
 label {
@@ -105,4 +113,34 @@ button {
 
 button:hover {
     background-color: #ff6b81;
+}
+
+/* PC向けスタイル (1400px-1540px) */
+@media (min-width: 1400px) and (max-width: 1540px) {
+    form {
+        padding: 30px;
+    }
+
+    .profile-pic {
+        width: 100%;
+    }
+
+    input[type="text"] {
+        font-size: 1.1em;
+    }
+}
+
+/* タブレット向けスタイル (768px-850px) */
+@media (min-width: 768px) and (max-width: 850px) {
+    form {
+        padding: 15px;
+    }
+
+    h2 {
+        font-size: 1.5em;
+    }
+
+    input[type="text"] {
+        font-size: 1em;
+    }
 }

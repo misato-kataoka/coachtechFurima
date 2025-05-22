@@ -58,19 +58,32 @@
 
         <div class="comments">
             <h2>コメント ({{ $item->comments->count() }})</h2>
+
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+
             @foreach ($item->comments as $comment)
                 <div class="comment">
-                    <strong>{{ $comment->user->name }}</strong>
-                    <p>{{ $comment->content }}</p>
+                    <img src="{{ $comment->user->profile_image_url }}" alt="{{ $comment->user->name }}のアイコン" class="user-icon">
+                    <strong class="username">{{ $comment->user->name }}</strong>
+                    <p class="comment-content">{{ $comment->content }}</p>
                 </div>
             @endforeach
 
             <form action="{{ route('comments.store') }}" method="POST">
                 @csrf
-                <textarea name="content" placeholder="こちらにコメントが入ります。" required></textarea
+                <textarea name="content" placeholder="こちらにコメントが入ります。"></textarea>
                 <input type="hidden" name="item_id" value="{{ $item->id }}">
                 <button type="submit" class="comment-submit-button">コメントを送信する</button>
             </form>
+        </div>
+        <div class="form__error">
+            @error('content')
+                {{ $message }}
+            @enderror
         </div>
 
         </div>

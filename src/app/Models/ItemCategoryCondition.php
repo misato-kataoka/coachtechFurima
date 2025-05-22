@@ -17,11 +17,6 @@ class ItemCategoryCondition extends Model
         'condition_id',
     ];
 
-    public function items()  
-    {  
-        return $this->hasMany(Item::class);  
-    }
-
     //リレーション: 中間テーブルはitem, category, condition をそれぞれに関連付ける
     public function item()
     {

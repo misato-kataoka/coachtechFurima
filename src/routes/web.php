@@ -6,6 +6,7 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\OrdersController;
+use App\Http\Controllers\CommentController;
 use Illuminate\Foundation\Auth\EmailVerificationNoticeController;
 
 
@@ -54,11 +55,23 @@ Route::get('/mylist', [ItemController::class, 'myList'])->name('item.mylist');
 Route::post('/item/{id}/like', [ItemController::class, 'like'])->name('item.like');
 
 //コメントを保存するためのルート
-Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
+Route::middleware(['auth'])->group(function () {
+    Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
+});
 
 //商品購入画面へのルート
 Route::get('/purchase/{item_id}', [OrdersController::class, 'show'])->middleware('auth')->name('purchase.show');
 Route::post('/orders/store', [OrderController::class, 'store'])->name('orders.store');
+
+//商品購入時のルート
+Route::post('/create-checkout-session', [OrdersController::class, 'createCheckoutSession'])->name('checkout.session');
+Route::get('/success', function () {
+    return view('success');
+})->name('success.page');
+
+Route::get('/cancel', function () {
+    return view('cancel');
+})->name('cancel.page');
 
 //住所変更のためのルート
 Route::get('/purchase/address/{item_id}', [RegisterController::class, 'edit'])->name('address.edit')->middleware('auth');

@@ -90,16 +90,58 @@ class ItemController extends Controller
     return view('mylist', compact('items'));  
 }  
 
-    public function store(Request $request)  
-    {  
-        // アイテムの保存処理を呼び出す  
-        $item = $this->saveItem($request);  
+    public function store(ExhibitionRequest $request)
+    {
+        if (!auth()->check()) {
+            return redirect()->route('login')->with('error', 'ログインが必要です。');
+        }
 
-        // カテゴリーの関連付け  
-        $item->categories()->attach($request->category_ids);  
+        // 現在のユーザーのIDを取得
+        $userId = auth()->id();
 
-        return redirect()->route('items.index')->with('success', '商品が出品されました。');  
-    }  
+        // 画像をストレージに保存
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('images', 'public');
+        }
+
+        try {
+        // 商品データを保存
+            $item = Item::create([
+                'item_name' => $request->item_name,
+                'brand' => $request->brand,
+                'description' => $request->description,
+                'price' => $request->price,
+                'image' => $imagePath,
+                'user_id' => $userId,
+            ]);
+
+        // カテゴリーの関連付け
+            if ($request->filled('category_ids')) {
+                $item->categories()->attach($request->category_ids);
+            } else {
+                return redirect()->back()->with('error', 'カテゴリーが選択されていません。');
+            }
+
+        // カテゴリーと状態をitem_category_conditionに保存
+            if ($request->filled('condition_id')) {
+                foreach ($request->category_ids as $categoryId) {
+                    ItemCategoryCondition::create([
+                        'item_id' => $item->id,
+                        'category_id' => $categoryId,
+                        'condition_id' => $request->condition_id,
+                    ]);
+                }
+            } else {
+                return redirect()->back()->with('error', '商品状態が選択されていません。');
+            }
+
+            return redirect()->route('items.index')->with('success', '商品が出品されました。');
+
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', '商品出品中にエラーが発生しました: ' . $e->getMessage());
+        }
+    }
 
     private function saveItem(Request $request)  
     {  

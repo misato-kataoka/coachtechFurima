@@ -17,7 +17,7 @@ class ItemsTableSeeder extends Seeder
     {
         Item::create([
                 'user_id' => 1,
-                'image' => 'Armani+Mens+Clock.jpg',
+                'image' => 'images/Armani+Mens+Clock.jpg',
                 'item_name' => '腕時計',
                 'brand' => 'アルマーニ',
                 'price' => '15000',
@@ -25,7 +25,7 @@ class ItemsTableSeeder extends Seeder
             ]);
             Item::create([
                 'user_id'       => 2,
-                'image' => 'HDD+Hard+Disk.jpg',
+                'image' => 'images/HDD+Hard+Disk.jpg',
                 'item_name' => 'HDD',
                 'brand' => 'BUFFALO',
                 'price' => '5000',
@@ -33,7 +33,7 @@ class ItemsTableSeeder extends Seeder
             ]);
             Item::create([
                 'user_id' => 1,
-                'image' => 'onion.jpg',
+                'image' => 'images/onion.jpg',
                 'item_name' => '玉ねぎ3束',
                 'brand' => 'JA',
                 'price' => '300',
@@ -41,7 +41,7 @@ class ItemsTableSeeder extends Seeder
             ]);
             Item::create([
                 'user_id' => 1,
-                'image' => 'LeatherShoes.jpg',
+                'image' => 'images/LeatherShoes.jpg',
                 'item_name' => '革靴',
                 'brand' => 'リーガル',
                 'price' => '4000',
@@ -49,7 +49,7 @@ class ItemsTableSeeder extends Seeder
             ]);
             Item::create([
                 'user_id' => 2,
-                'image' => 'Laptop.jpg',
+                'image' => 'images/Laptop.jpg',
                 'item_name' => 'ノートPC',
                 'brand' => 'DELL',
                 'price' => '45000',
@@ -57,7 +57,7 @@ class ItemsTableSeeder extends Seeder
             ]);
             Item::create([
                 'user_id' => 1,
-                'image' => 'Mic.jpg',
+                'image' => 'images/Mic.jpg',
                 'item_name' => 'マイク',
                 'brand' => 'YAMAHA',
                 'price' => '8000',
@@ -65,7 +65,7 @@ class ItemsTableSeeder extends Seeder
             ]);
             Item::create([
                 'user_id' => 2,
-                'image' => 'Purse.jpg',
+                'image' => 'images/Purse.jpg',
                 'item_name' => 'ショルダーバッグ',
                 'brand' => 'FURLA',
                 'price' => '3500',
@@ -73,7 +73,7 @@ class ItemsTableSeeder extends Seeder
             ]);
             Item::create([
                 'user_id' => 2,
-                'image' => 'Tumbler.jpg',
+                'image' => 'images/Tumbler.jpg',
                 'item_name' => 'タンブラー',
                 'brand' => 'サーモス',
                 'price' => '500',
@@ -81,7 +81,7 @@ class ItemsTableSeeder extends Seeder
             ]);
             Item::create([
                 'user_id' => 1,
-                'image' => 'CoffeeGrinder.jpg',
+                'image' => 'images/CoffeeGrinder.jpg',
                 'item_name' => 'コーヒーミル',
                 'brand' => 'カリタ',
                 'price' => '4000',
@@ -89,7 +89,7 @@ class ItemsTableSeeder extends Seeder
             ]);
             Item::create([
                 'user_id' => 2,
-                'image' => 'cosmetics.jpg',
+                'image' => 'images/cosmetics.jpg',
                 'item_name' => 'メイクセット',
                 'brand' => '資生堂',
                 'price' => '2500',

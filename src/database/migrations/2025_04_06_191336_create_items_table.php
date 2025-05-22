@@ -15,9 +15,9 @@ class CreateItemsTable extends Migration
     {
         Schema::create('items', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('buyer_id')->nullable()->after('user_id');
-            $table->unsignedBigInteger('seller_id')->after('buyer_id');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('buyer_id')->nullable()->constrained('users')->after('user_id');
+            $table->foreignId('seller_id')->nullable()->constrained('users')->after('buyer_id');
             $table->string('image');
             $table->string('item_name');
             $table->string('brand')->nullable();
@@ -25,7 +25,6 @@ class CreateItemsTable extends Migration
             $table->text('description');
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

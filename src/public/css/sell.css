@@ -3,7 +3,7 @@ body {
 }
 
 .container {
-    max-width: 600px;
+    max-width: 700px;
     margin: 0 auto;
     padding: 20px;
 }
@@ -26,6 +26,24 @@ body {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
+}
+
+.subtitle {
+    color: #636363;
+    font-size: 20px;
+    padding-bottom: 5px;
+    position: relative;
+}
+
+.subtitle::after {
+    content: '';
+    display: block;
+    height: 2px;
+    background-color: #ccc;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    bottom: -5px;
 }
 
 .input,
@@ -73,16 +91,42 @@ body {
 }
 
 .image-upload {
+    width: 100%;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 150px;
     position: relative;
+}
+
+.image-container {
+    position: relative;
+}
+
+.preview-image {
+    max-width: 20%;
+    height: auto;
+    display: block;
 }
 
 .upload-button {
     padding: 10px 20px;
+    border: 2px solid #ff6f61;
+    border-color: #ff6f61;
+    background-color: white;
+    color: #ff6f61;
+    border-radius: 6px;
+    cursor: pointer;
+    z-index: 1;
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.upload-button:hover {
     background-color: #ff6f61;
     color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
 }
 
 .file-input {
@@ -102,6 +146,13 @@ body {
 
 .submit-button:hover {
     background-color: #ff4b53;
+}
+
+.form__error {
+    display: block;
+    margin-top: 0;
+    margin-bottom: 5px;
+    color: red;
 }
 
 /* PC向けスタイル (1400px-1540px) */

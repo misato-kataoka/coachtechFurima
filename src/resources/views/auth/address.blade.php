@@ -11,13 +11,14 @@
 <div class="profile-pic">
     <label for="imageUpload" class="image-placeholder">
         <img id="imagePreview" src="" alt="選択した画像のプレビュー" style="display: none;" />
+        
     </label>
     <input type="file" id="imageUpload" accept="image/*" style="display: none;" onchange="previewImage(event)" />
     <span class="image-label" onclick="document.getElementById('imageUpload').click();">画像を選択する</span>
 </div>
 
     <label for="username">ユーザー名</label>
-        <input type="text" id="username" name="username" value="{{ old('username') }}" />
+        <input type="text" id="username" name="username" value="{{ old('username', $user->username) }}" />
             <div class="form__error">
                 @error('username')
                 {{ $message }}
@@ -41,7 +42,7 @@
             </div>
 
     <label for="building_name">建物名</label>
-        <input type="text" id="building_name" name="building_name" value="{{ old('building') }}" />
+        <input type="text" id="building_name" name="building_name" value="{{ old('building',$user->building) }}" />
             <div class="form__error">
                 @error('building')
                 {{ $message }}

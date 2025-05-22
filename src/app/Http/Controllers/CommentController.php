@@ -11,25 +11,28 @@ use App\Models\Item;
 use App\Models\Condition;
 use App\Models\Category;
 use App\Models\Like;
+use App\Models\Comment;
 use App\Models\UserItemList;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
-class CommentController extends Controller  
-{  
-    public function store(Request $request)  
-    {  
-        $request->validate([  
-            'content' => 'required|string',  
-            'item_id' => 'required|exists:items,id',  
-        ]);  
+class CommentController extends Controller
+{
+    public function store(CommentRequest $request)
+    {
+        if (!auth()->check()) {
+            return redirect()->back()->withErrors(['user' => 'ログインが必要です。']);
+        }
 
-        Comment::create([  
-            'user_id' => auth()->id(),  
-            'item_id' => $request->item_id,  
-            'content' => $request->content,  
-        ]);  
+         // デバッグ用: リクエスト内容を確認  
+    \Log::info($request->all()); // これで送信されている内容をログに記録 
 
-        return redirect()->back()->with('success', 'コメントが送信されました。');  
-    }  
-}  
+        Comment::create([
+            'user_id' => auth()->id(),
+            'item_id' => $request->item_id,
+            'content' => $request->content,
+        ]);
+
+        return redirect()->back()->with('success', 'コメントが送信されました。');
+    }
+}

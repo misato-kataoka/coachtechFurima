@@ -24,14 +24,14 @@ class CommentRequest extends FormRequest
     public function rules()
     {
         return [
-            'comment'=>['required','max:255'],
+            'content'=>['required','max:255'],
         ];
     }
 
     public function messages(){
         return [
-            'comment.required'=>'商品コメントを入力してください',
-            'comment.max' => '商品コメントは255文字以下で入力してください。',
+            'content.required'=>'商品コメントを入力してください',
+            'content.max' => '商品コメントは255文字以下で入力してください。',
         ];
     }
 }

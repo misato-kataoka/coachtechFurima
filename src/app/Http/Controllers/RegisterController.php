@@ -62,6 +62,9 @@ class RegisterController extends Controller
         // 画像のアップロード処理  
     $profilePicPath = null;
 
+    $image = $request->file('image');  
+    $path = $image->store('images', 'public');
+
     if ($request->hasFile('profile_pic')) {  
         $profilePicPath = $request->file('profile_pic')->store('profile_pics', 'public'); // 'profile_pics' ディレクトリに保存  
     }
