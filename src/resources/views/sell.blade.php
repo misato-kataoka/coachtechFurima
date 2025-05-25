@@ -103,12 +103,12 @@
         <button type="submit" class="submit-button">出品する</button>
     </form>
 
-    <script>  
-        function previewImage(event) {  
-            const preview = document.getElementById('preview');  
-            preview.style.display = 'block';  
-            preview.src = URL.createObjectURL(event.target.files[0]);  
-        }  
+    <script>
+        function previewImage(event) {
+            const preview = document.getElementById('preview');
+            preview.style.display = 'block';
+            preview.src = URL.createObjectURL(event.target.files[0]);
+        }
     </script>
 
 </div>

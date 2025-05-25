@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Item;
 use App\Models\Condition;
 use App\Models\Category;
+use App\Models\ItemCategoryCondition;
 use App\Models\Like;
 use App\Models\UserItemList;
 use Illuminate\Support\Facades\Hash;
@@ -92,6 +93,7 @@ class ItemController extends Controller
 
     public function store(ExhibitionRequest $request)
     {
+        dd($request->all());
         if (!auth()->check()) {
             return redirect()->route('login')->with('error', 'ログインが必要です。');
         }
@@ -116,15 +118,8 @@ class ItemController extends Controller
                 'user_id' => $userId,
             ]);
 
-        // カテゴリーの関連付け
-            if ($request->filled('category_ids')) {
-                $item->categories()->attach($request->category_ids);
-            } else {
-                return redirect()->back()->with('error', 'カテゴリーが選択されていません。');
-            }
-
-        // カテゴリーと状態をitem_category_conditionに保存
-            if ($request->filled('condition_id')) {
+        // カテゴリーと商品の状態をitem_category_conditionテーブルに保存
+            if ($request->filled('category_ids') && $request->filled('condition_id')) {
                 foreach ($request->category_ids as $categoryId) {
                     ItemCategoryCondition::create([
                         'item_id' => $item->id,
@@ -133,7 +128,7 @@ class ItemController extends Controller
                     ]);
                 }
             } else {
-                return redirect()->back()->with('error', '商品状態が選択されていません。');
+                return redirect()->back()->with('error', 'カテゴリーまたは商品状態が選択されていません。');
             }
 
             return redirect()->route('items.index')->with('success', '商品が出品されました。');
@@ -143,53 +138,33 @@ class ItemController extends Controller
         }
     }
 
-    private function saveItem(Request $request)  
-    {  
-        $request->validate([  
-            'item_name' => 'required|string|max:255',  
-            'brand' => 'nullable|string|max:255',  
-            'description' => 'required|string',  
-            'price' => 'required|numeric',  
-            'condition_id' => 'required|exists:conditions,id',  
-            // 他のバリデーションを追加  
-        ]);  
-
-        return Item::create([  
-            'name' => $request->item_name,  
-            'brand' => $request->brand,  
-            'description' => $request->description,  
-            'price' => $request->price,  
-            'condition_id' => $request->condition_id,  
-            // 他のカラムを追加  
-        ]);  
-    }
 //いいね機能
-    public function like(Request $request, $id)  
-    {  
-        if (!Auth::check()) {  
-            return redirect()->route('item.show', $id)->with('error', 'ログインが必要です。');  
-        }  
+    public function like(Request $request, $id)
+    {
+        if (!Auth::check()) {
+            return redirect()->route('item.show', $id)->with('error', 'ログインが必要です。');
+        }
 
-        $like = Like::where('user_id', Auth::id())->where('item_id', $id)->first();  
+        $like = Like::where('user_id', Auth::id())->where('item_id', $id)->first();
 
-        if ($like) {  
-            // すでにいいねがある場合は削除  
-            $like->delete();  
-            return redirect()->route('item.show', $id)->with('status', 'いいねを解除しました。');  
-        } else {  
-            // いいねを新規追加  
-            Like::create([  
-                'user_id' => Auth::id(),  
-                'item_id' => $id,  
-            ]);  
-            return redirect()->route('item.show', $id)->with('status', 'いいねしました。');  
-        }  
+        if ($like) {
+            // すでにいいねがある場合は削除
+            $like->delete();
+            return redirect()->route('item.show', $id)->with('status', 'いいねを解除しました。');
+        } else {
+            // いいねを新規追加
+            Like::create([
+                'user_id' => Auth::id(),
+                'item_id' => $id,
+            ]);
+            return redirect()->route('item.show', $id)->with('status', 'いいねしました。');
+        }
     }
 
-public function getLikes($id)  
-{  
-    // アイテムに対するいいねの数を取得  
-    $likeCount = Like::where('item_id', $id)->count();  
-    return response()->json(['likes' => $likeCount]);  
-}  
+    public function getLikes($id)
+    {
+    // アイテムに対するいいねの数を取得
+        $likeCount = Like::where('item_id', $id)->count();
+        return response()->json(['likes' => $likeCount]);
+    }
 }

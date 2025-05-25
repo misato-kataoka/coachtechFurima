@@ -47,8 +47,13 @@
             <h2>商品情報</h2>
             <ul>
                 @if ($item->categoryConditions->isNotEmpty())
-                    <li>カテゴリ: {{ $item->categoryConditions->first()->category->category_name ?? '未定義' }}</li> <!-- カテゴリ名を表示 -->
-                    <li>状態: {{ $item->categoryConditions->first()->condition->condition ?? '未定義' }}</li> <!-- 状態名を表示 -->
+                    <li>カテゴリ:</li>
+                    <ul>
+                        @foreach ($item->categoryConditions as $categoryCondition)
+                            <li>{{ $categoryCondition->category->category_name ?? '未定義' }}</li>
+                        @endforeach
+                    </ul>
+                    <li>状態: {{ $item->categoryConditions->first()->condition->condition ?? '未定義' }}</li>
                 @else
                     <li>カテゴリ: 未定義</li>
                     <li>状態: 未定義</li>

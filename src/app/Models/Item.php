@@ -42,7 +42,7 @@ class Item extends Model
     // item_category_conditionテーブルを経由
     public function categories()
     {
-        return $this->belongsToMany(Category::class, 'item_category_condition','item_id', 'category_id', 'condition_id');
+        return $this->belongsToMany(Category::class, 'item_category_condition','item_id', 'category_id');
     }
 
     public function conditions()
