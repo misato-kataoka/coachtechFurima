@@ -102,12 +102,16 @@
                     'X-CSRF-TOKEN': '{{ csrf_token() }}' // CSRFトークンを送信
                 },
                 body: JSON.stringify({
-                    payment_method: paymentMethod,
-                    item_price: {{ $item->price }},
-                    item_name: '{{ $item->item_name }}'
+                    item_id: {{ $item->id }},
+                    payment_method: paymentMethod
                 }),
             })
-            .then((response) => response.json())
+            .then((response) => {
+                if (!response.ok) {
+                    return response.json().then(errorData => Promise.reject(errorData));
+                }
+                return response.json();
+            })
             .then((data) => {
                 if (data.error) {
                     alert(data.error);

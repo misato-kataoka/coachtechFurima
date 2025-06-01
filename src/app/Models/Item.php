@@ -14,17 +14,22 @@ class Item extends Model
     protected $fillable = [
         'user_id',
         'buyer_id',
-        'seller_id',
         'image',
         'item_name',
         'brand',
         'price',
         'description',
+        'is_sold'
     ];
 
     public function getImageAttribute($value)
     {
         return asset('storage/' . $value);
+    }
+
+    public function getItemName()
+    {
+        return $this->item ? $this->item->item_name : '未定義';
     }
 
     //リレーション: アイテムは1人のユーザーに属する (多対1)
@@ -76,4 +81,9 @@ class Item extends Model
     {
         return $this->hasMany(Order::class, 'item_id');
     }
+
+    public function isSold()  
+{  
+    return $this->item ? $this->item->is_sold : false;  
+}
 }

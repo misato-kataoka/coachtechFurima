@@ -36,19 +36,20 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'loginUser']);
 
-// 商品一覧のルート（GETリクエスト）
+// 商品一覧のルート
 Route::get('/items', [ItemController::class, 'index'])->name('item.list');
 
 //商品検索のルート
 Route::get('/item/search', [ItemController::class, 'search'])->name('item.search');
 
 // 商品詳細のルート
-Route::get('/item/{id}', [ItemController::class, 'show'])->name('item.show');
+Route::get('/item/{id}', [ItemController::class, 'show'])->name('item.detail');
 
 // マイリストに追加するためのルート  
-Route::post('/user_item_lists', [UserItemListController::class, 'store'])->name('user_item_lists.store'); 
-Route::get('/mylist', [ItemController::class, 'myList'])->name('item.mylist');
-
+//Route::post('/user_item_lists', [UserItemListController::class, 'store'])->name('user_item_lists.store'); 
+Route::middleware('auth')->group(function () {  
+    Route::get('/mylist', [ItemController::class, 'myList'])->name('item.mylist');
+});
 
 
 //いいね機能に関するルート
@@ -61,12 +62,11 @@ Route::middleware(['auth'])->group(function () {
 
 //商品購入画面へのルート
 Route::get('/purchase/{item_id}', [OrdersController::class, 'show'])->middleware('auth')->name('purchase.show');
-Route::post('/orders/store', [OrderController::class, 'store'])->name('orders.store');
+Route::post('/orders/store', [OrdersController::class, 'store'])->name('orders.store');
 
 //商品購入時のルート
-Route::post('/create-checkout-session', [OrdersController::class, 'createCheckoutSession'])->name('checkout.session');
-Route::get('/success', function () {
-    return view('success');
+Route::post('/create-checkout-session', [OrdersController::class, 'createCheckoutSession'])->name('create.checkout.session');
+Route::get('/success', function () {return view('success');
 })->name('success.page');
 
 Route::get('/cancel', function () {
@@ -78,14 +78,17 @@ Route::get('/purchase/address/{item_id}', [RegisterController::class, 'edit'])->
 Route::put('/purchase/address/update/{item_id}', [RegisterController::class, 'update'])->name('address.update')->middleware('auth');
 
 // トップページルート
-Route::middleware('auth')->group(function () {
+Route::get('/', [ItemController::class, 'index'])->name('home');
+//Route::middleware('auth')->group(function () {
     Route::get('/', [ItemController::class, 'index'])->name('home');
-});
+//});
 
 // マイページへのルート
 Route::middleware('auth')->group(function () {
     Route::get('/mypage', [UserController::class, 'show'])->name('mypage');
     Route::post('/mypage/profile', [UserController::class, 'update'])->name('profile.update');
+    Route::get('/mypage/profile/edit', [UserController::class, 'edit'])->name('address.edit'); // プロフィール編集
+    Route::post('/mypage/profile/update', [UserController::class, 'update'])->name('address.update'); // プロフィール更新
     Route::get('/profile', [UserController::class, 'profile'])->name('user.profile'); // プロフィールページ
 });
 

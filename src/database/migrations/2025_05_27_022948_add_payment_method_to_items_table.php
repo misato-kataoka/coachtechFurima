@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class DropForeignKeysFromItemsTable extends Migration
+class AddPaymentMethodToItemsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +14,7 @@ class DropForeignKeysFromItemsTable extends Migration
     public function up()
     {
         Schema::table('items', function (Blueprint $table) {
-            $table->dropForeign(['buyer_id']);
-            $table->dropForeign(['user_id']);
+            $table->string('payment_method')->nullable;
         });
     }
 
@@ -27,8 +26,7 @@ class DropForeignKeysFromItemsTable extends Migration
     public function down()
     {
         Schema::table('items', function (Blueprint $table) {
-            $table->foreign('buyer_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->dropColumn('payment_method');
         });
     }
 }

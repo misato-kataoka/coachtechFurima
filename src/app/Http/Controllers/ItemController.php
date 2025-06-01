@@ -13,6 +13,7 @@ use App\Models\Category;
 use App\Models\ItemCategoryCondition;
 use App\Models\Like;
 use App\Models\UserItemList;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -21,15 +22,22 @@ class ItemController extends Controller
     public function index(Request $request)
     {
         $query = $request->input('query');
+        $userId = auth()->id();
 
         // 商品を検索する
-        if ($query) {
-            // 商品名に部分一致するものを検索し、ページネートする
-            $items = Item::where('item_name', 'LIKE', '%' . $query . '%')->paginate(8); // 1ページあたり8件
-        } else {
-            // クエリがない場合はすべての商品を取得し、ページネートする
-            $items = Item::paginate(8); // 1ページあたり8件
-        }
+        $items = Item::where(function($q) use ($query) {
+            if ($query) {
+            // 商品名に部分一致する場合
+            $q->where('item_name', 'LIKE', '%' . $query . '%');
+            }
+        })
+        ->where(function($q) use ($userId) {
+            if ($userId) {
+                // 自分の商品は表示しない
+                $q->where('user_id', '<>', $userId);
+            }
+        })
+            ->paginate(8); // 1ページあたり8件
 
         return view('item_list', compact('items', 'query'));
     }
@@ -59,12 +67,30 @@ class ItemController extends Controller
 
     public function show($id)
     {
-    $item = Item::with('comments.user', 'categoryConditions.category', 'categoryConditions.condition')->findOrFail($id); 
-    $likesCount = Like::where('item_id', $id)->count();
+    // 商品を取得
+        $item = Item::with([
+            'comments.user',
+            'categoryConditions.category',
+            'categoryConditions.condition'
+        ])->findOrFail($id);
 
-    // ユーザーが既にいいねしているかを確認  
-        $userLiked = Like::where('item_id', $id)->where('user_id', auth()->id())->exists();
-    return view('item_detail', compact('item', 'likesCount', 'userLiked')); // item_detail ビューに渡す
+    // 現在のユーザーIDを取得
+        $userId = auth()->id(); // ユーザーがログインしていない場合に備えてnullになることを考慮する
+
+    // いいねのカウントとユーザーのいいね状況を同時に取得
+        $likesData = Like::select([
+            DB::raw('COUNT(id) as count'),
+            DB::raw('MAX(CASE WHEN user_id = ? THEN 1 ELSE 0 END) as userLiked')
+        ])
+        ->setBindings([$userId]) // バインディングを使用してuser_idを伝達
+        ->where('item_id', $id)
+        ->first();
+
+        return view('item_detail', [
+            'item' => $item,
+            'likesCount' => $likesData->count,
+            'userLiked' => $likesData->userLiked
+        ]);
     }
 
     public function addToMyList(Request $request, $itemId)  
@@ -83,17 +109,14 @@ class ItemController extends Controller
 
     public function myList()  
 {  
-    // ログイン中のユーザーに対してマイリストを取得  
-    $items = UserItemList::where('user_id', auth()->id())  
-                ->with('item') // 商品情報も同時に取得  
-                ->paginate(8); // 1ページあたり10アイテム表示  
+    // ログイン中のユーザーに対してマイリストを取得
+    $items = auth()->user()->likes()->paginate(8); // 1ページあたり8アイテム
 
-    return view('mylist', compact('items'));  
-}  
+    return view('mylist', compact('items'));
+}
 
     public function store(ExhibitionRequest $request)
     {
-        dd($request->all());
         if (!auth()->check()) {
             return redirect()->route('login')->with('error', 'ログインが必要です。');
         }
@@ -142,7 +165,7 @@ class ItemController extends Controller
     public function like(Request $request, $id)
     {
         if (!Auth::check()) {
-            return redirect()->route('item.show', $id)->with('error', 'ログインが必要です。');
+            return redirect()->route('item.detail', $id)->with('error', 'ログインが必要です。');
         }
 
         $like = Like::where('user_id', Auth::id())->where('item_id', $id)->first();
@@ -150,14 +173,14 @@ class ItemController extends Controller
         if ($like) {
             // すでにいいねがある場合は削除
             $like->delete();
-            return redirect()->route('item.show', $id)->with('status', 'いいねを解除しました。');
+            return redirect()->route('item.detail', $id)->with('status', 'いいねを解除しました。');
         } else {
             // いいねを新規追加
             Like::create([
                 'user_id' => Auth::id(),
                 'item_id' => $id,
             ]);
-            return redirect()->route('item.show', $id)->with('status', 'いいねしました。');
+            return redirect()->route('item.detail', $id)->with('status', 'いいねしました。');
         }
     }
 

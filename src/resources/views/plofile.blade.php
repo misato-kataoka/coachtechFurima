@@ -21,18 +21,25 @@
         @foreach($listedItems as $item)  
             <div class="product-card">  
                 <img src="{{ $item->image }}" alt="商品画像" class="product-image"/>  
-                <h2 class="product-name">{{ $item->name }}</h2>  
+                <h2 class="product-name">{{ $item->item_name }}</h2>  
+                <p class="product-price">{{ number_format($item->price) }}円</p> <!-- 価格 -->  
             </div>  
         @endforeach  
     </div>  
 
     <div class="product-list" id="purchased" style="display: none;">  
-        @foreach($purchasedItems as $item)  
-            <div class="product-card">  
-                <img src="{{ $item->image }}" alt="商品画像" class="product-image"/>  
-                <h2 class="product-name">{{ $item->name }}</h2>  
-            </div>  
-        @endforeach  
+        @if($purchasedItems->count() > 0)  
+            @foreach($purchasedItems as $item)  
+                <div class="product-card">  
+                    <img src="{{ $item->image }}" alt="商品画像" class="product-image"/>  
+                    <h2 class="product-name">{{ $item->item_name }}</h2>  
+                    <p class="product-price">{{ number_format($item->price) }}円</p> <!-- 価格 -->  
+                    <p class="purchase-date">{{ $item->created_at->format('Y年m月d日') }}</p> <!-- 購入日 -->  
+                </div>  
+            @endforeach  
+        @else  
+            <p>購入した商品はありません。</p>  
+        @endif  
     </div>  
 
     <!-- ページネーション -->  
@@ -49,6 +56,13 @@ function showTab(tabName) {
         tab.style.display = 'none'; // すべてのタブを非表示に  
     });  
     document.getElementById(tabName).style.display = 'block'; // 選択されたタブのみ表示  
+    
+    // タブのアクティブ状態を管理  
+    const tabButtons = document.querySelectorAll('.tab-button');  
+    tabButtons.forEach(button => {  
+        button.classList.remove('active'); // すべてのタブボタンからアクティブを削除  
+    });  
+    document.querySelector(`button[onclick="showTab('${tabName}')"]`).classList.add('active'); // アクティブを追加  
 }  
 </script>  
 @endsection  

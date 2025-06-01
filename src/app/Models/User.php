@@ -54,7 +54,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
     //リレーション: あるユーザーはいくつものLike情報を持つ (1対多)
     public function likes()
     {
-        return $this->hasMany(Like::class, 'user_id');
+        return $this->belongsToMany(Item::class, 'likes', 'user_id', 'item_id')->withPivot('id');
     }
 
     //リレーション: 購入者としての注文 (1対多)

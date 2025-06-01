@@ -6,9 +6,11 @@
 
 @section('content')
     <div class="header-container">
-        <span class="caption">おすすめ</span>
         <span class="caption">
-            <a href="{{ route('item.mylist') }}" class="tab-link">マイリスト</a>
+            <a href="{{ route('items.index') }}" class="{{ request()->routeIs('items.index') ? 'active' : 'inactive' }} tab-link">おすすめ</a>
+        </span>
+        <span class="caption">
+            <a href="{{ route('item.mylist') }}" class="{{ request()->routeIs('item.mylist') ? 'active' : 'inactive' }} tab-link">マイリスト</a>
         </span>
     </div>
     <div class="border-line"></div>
@@ -20,9 +22,14 @@
             <div class="item-grid">
                 @foreach ($items as $item)
                     <div class="item-card">
-                    <a href="{{ route('item.show', ['id' => $item->id]) }}">
+                        <a href="{{ route('item.detail', ['id' => $item->id]) }}">
                         <img src="{{ $item->image }}" alt="商品画像" class="item-image"/>
                         <div class="item-title">{{ $item->item_name }}</div>
+
+                        <!-- 購入済み商品は "Sold" と表示 -->
+                        @if ($item->is_sold)
+                            <div class="sold-label">Sold</div>
+                        @endif
                     </a>
                 </div>
                 @endforeach

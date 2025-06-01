@@ -1,55 +1,64 @@
-@extends('layouts.app')  
+@extends('layouts.app')
 
-@section('css')  
+@section('css')
 <link rel="stylesheet" href="{{ asset('css/mypage.css') }}">  
 @endsection  
 
 @section('content')  
-<div class="header-container">  
-    <span class="caption">出品した商品</span>  
-    <span class="caption">  
-        <a href="{{ route('item.mylist') }}" class="tab-link">購入した商品</a>  
-    </span>  
-</div>  
-<div class="border-line"></div>  
-
-<div class="container">  
-    @if ($purchasedItems->isEmpty()) <!-- ここを修正 -->  
-        <div class="no-items-message">商品がありません。</div>  
-    @else  
-        <div class="item-grid">  
-            @foreach ($purchasedItems as $item) <!-- ここを修正 -->  
-                <div class="item-card">  
-                    <a href="{{ route('item.show', ['id' => $item->id]) }}">  
-                        <img src="{{ $item->image }}" alt="商品画像" class="item-image"/>  
-                        <div class="item-title">{{ $item->item_name }}</div>  
-                    </a>  
-                </div>  
-            @endforeach  
-        </div>  
-    @endif  
+<div class="user-info">
+    @if(Auth::user()->profile_picture) <!-- 画像が設定されているか確認 -->
+        <img src="{{ Auth::user()->profile_picture }}" alt="ユーザー画像" class="user-image"/>
+    @else
+        <div class="user-image-placeholder"></div> <!-- プレースホルダーを表示 -->
+    @endif
+    <div class="user-details">
+        <h1 class="text-xl font-semibold">{{ Auth::user()->username }}</h1>
+        <a href="{{ route('address.edit')}}" class="edit-profile-button">プロフィールを編集</a>
+    </div>
 </div>
 
-    <div class="pagination">  
-        @if ($purchasedItems->onFirstPage())  
-            <span class="disabled">前へ</span>  
-        @else  
-            <a href="{{ $items->previousPageUrl() }}" class="previous">前へ</a>  
-        @endif  
+<div class="tab-container">
+    <a href="{{ url('/mypage?tab=sell') }}" class="tab-link {{ $activeTab === 'sell' ? 'active' : '' }}">出品した商品</a>
+    <a href="{{ url('/mypage?tab=buy') }}" class="tab-link {{ $activeTab === 'buy' ? 'active' : '' }}">購入した商品</a>
+</div>
+<div class="border-line"></div>
 
-        @for ($i = 1; $i <= $purchasedItems->lastPage(); $i++)  
-            @if ($i === $purchasedItems->currentPage())  
-                <span class="active">{{ $i }}</span>  
-            @else  
-                <a href="{{ $items->url($i) }}" class="other">{{ $i }}</a>  
-            @endif  
-        @endfor  
+<div class="container">
+    @if ($itemsToShow->isEmpty())
+        <div class="no-items-message">商品がありません。</div>
+    @else
+        <div class="item-grid">
+            @foreach ($itemsToShow as $item)
+                <div class="item-card">
+                    <a href="{{ route('item.detail', ['id' => $item->id]) }}">
+                        <img src="{{ $item->image }}" alt="商品画像" class="item-image"/>
+                        <div class="item-title">{{ $item->item_name }}</div>
+                    </a>
+                </div>
+            @endforeach
+        </div>
+    @endif
+</div>
 
-        @if ($purchasedItems->hasMorePages())  
-            <a href="{{ $items->nextPageUrl() }}" class="next">次へ</a>  
+<div class="pagination">  
+    @if ($itemsToShow->onFirstPage())  
+        <span class="disabled">前へ</span>  
+    @else  
+        <a href="{{ $itemsToShow->previousPageUrl() }}" class="previous">前へ</a>  
+    @endif  
+
+    @for ($i = 1; $i <= $itemsToShow->lastPage(); $i++)  
+        @if ($i === $itemsToShow->currentPage())  
+            <span class="active">{{ $i }}</span>  
         @else  
-            <span class="disabled">次へ</span>  
+            <a href="{{ $itemsToShow->url($i) }}" class="other">{{ $i }}</a>  
         @endif  
-    </div>  
+    @endfor  
+
+    @if ($itemsToShow->hasMorePages())  
+        <a href="{{ $itemsToShow->nextPageUrl() }}" class="next">次へ</a>  
+    @else  
+        <span class="disabled">次へ</span>  
+    @endif  
 </div>  
-@endsection  
+@endsection

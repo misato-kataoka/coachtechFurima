@@ -20,10 +20,12 @@
 
 }
 
-.tab-link {
-    text-decoration: none;
-    color: red;
-    /* リンクの色 */
+.active {
+    color: red; /* 現在表示されているページの色 */
+}
+
+.inactive {
+    color: black;/* 表示されていないページの色 */
 }
 
 .tab-link:hover {
@@ -73,6 +75,13 @@ h3 {
     aspect-ratio: 1 / 1; /* 正方形にする */
     width: 100%;
     position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.item-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-color: rgb(247, 151, 7)
 }
 
 .item-image {
@@ -88,6 +97,7 @@ h3 {
     color: #333;
     text-align: left;
     position: relative;
+    text-decoration: none;
     z-index: 1;
 }
 

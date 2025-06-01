@@ -6,12 +6,11 @@
 
 @section('content')
 <h2>{{ isset($user) ? 'プロフィール修正' : 'プロフィール登録' }}</h2>
-<form action="{{ isset($user) ? route('address.update', ['item_id' => $item_id]) : route('address.store') }}" method="POST" enctype="multipart/form-data">
+<form action="{{ isset($user) ? route('address.update') : route('address.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
 <div class="profile-pic">
     <label for="imageUpload" class="image-placeholder">
-        <img id="imagePreview" src="" alt="選択した画像のプレビュー" style="display: none;" />
-        
+        <img id="imagePreview" src="{{ old('image', $user->profile_picture) }}" alt="選択した画像のプレビュー" style="display: {{ $user->profile_picture ? 'block' : 'none' }};" />
     </label>
     <input type="file" id="imageUpload" accept="image/*" style="display: none;" onchange="previewImage(event)" />
     <span class="image-label" onclick="document.getElementById('imageUpload').click();">画像を選択する</span>

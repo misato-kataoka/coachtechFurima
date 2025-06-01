@@ -16,13 +16,13 @@ class CreateItemsTable extends Migration
         Schema::create('items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('buyer_id')->nullable()->constrained('users')->after('user_id');
-            $table->foreignId('seller_id')->nullable()->constrained('users')->after('buyer_id');
+            $table->foreignId('buyer_id')->nullable()->constrained('users')->after('user_id')->onDelete('set null');
             $table->string('image');
             $table->string('item_name');
             $table->string('brand')->nullable();
-            $table->integer('price');
+            $table->decimal('price', 10, 2);
             $table->text('description');
+            $table->boolean('is_sold')->default(false);
             $table->timestamps();
 
         });
@@ -35,6 +35,10 @@ class CreateItemsTable extends Migration
      */
     public function down()
     {
+        Schema::table('items', function (Blueprint $table) {
+            $table->dropColumn('is_sold'); // is_soldカラムを削除
+        });
+
         Schema::dropIfExists('items');
     }
 }

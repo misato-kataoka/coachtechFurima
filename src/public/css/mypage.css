@@ -1,7 +1,61 @@
-/* mypage.css */
+.user-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 30px 0;
+    text-align: center;
+}
+
+.user-image {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin-right: 50px;
+}
+
+.user-image-placeholder {
+    width: 100px;
+    /* プレースホルダーの幅 */
+    height: 100px;
+    /* プレースホルダーの高さ */
+    background-color: #d3d3d3;
+    /* グレーの背景色 */
+    border-radius: 50%;
+    /* 円形にする */
+    margin-right: 50px;
+    /* 右側のマージン */
+    display: flex;
+    /* フレックスボックスで中央揃え */
+    align-items: center;
+    /* 中央揃え */
+    justify-content: center;
+    /* 中央揃え */
+}
+
+.user-details {
+    display: flex;
+    align-items: center;
+}
+
+.edit-profile-button {
+    margin-left: 200px;
+    border: 2px solid #f00;
+    color: #f00;
+    background-color: #fff;
+    padding: 5px 15;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.edit-profile-button:hover {
+    background-color: #eedada;
+}
+
 .header-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: left;
     align-items: center;
     padding: 10px 20px;
 }
@@ -9,6 +63,35 @@
 .border-line {
     border-bottom: 1px solid #ccc;
     margin-bottom: 20px;
+}
+
+.tab-container {
+    display: flex;
+    /* 横並び */
+    justify-content: flex-start;
+    /* 左寄せ */
+    margin-bottom: 20px;
+    /* タブ下部のマージン */
+}
+
+.tab-link {
+    padding: 10px 20px;
+    text-decoration: none;
+    color: black;
+    border: 1px solid transparent;
+    margin-right: 10px;
+    transition: color 0.3s;
+}
+
+.tab-link.active {
+    color: red;
+    font-weight: bold;
+    border-color: red;
+}
+
+.tab-link:hover {
+    border-color: #007bff;
+    /* ホバー時のボーダー色 */
 }
 
 .container {
@@ -27,15 +110,24 @@
     border-radius: 8px;
     overflow: hidden;
     text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.item-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-color: rgb(247, 151, 7)
 }
 
 .item-image {
     width: 100%;
     height: auto;
+    object-fit: cover;
 }
 
 .item-title {
     margin: 10px 0;
+    text-align: center;
 }
 
 .pagination {
@@ -67,4 +159,55 @@
 .pagination a:hover {
     text-decoration: underline;
     /* ホバー時の効果 */
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 1540px) {
+    .user-info {
+        gap: 12px;
+    }
+
+    .user-image {
+        width: 56px;
+        height: 56px;
+    }
+
+    .edit-profile-button {
+        padding: 6px 12px;
+    }
+
+    .item-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .item-title {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 850px) {
+    .user-info {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .header-container {
+        flex-direction: column;
+    }
+
+    .item-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .user-image {
+        width: 50px;
+        height: 50px;
+    }
+
+    .edit-profile-button {
+        padding: 4px 8px;
+    }
+    .item-title {
+        font-size: 12px;
+    }
 }
