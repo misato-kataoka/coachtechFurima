@@ -8,11 +8,15 @@
 <h2>{{ isset($user) ? 'プロフィール修正' : 'プロフィール登録' }}</h2>
 <form action="{{ isset($user) ? route('address.update') : route('address.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
-<div class="profile-pic">
+    <div class="profile-pic">
     <label for="imageUpload" class="image-placeholder">
-        <img id="imagePreview" src="{{ old('image', $user->profile_picture) }}" alt="選択した画像のプレビュー" style="display: {{ $user->profile_picture ? 'block' : 'none' }};" />
+        @if($user->profile_pic) <!-- 画像が存在する場合 -->
+            <img id="imagePreview" src="{{ asset('storage/' . $user->profile_pic) }}" alt="選択した画像のプレビュー" style="display: block;" />
+        @else
+            <img id="imagePreview" src="" alt="選択した画像のプレビュー" style="display: none;" />
+        @endif
     </label>
-    <input type="file" id="imageUpload" accept="image/*" style="display: none;" onchange="previewImage(event)" />
+    <input type="file" id="imageUpload" name="imageUpload" accept="image/*" style="display: none;" onchange="previewImage(event)" />
     <span class="image-label" onclick="document.getElementById('imageUpload').click();">画像を選択する</span>
 </div>
 
@@ -40,8 +44,8 @@
                 @enderror
             </div>
 
-    <label for="building_name">建物名</label>
-        <input type="text" id="building_name" name="building_name" value="{{ old('building',$user->building) }}" />
+    <label for="building">建物名</label>
+        <input type="text" id="building" name="building" value="{{ old('building',$user->building) }}" />
             <div class="form__error">
                 @error('building')
                 {{ $message }}
@@ -55,7 +59,6 @@
 @section('javascript')
 <script>
     function previewImage(event) {
-        // 画像ファイルが選択された場合
         const input = event.target;
         if (input.files && input.files[0]) {
             const reader = new FileReader();

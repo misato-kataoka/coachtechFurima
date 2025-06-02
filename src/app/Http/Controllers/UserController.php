@@ -20,14 +20,14 @@ class UserController extends Controller
 
         // ユーザー情報を更新
         $user->username = $request->username;
-        $user->postal_code = $request->postal_code;
+        $user->post_code = $request->post_code;
         $user->address = $request->address;
-        $user->building_name = $request->building_name;
+        $user->building = $request->building;
 
         // プロフィール画像がアップロードされた場合
         if ($request->hasFile('imageUpload')) {
             $imagePath = $request->file('imageUpload')->store('profiles', 'public');
-            $user->profile_picture = $imagePath;
+            $user->profile_pic = $imagePath;
         }
 
         // データベースに保存
@@ -67,9 +67,9 @@ class UserController extends Controller
     public function profile()  
     {  
     $purchasedItems = Item::where('buyer_id', Auth::id())->paginate(8); // 購入商品  
-    $listedItems = Item::where('seller_id', Auth::id())->paginate(8); // 出品商品  
+    $soldItems = Item::where('user_id', $user->id)->paginate(8); // 出品商品  
 
-    return view('profile', compact('listedItems', 'purchasedItems'));  
+    return view('profile', compact('soldItems', 'purchasedItems'));  
     }  
 
 }

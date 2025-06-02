@@ -34,7 +34,11 @@
         </div>
 
         <form action="{{ url('/purchase/' . $item->id) }}" method="GET">
-            <button type="submit" class="buy-button">購入手続きへ</button>
+            @if ($item->is_sold)  <!-- 商品が売り切れの場合 -->
+                <button type="button" class="sold-out-button">売り切れ</button> <!-- 売り切れボタン -->
+            @else
+                <button type="submit" class="buy-button">購入手続きへ</button>
+            @endif
         </form>
         <a href="{{ url('/') }}" class="back-button">戻る</a> <!-- 戻るボタン -->
 

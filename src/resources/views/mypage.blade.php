@@ -6,10 +6,10 @@
 
 @section('content')  
 <div class="user-info">
-    @if(Auth::user()->profile_picture) <!-- 画像が設定されているか確認 -->
-        <img src="{{ Auth::user()->profile_picture }}" alt="ユーザー画像" class="user-image"/>
+    @if(Auth::user()->profile_pic)
+        <img src="{{ asset('storage/' . Auth::user()->profile_pic) }}" alt="ユーザー画像" class="user-image"/>
     @else
-        <div class="user-image-placeholder"></div> <!-- プレースホルダーを表示 -->
+        <div class="user-image-placeholder"></div>
     @endif
     <div class="user-details">
         <h1 class="text-xl font-semibold">{{ Auth::user()->username }}</h1>
@@ -34,6 +34,8 @@
                         <img src="{{ $item->image }}" alt="商品画像" class="item-image"/>
                         <div class="item-title">{{ $item->item_name }}</div>
                     </a>
+
+                    <div class="sold-overlay">SOLD</div>
                 </div>
             @endforeach
         </div>

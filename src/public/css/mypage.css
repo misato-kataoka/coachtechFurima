@@ -110,6 +110,7 @@
     border-radius: 8px;
     overflow: hidden;
     text-align: center;
+    position: relative;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -128,6 +129,56 @@
 .item-title {
     margin: 10px 0;
     text-align: center;
+}
+
+.sold-overlay {
+    position: absolute;
+    /* 親要素に対して絶対位置 */
+    top: 0;
+    left: 0;
+    width: 100%;
+    /* 幅を100%に設定 */
+    height: 100%;
+    /* 高さを100%に設定 */
+    background-color: rgba(0, 0, 0, 0.5);
+    /* 半透明の背景 */
+    display: flex;
+    /* 中央揃えにするためにFlexboxを使用 */
+    justify-content: center;
+    /* 水平方向の中央揃え */
+    align-items: center;
+    /* 垂直方向の中央揃え */
+    color: white;
+    /* テキストの色を白に */
+    font-size: 24px;
+    /* フォントサイズを設定 */
+    font-weight: bold;
+    /* フォントを太字に */
+    text-transform: uppercase;
+    /* テキストを大文字に */
+    pointer-events: none;
+    /* 他の要素へのイベントを無効にする */
+    z-index: 10;
+}
+
+.product-image {
+    width: 100%;
+    height: auto;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.product-name {
+    font-size: 1.2rem;
+    margin-top: 10px;
+}
+
+/* ページネーションのスタイル */
+.pagination {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    /* 中央に配置 */
 }
 
 .pagination {

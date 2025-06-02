@@ -62,12 +62,20 @@ class RegisterController extends Controller
         // 画像のアップロード処理  
     $profilePicPath = null;
 
-    $image = $request->file('image');  
-    $path = $image->store('images', 'public');
-
-    if ($request->hasFile('profile_pic')) {  
-        $profilePicPath = $request->file('profile_pic')->store('profile_pics', 'public'); // 'profile_pics' ディレクトリに保存  
+    if ($request->hasFile('image')) {
+        $filePath = $request->file('image')->store('images', 'public');
+        $user->profile_pic = $filePath; // ユーザーのプロフィール画像のパスを更新
+        $user->save();
     }
+
+    return redirect()->back()->with('success', '画像がアップロードされました。');
+
+    //$image = $request->file('image');  
+    //$path = $image->store('images', 'public');
+
+    //if ($request->hasFile('profile_pic')) {  
+        //$profilePicPath = $request->file('profile_pic')->store('profile_pics', 'public'); // 'profile_pics' ディレクトリに保存  
+    
 
         // 新しいユーザーを作成  
         $user = User::create([  

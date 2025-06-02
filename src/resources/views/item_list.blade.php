@@ -26,9 +26,8 @@
                         <img src="{{ $item->image }}" alt="商品画像" class="item-image"/>
                         <div class="item-title">{{ $item->item_name }}</div>
 
-                        <!-- 購入済み商品は "Sold" と表示 -->
                         @if ($item->is_sold)
-                            <div class="sold-label">Sold</div>
+                            <div class="sold-overlay">SOLD</div>
                         @endif
                     </a>
                 </div>

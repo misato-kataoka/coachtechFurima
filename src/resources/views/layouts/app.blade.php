@@ -49,6 +49,8 @@
     <main>
     @yield('content')
     </main>
+
+    @yield('javascript')
 </body>
 
 </html>

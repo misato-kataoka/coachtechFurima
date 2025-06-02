@@ -39,6 +39,15 @@ main {
     margin: 20px 0;
 }
 
+.profile-pic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* 画像を適切に収める */
+    border-radius: 50%;
+    /* 画像も円形に */
+}
+
 .image-placeholder {
     display: inline-block;
     background-color: #ccc;
@@ -63,7 +72,7 @@ main {
 }
 
 .image-label {
-    margin-left: 20px;/* 円との間隔 */
+    margin-top: 20px;/* 円との間隔 */
     font-size: 14px;
     border: red solid 1px;
     color: red;

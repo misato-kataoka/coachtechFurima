@@ -7,7 +7,7 @@
 @section('content')  
 <div class="profile-container">  
     <div class="user-info">  
-        <img src="{{ Auth::user()->profile_image }}" alt="ユーザー画像" class="user-image"/>  
+        <img src="{{ Auth::user()->profile_pic }}" alt="ユーザー画像" class="user-image"/>  
         <h1>{{ Auth::user()->username }}</h1>  
         <a href="{{ route('address.edit') }}" class="edit-profile-button">プロフィールを編集</a>  
     </div>  
@@ -23,6 +23,7 @@
                 <img src="{{ $item->image }}" alt="商品画像" class="product-image"/>  
                 <h2 class="product-name">{{ $item->item_name }}</h2>  
                 <p class="product-price">{{ number_format($item->price) }}円</p> <!-- 価格 -->  
+
             </div>  
         @endforeach  
     </div>  
@@ -34,11 +35,13 @@
                     <img src="{{ $item->image }}" alt="商品画像" class="product-image"/>  
                     <h2 class="product-name">{{ $item->item_name }}</h2>  
                     <p class="product-price">{{ number_format($item->price) }}円</p> <!-- 価格 -->  
-                    <p class="purchase-date">{{ $item->created_at->format('Y年m月d日') }}</p> <!-- 購入日 -->  
-                </div>  
-            @endforeach  
-        @else  
-            <p>購入した商品はありません。</p>  
+                    <p class="purchase-date">{{ $item->created_at->format('Y年m月d日') }}</p>
+
+                    <div class="sold-overlay">SOLD</div>
+                </div>
+            @endforeach
+        @else
+            <p>購入した商品はありません。</p>
         @endif  
     </div>  
 
