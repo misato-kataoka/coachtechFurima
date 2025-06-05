@@ -10,18 +10,18 @@
     @csrf
     <div class="profile-pic">
     <label for="imageUpload" class="image-placeholder">
-        @if($user->profile_pic) <!-- 画像が存在する場合 -->
+        @if(isset($user) && $user->profile_pic) <!-- 画像が存在する場合 -->
             <img id="imagePreview" src="{{ asset('storage/' . $user->profile_pic) }}" alt="選択した画像のプレビュー" style="display: block;" />
         @else
             <img id="imagePreview" src="" alt="選択した画像のプレビュー" style="display: none;" />
         @endif
     </label>
-    <input type="file" id="imageUpload" name="imageUpload" accept="image/*" style="display: none;" onchange="previewImage(event)" />
+    <input type="file" id="imageUpload" name="image" accept="image/*" style="display: none;" onchange="previewImage(event)" />
     <span class="image-label" onclick="document.getElementById('imageUpload').click();">画像を選択する</span>
 </div>
 
     <label for="username">ユーザー名</label>
-        <input type="text" id="username" name="username" value="{{ old('username', $user->username) }}" />
+        <input type="text" id="username" name="username" value="{{ old('username', $user->username ?? $username_from_session ??'') }}" />
             <div class="form__error">
                 @error('username')
                 {{ $message }}
@@ -29,7 +29,7 @@
             </div>
 
     <label for="post_code">郵便番号</label>
-        <input type="text" id="post_code" name="post_code" value="{{ old('post_code', $user->post_code) }}" />
+        <input type="text" id="post_code" name="post_code" value="{{ old('post_code', $user->post_code ?? '') }}" />
             <div class="form__error">
                 @error('post_code')
                 {{ $message }}
@@ -37,7 +37,7 @@
             </div>
 
     <label for="address">住所</label>
-        <input type="text" id="address" name="address" value="{{ old('address',$user->address) }}" />
+        <input type="text" id="address" name="address" value="{{ old('address',$user->address ?? '') }}" />
             <div class="form__error">
                 @error('address')
                 {{ $message }}
@@ -45,7 +45,7 @@
             </div>
 
     <label for="building">建物名</label>
-        <input type="text" id="building" name="building" value="{{ old('building',$user->building) }}" />
+        <input type="text" id="building" name="building" value="{{ old('building',$user->building ?? '') }}" />
             <div class="form__error">
                 @error('building')
                 {{ $message }}

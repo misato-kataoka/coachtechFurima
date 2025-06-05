@@ -24,6 +24,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
         'post_code',
         'address',
         'building',
+        'profile_pic'
     ];
 
     /**

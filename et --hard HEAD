@@ -1,0 +1,187 @@
+[33mcommit 2e3dff6df1fcfaaa49018ec864521bf560d3af68[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: misato kataoka <sakisachi.14@gmail.com>
+Date:   Mon Jun 2 23:35:38 2025 +0900
+
+    売り切れ時の表示更新
+
+[33mcommit 283c3f7c8d4ba117bcf821315e27b11a415bc5d0[m
+Author: misato kataoka <sakisachi.14@gmail.com>
+Date:   Sun Jun 1 23:29:33 2025 +0900
+
+    プロフィール画面実装
+
+[33mcommit 78e5b9dfcccd102421b30864339172b0cded18ee[m
+Author: misato kataoka <sakisachi.14@gmail.com>
+Date:   Sun May 25 22:14:35 2025 +0900
+
+    商品登録機能実装
+
+[33mcommit 80b6ab44dd840bd9f29b6e4995ccaf717b449caf[m
+Author: misato kataoka <sakisachi.14@gmail.com>
+Date:   Thu May 22 22:57:37 2025 +0900
+
+    決済機能実装
+
+[33mcommit d6da9cf4264eb612f0daffb6591602504faf1d7f[m
+Author: misato kataoka <sakisachi.14@gmail.com>
+Date:   Sat May 17 04:05:25 2025 +0900
+
+    商品出品画面作成
+
+[33mcommit 08f600d3384111d1dde16db8b02b86a669f2dc24[m
+Author: misato kataoka <sakisachi.14@gmail.com>
+Date:   Fri May 16 23:07:23 2025 +0900
+
+    商品購入画面一時保存
+
+[33mcommit 4dedbed44c4f69cc989e14afd4e5f1b933ae430b[m
+Author: misato kataoka <sakisachi.14@gmail.com>
+Date:   Thu May 1 02:33:32 2025 +0900
+
+    詳細画面上書き保存
+
+[33mcommit 823b8638cbc9878e0e265bbbaad46fa675b25d4e[m
+Author: misato kataoka <sakisachi.14@gmail.com>
+Date:   Fri Apr 25 00:35:47 2025 +0900
+
+    商品詳細ページ作成
+
+[33mcommit f54bb3669a851284b0ba4dec12adc7fd2cd9308f[m
+Author: misato kataoka <sakisachi.14@gmail.com>
+Date:   Tue Apr 15 03:25:32 2025 +0900
+
+    商品検索機能実装
+
+[33mcommit baaa5596ea5242a31c5ace65ba409f9a8881eb24[m
+Author: misato kataoka <sakisachi.14@gmail.com>
+Date:   Sat Apr 12 23:27:14 2025 +0900
+
+    ログアウト機能修正
+
+[33mcommit eb1926b87cb0aaf361009a46723deaf70e9c3487[m
+Author: misato kataoka <sakisachi.14@gmail.com>
+Date:   Thu Apr 10 23:32:26 2025 +0900
+
+    商品一覧画面仮作成
+
+[33mcommit 745e43f9c09cb9dd40c7f3d1c599fcf1b8c57329[m
+Author: misato kataoka <sakisachi.14@gmail.com>
+Date:   Thu Apr 10 03:54:46 2025 +0900
+
+    ログイン機能実装
+
+[33mcommit 69d3c80157d5b1cbd512d59e8940dda4dd419583[m
+Author: misato kataoka <sakisachi.14@gmail.com>
+Date:   Wed Apr 9 00:17:02 2025 +0900
+
+    ダミーデータ作成
+
+[33mcommit 009381b788c996ef1a7e8791868ae9a5b264f899[m
+Author: misato kataoka <sakisachi.14@gmail.com>
+Date:   Wed Apr 9 00:04:25 2025 +0900
+
+    Seederファイル作成
+
+[33mcommit 3221362d054236b19f3b4ce4646f52280aaf7f68[m
+Author: misato kataoka <sakisachi.14@gmail.com>
+Date:   Tue Apr 8 21:23:08 2025 +0900
+
+    マイグレーション訂正
+
+[33mcommit 1a2739aa555eaa518128746a2f3d4befe7aebb3b[m
+Author: misato kataoka <sakisachi.14@gmail.com>
+Date:   Sun Apr 6 19:52:58 2025 +0900
+
+    マイグレーションファイル作成
+
+[33mcommit 41f360e8b5b8460570c644563e116511f6f92820[m
+Author: misato kataoka <sakisachi.14@gmail.com>
+Date:   Sun Apr 6 00:13:39 2025 +0900
+
+    プロフィール設定画面作成とバリデーション設定
+
+[33mcommit c38635674c4cf5feb1a5c53eedb3218e0c7fefab[m
+Author: misato kataoka <sakisachi.14@gmail.com>
+Date:   Sat Apr 5 15:33:34 2025 +0900
+
+    会員登録画面バリデーション実装
+
+[33mcommit 96dc72a1dfa8441bd9037ace69875babf00b4b2d[m
+Author: misato kataoka <sakisachi.14@gmail.com>
+Date:   Sat Apr 5 10:42:25 2025 +0900
+
+    バリデーション作成
+
+[33mcommit 8ce19ce073d85315855ec06653ea0eb63e61fb82[m
+Author: misato-kataoka <sakisachi.14@gmail.com>
+Date:   Mon Mar 31 22:32:47 2025 +0900
+
+    Update README.md
+
+[33mcommit 4adfd5ef74e61988b7ffda28064ceecf52290006[m
+Author: misato-kataoka <sakisachi.14@gmail.com>
+Date:   Mon Mar 31 22:32:30 2025 +0900
+
+    Create README.md
+
+[33mcommit 8b54c6cfd313d6e3ea8ed0239b41ac5fcd4f8713[m
+Author: 岩崎敬信 <keishin0405.182@gmail.com>
+Date:   Fri Apr 15 12:12:09 2022 +0900
+
+    fix: Initialize laravel version 8.83.8
+
+[33mcommit f87057dba4d3b0899546078aeca33316242be053[m
+Merge: 34626df 61a952c
+Author: soccerin30 <footballer.rin@gmail.com>
+Date:   Sat Mar 12 17:23:36 2022 +0900
+
+    Merge branch 'master' of https://github.com/coachtech-material/laravel-docker-template
+
+[33mcommit 34626df99217b6ab4c7c5d1a12fb34664972b560[m
+Author: soccerin30 <footballer.rin@gmail.com>
+Date:   Sat Mar 12 17:21:16 2022 +0900
+
+    add: laravel-api-ec
+
+[33mcommit 61a952cd7145be511760dd29dac75e1ff6c4365c[m
+Author: soccerin30 <footballer.rin@gmail.com>
+Date:   Fri Mar 11 16:35:15 2022 +0900
+
+    fix: settings
+
+[33mcommit 1c7fac8ec9caadcf56d6b9cebf0b98069fd4fcd7[m
+Merge: e86175e fe7f3d7
+Author: soccerin30 <footballer.rin@gmail.com>
+Date:   Fri Mar 11 16:34:37 2022 +0900
+
+    merge conflict
+
+[33mcommit e86175e0eed3827ed5be219710b0d909d52ca606[m
+Author: soccerin30 <footballer.rin@gmail.com>
+Date:   Fri Mar 11 16:31:01 2022 +0900
+
+    add: laravel api reservation
+
+[33mcommit fe7f3d706bcc8ea2c91a437dcd571d401b4d1d29[m
+Author: soccerin30 <footballer.rin@gmail.com>
+Date:   Thu Mar 10 21:59:31 2022 +0900
+
+    fix: laravel api attendance
+
+[33mcommit 2068a0cbae22d4b22943062a6d12e78f3efc2e89[m
+Author: soccerin30 <footballer.rin@gmail.com>
+Date:   Sat Mar 5 14:15:31 2022 +0900
+
+    fix
+
+[33mcommit 867f56edb27130d185a03d99cb0ae29e774c4989[m
+Author: soccerin30 <footballer.rin@gmail.com>
+Date:   Sun Jan 30 14:52:07 2022 +0900
+
+    fix
+
+[33mcommit 281e0c80578425cf28310f320fc5c31312064cb6[m
+Author: soccerin30 <footballer.rin@gmail.com>
+Date:   Sun Jan 30 14:36:58 2022 +0900
+
+    first commit

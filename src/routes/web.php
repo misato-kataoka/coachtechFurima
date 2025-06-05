@@ -27,7 +27,7 @@ Route::post('/register', [RegisterController::class, /*'storeUser'*/'register'])
 
 // 住所入力ページへのルート
 Route::get('/address/form', [RegisterController::class, 'showAddressForm'])->name('address.form'); // 認証済みユーザーのみ
-Route::post('/address/form', [RegisterController::class, 'storeAddress'])->name('address.store')/*->middleware('auth')*/; // 住所情報保存のルート
+Route::post('/address', [RegisterController::class, 'storeAddress'])->name('address.store')/*->middleware('auth')*/; // 住所情報保存のルート
 
 //ログアウト機能
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

@@ -21,85 +21,88 @@ class RegisterController extends Controller
     {
         $validatedData = $request->validated();
 
-        // ユーザー登録
-        //$user = User::create([
-        // ユーザー情報をセッションに保存  
+        // ユーザー情報をセッションに保存
         session([
             'username' => $validatedData['username'],
             'email' => $validatedData['email'],
             'password' => $validatedData['password'],
         ]);
 
-        // 住所入力フォームへのリダイレクト  
-        return redirect()->route('address.form');  
+        // 住所入力フォームへのリダイレクト
+        return redirect()->route('address.form');
     }
 
-        // 登録後に住所をセッションに保存
-        //session(['address' => $validatedData['address']]);
+    public function showAddressForm()
+    {
 
-        // 登録後にaddressメソッドを呼び出してリダイレクト
-        //return $this->address();
-    //}
-
-    public function showAddressForm()  
-    {  
-        return view('auth.address'); // address.blade.phpを表示  
+    // 会員登録フローに必要な情報がセッションに存在するか確認
+        if (!session()->has('username') || !session()->has('email') || !session()->has('password')) {
+    // 必要な情報がセッションになければ、登録の初期段階（会員登録フォーム）に戻す
+        return redirect()->route('register')->with('error', '登録情報が不足しています。お手数ですが、最初からやり直してください。');
     }
+        $user = null;
+        $username_from_session = session('username'); // セッションからユーザー名を取得
 
-    //public function address() //住所登録ページへ遷移
-    //{
-        //return view('address'); // address.blade.phpを表示
-    //}
+        return view('auth.address', compact('user', 'username_from_session'));
+    }
 
     public function storeAddress(AddressRequest $request)
     {
+        \Log::info('storeAddress method called.');
+    // セッションからユーザー情報を取得
+        $username = session('username');
+        $email = session('email');
+        $password = session('password');
 
-    // セッションからユーザー情報を取得  
-        $username = session('username');  
-        $email = session('email');  
-        $password = session('password');  
+    // 画像のアップロード処理
+        $profilePicPath = null;
 
-        // 画像のアップロード処理  
-    $profilePicPath = null;
-
-    if ($request->hasFile('image')) {
-        $filePath = $request->file('image')->store('images', 'public');
-        $user->profile_pic = $filePath; // ユーザーのプロフィール画像のパスを更新
-        $user->save();
-    }
-
-    return redirect()->back()->with('success', '画像がアップロードされました。');
-
-    //$image = $request->file('image');  
-    //$path = $image->store('images', 'public');
-
-    //if ($request->hasFile('profile_pic')) {  
-        //$profilePicPath = $request->file('profile_pic')->store('profile_pics', 'public'); // 'profile_pics' ディレクトリに保存  
+        //if ($request->hasFile('image')) {
+           // $profilePicPath = $request->file('image')->store('images', 'public');
+           if ($request->hasFile('image')) {
+            \Log::info('Image file is present in the request.'); // ファイルが存在するか確認
+            try {
+                $profilePicPath = $request->file('image')->store('images', 'public');
+                \Log::info('Image stored. Path: ' . $profilePicPath); // 保存パスを確認
+                if (!$profilePicPath) {
+                    \Log::error('Failed to store image, store() returned falsy value.');
+                }
+            } catch (\Exception $e) {
+                \Log::error('Exception during image store: ' . $e->getMessage()); // 例外が発生した場合
+            }
+        } else {
+            \Log::info('No image file in the request.'); // ファイルが存在しない場合
+        }
     
 
-        // 新しいユーザーを作成  
-        $user = User::create([  
-            'username' => $username,  
-            'email' => $email,  
-            'password' => Hash::make($password),  
-            'post_code' => $request->post_code,  
-            'address' => $request->address,  
-            'building' => $request->building,  
-            'profile_pic' => $profilePicPath, // アップロードされた画像のパスを保存
-        ]);  
+    // 新しいユーザーを作成
+    try{
+    $user = User::create([
+        'username' => $username,
+        'email' => $email,
+        'password' => Hash::make($password),
+        'post_code' => $request->post_code,
+        'address' => $request->address,
+        'building' => $request->building,
+        'profile_pic' => $profilePicPath, // アップロードされた画像のパスを保存
+    ]);
+    \Log::info('User created successfully. User ID: ' . $user->id);
+    } catch (\Exception $e) {
+        \Log::error('Exception during user creation: ' . $e->getMessage());
+    }
 
-        // 完了後、ログイン  
-        Auth::login($user);  
+        // 完了後、ログイン
+        Auth::login($user);
 
-        // セッション情報をクリア  
-        session()->forget(['username', 'email', 'password']);  
+        // セッション情報をクリア
+        session()->forget(['username', 'email', 'password']);
 
-        // 完了メッセージと共にトップページにリダイレクト  
-        return redirect('/')->with('success', '登録が完了しました。');  
+        // 完了メッセージと共にトップページにリダイレクト
+        return redirect('/mypage')->with('success', '登録が完了しました。');
     }
 
     public function edit($item_id)
-    {   
+    {
         $user = Auth::user();
 
         return view('auth.address', compact('user', 'item_id'));
