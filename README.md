@@ -21,8 +21,8 @@
   DB_CONNECTION=mysql
   DB_HOST=mysql
   DB_PORT=3306
-  DB_DATABASE=larabel_db
-  DB_USERNAME=larabel_user
+  DB_DATABASE=laravel_db
+  DB_USERNAME=laravel_user
   DB_PASSWORD=laravel_pass
 
 STRIPE_KEY=pk_test_51RRVovH1ap6ABKzgQAn4S9wxQIN0slhHLU6AmiciLYL1NG0iR0vRSuk3iSDOxMJtMUYC7jzahEJXpQgCHrsGKZia00awOr9IHV
