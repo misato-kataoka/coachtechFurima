@@ -57,7 +57,9 @@ STRIPE_SECRET=sk_test_51RRVovH1ap6ABKzg5R9B8ykI65tfvTttnAGKPKddAWvG606XMgkbXmRNJ
 -Laravel (v8.6.12)
 
 -MySQL 8.0.26
+
 -Docker
+
 -Stripe API
 
 ## URL
