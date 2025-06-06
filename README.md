@@ -9,10 +9,10 @@
 
 2. cd coachtechFurima
 
-3. docker-compose up -d --build
+3. docker compose up -d --build
 
 ### Laravelの環境構築
-1. docker-compose exec php bash
+1. docker compose exec php bash
 
 2. composer install
 
@@ -28,7 +28,7 @@
 STRIPE_KEY=pk_test_51RRVovH1ap6ABKzgQAn4S9wxQIN0slhHLU6AmiciLYL1NG0iR0vRSuk3iSDOxMJtMUYC7jzahEJXpQgCHrsGKZia00awOr9IHV
 STRIPE_SECRET=sk_test_51RRVovH1ap6ABKzg5R9B8ykI65tfvTttnAGKPKddAWvG606XMgkbXmRNJOHWkOzt0zkOs5RAUIOyzPPN0Zf6c9aN00YKUK6lCC
 ```
-4. docker-compose exec php bash
+4. docker compose exec php bash
 
 5. アプリケーションキーの作成
 ```
