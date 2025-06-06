@@ -46,7 +46,7 @@ STRIPE_SECRET=sk_test_51RRVovH1ap6ABKzg5R9B8ykI65tfvTttnAGKPKddAWvG606XMgkbXmRNJ
 ## ER図
 ![Image](https://github.com/user-attachments/assets/b6f3634f-dc57-45c7-9baf-06ba36d2703f)
 
-##テストユーザー
+## テストユーザー
 * **Email:** 'testuser@example.com'
 * **password:** 'password123'
 
