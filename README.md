@@ -3,7 +3,9 @@
 
 ## 環境構築
 ### Docker ビルド
-1. git clone git@github.com:misato-kataoka/coachtechFurima.git
+1. **リポジトリをクローン**
+   ```bash
+   git clone git@github.com:misato-kataoka/coachtechFurima.git
 
 2. cd coachtechFurima
 
@@ -22,6 +24,9 @@
   DB_DATABASE=larabel_db
   DB_USERNAME=larabel_user
   DB_PASSWORD=laravel_pass
+
+STRIPE_KEY=pk_test_51RRVovH1ap6ABKzgQAn4S9wxQIN0slhHLU6AmiciLYL1NG0iR0vRSuk3iSDOxMJtMUYC7jzahEJXpQgCHrsGKZia00awOr9IHV
+STRIPE_SECRET=sk_test_51RRVovH1ap6ABKzg5R9B8ykI65tfvTttnAGKPKddAWvG606XMgkbXmRNJOHWkOzt0zkOs5RAUIOyzPPN0Zf6c9aN00YKUK6lCC
 ```
 4. docker-compose exec php bash
 
@@ -39,7 +44,11 @@
 ```
 
 ## ER図
+![Image](https://github.com/user-attachments/assets/b6f3634f-dc57-45c7-9baf-06ba36d2703f)
 
+##テストユーザー
+* **Email:** 'testuser@example.com'
+* **password:** 'password123'
 
 ## 使用技術
 
@@ -48,6 +57,8 @@
 -Laravel (v8.6.12)
 
 -MySQL 8.0.26
+-Docker
+-Stripe API
 
 ## URL
 
