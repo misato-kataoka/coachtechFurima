@@ -22,25 +22,25 @@
                     @csrf
                     <button type="submit" class="like-button">
                     <img src="{{ asset($userLiked ? 'image/star2.png' : 'image/star.png') }}" alt="いいね" class="like-icon">
-                    <span class="like-count">{{ $likesCount }}</span> <!-- いいねの数 -->
+                    <span class="like-count">{{ $likesCount }}</span>
                     </button>
                 </form>
             </div>
 
             <div class="comments-section">
                 <img src="{{ asset('image/comment.png') }}" alt="コメント" class="comment-icon">
-                <span class="comment-count">{{ $item->comments->count() }}</span> <!-- コメントの数 -->
+                <span class="comment-count">{{ $item->comments->count() }}</span>
             </div>
         </div>
 
         <form action="{{ url('/purchase/' . $item->id) }}" method="GET">
-            @if ($item->is_sold)  <!-- 商品が売り切れの場合 -->
-                <button type="button" class="sold-out-button">売り切れ</button> <!-- 売り切れボタン -->
+            @if ($item->is_sold)
+                <button type="button" class="sold-out-button">売り切れ</button>
             @else
                 <button type="submit" class="buy-button">購入手続きへ</button>
             @endif
         </form>
-        <a href="{{ url('/') }}" class="back-button">戻る</a> <!-- 戻るボタン -->
+        <a href="{{ url('/') }}" class="back-button">戻る</a>
 
         <div class="item-description">
             <h2>商品説明</h2>

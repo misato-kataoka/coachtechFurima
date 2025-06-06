@@ -11,7 +11,6 @@ body {
 
 p {
     font-size: 1.2em;
-    /* 段落のフォントサイズを設定 */
 }
 
 .bach-button {
@@ -26,5 +25,4 @@ p {
 
 .back-button:hover {
     background-color: #0056b3;
-    /* ホバー時の背景色 */
 }

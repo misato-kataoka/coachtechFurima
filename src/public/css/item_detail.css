@@ -14,14 +14,11 @@
 
 .item-image-container {
     width: 50%;
-    /* 左側の幅を50%に設定 */
 }
 
 .item-info-container {
     width: 50%;
-    /* 右側の幅を50%に設定 */
     padding: 20px;
-    /* 右側に内側のパディングを追加 */
 }
 
 .item-title {
@@ -74,7 +71,6 @@
     width: 28px;
     height: 28px;
     vertical-align: middle;
-    /* ボタンのテキストと画像を整列させる */
 }
 
 .like-count {
@@ -105,51 +101,35 @@ item-info {
 
 .comment-count {
     margin-left: 5px;
-    /* アイコンとの間に少しスペースを追加 */
     font-size: 14px;
     color: inherit;
 }
 
 .comment {
     display: flex;
-    /* 横並びにする */
     align-items: center;
-    /* 縦方向に中央揃え */
     background-color: #f9f9f9;
-    /* 背景色 */
     border: 1px solid #ccc;
-    /* グレーの枠線 */
     border-radius: 5px;
-    /* 角を丸く */
     padding: 10px;
-    /* パディング */
     margin-bottom: 10px;
-    /* 下のコメントとの間隔 */
 }
 
 .user-icon {
     width: 40px;
-    /* サイズを調整 */
     height: 40px;
-    /* サイズを調整 */
     border-radius: 50%;
-    /* 丸型にする */
     margin-right: 10px;
-    /* ユーザーネームとの間隔 */
 }
 
 .username {
     font-weight: bold;
-    /* ユーザーネームを太文字に */
     margin-right: 10px;
-    /* コメントとの間隔 */
 }
 
 .comment-content {
     margin-top: 5px;
-    /* コメントの位置調整 */
     color: #555;
-    /* コメントの色 */
 }
 
 textarea {
@@ -214,7 +194,6 @@ textarea {
 
 .comment-submit-button:disabled {
     background-color: #c0c0c0;
-    /* 無効時の明るいグレー */
     cursor: not-allowed;
     /* ポインターを禁止マークに */
 }

@@ -57,13 +57,6 @@ class ItemController extends Controller
         $categories = Category::all();
     return view('sell', compact('conditions', 'categories'));
     }
-    /*public function myList()  
-    {  
-        // セッションやデータベースから商品を取得する  
-        $items = Item::where('user_id', auth()->id())->paginate(8);
-
-        return view('mylist', compact('items'));  
-    } */
 
     public function show($id)
     {
@@ -93,22 +86,22 @@ class ItemController extends Controller
         ]);
     }
 
-    public function addToMyList(Request $request, $itemId)  
-{  
-    $this->validate($request, [  
-        'item_id' => 'required|exists:items,id',  
-    ]);  
+    public function addToMyList(Request $request, $itemId)
+{
+    $this->validate($request, [
+        'item_id' => 'required|exists:items,id',
+    ]);
 
-    UserItemList::create([  
-        'user_id' => auth()->id(), // 現在ログイン中のユーザーID  
-        'item_id' => $itemId,  
-    ]);  
+    UserItemList::create([
+        'user_id' => auth()->id(), // 現在ログイン中のユーザーID
+        'item_id' => $itemId,
+    ]);
 
-    return redirect()->back()->with('success', '商品をマイリストに追加しました。');  
-}  
+    return redirect()->back()->with('success', '商品をマイリストに追加しました。');
+}
 
-    public function myList()  
-{  
+    public function myList()
+{
     // ログイン中のユーザーに対してマイリストを取得
     $items = auth()->user()->likes()->paginate(8); // 1ページあたり8アイテム
 

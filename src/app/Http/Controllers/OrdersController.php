@@ -94,31 +94,29 @@ class OrdersController extends Controller
         }
     }
 
-    public function success(Request $request)  
-{  
-    $sessionId = $request->query('session_id');  
+    public function success(Request $request)
+{
+    $sessionId = $request->query('session_id');
 
-    try {  
-        // セッション情報を取得  
-        $session = \Stripe\Checkout\Session::retrieve($sessionId);  
+    try {
+        // セッション情報を取得
+        $session = \Stripe\Checkout\Session::retrieve($sessionId);
 
- dd($session); 
-
-        $itemId = $session->metadata->item_id; // メタデータからitem_idを取得  
+        $itemId = $session->metadata->item_id; // メタデータからitem_idを取得
         $item = Item::findOrFail($itemId);
 
-        // 商品を更新  
-        $item->is_sold = true; // 商品を「売れた」とマーク  
-        $item->buyer_id = auth()->id(); // 購入者のIDを追加  
+        // 商品を更新
+        $item->is_sold = true;
+        $item->buyer_id = auth()->id(); // 購入者のIDを追加
         $item->payment_method = $session->payment_method_types[0];
         $item->save();
 
-        // ここに完了メッセージを返すか、ビューを表示する  
+        // ここに完了メッセージを返すか、ビューを表示する
         return view('success', ['item' =>$item]);
 
-    } catch (\Exception $e) {  
-        \Log::error('Error retrieving Stripe session: ' . $e->getMessage());  
-        return redirect()->route('error.page')->with('error', '決済処理中のエラーが発生しました。');  
-    }  
+    } catch (\Exception $e) {
+        \Log::error('Error retrieving Stripe session: ' . $e->getMessage());
+        return redirect()->route('error.page')->with('error', '決済処理中のエラーが発生しました。');
+    }
 }
 }

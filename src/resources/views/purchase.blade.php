@@ -79,14 +79,11 @@
             selectedPaymentMethod.textContent = value === 'card' ? 'クレジットカード払い' : 'コンビニ払い';
         });
 
-        // 購入ボタンのイベントリスナー
         document.getElementById('purchase-button').addEventListener('click', function (event) {
             event.preventDefault(); // デフォルトのフォーム送信を防ぐ
 
-            // Stripeを初期化
-            const stripe = Stripe('{{ env('STRIPE_KEY') }}'); // 環境変数から公開キーを取得
+            const stripe = Stripe('{{ env('STRIPE_KEY') }}');
 
-            // フォームデータを取得
             const paymentMethod = paymentMethodSelect.value;
 
             if (!paymentMethod) {
@@ -94,12 +91,11 @@
                 return;
             }
 
-            // サーバーにリクエストを送信し、セッションを作成
             fetch('/create-checkout-session', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}' // CSRFトークンを送信
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
                 body: JSON.stringify({
                     item_id: {{ $item->id }},

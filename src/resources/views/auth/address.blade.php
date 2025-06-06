@@ -10,7 +10,7 @@
     @csrf
     <div class="profile-pic">
     <label for="imageUpload" class="image-placeholder">
-        @if(isset($user) && $user->profile_pic) <!-- 画像が存在する場合 -->
+        @if(isset($user) && $user->profile_pic)
             <img id="imagePreview" src="{{ asset('storage/' . $user->profile_pic) }}" alt="選択した画像のプレビュー" style="display: block;" />
         @else
             <img id="imagePreview" src="" alt="選択した画像のプレビュー" style="display: none;" />

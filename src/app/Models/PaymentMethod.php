@@ -15,9 +15,8 @@ class PaymentMethod extends Model
         'name',
     ];
 
-     //リレーション: この支払い方法を利用した注文
     public function orders()
     {
-        return $this->hasMany(Order::class, 'payment_method_id');
+        return $this->hasMany(Item::class, 'payment_method_id');
     }
 }

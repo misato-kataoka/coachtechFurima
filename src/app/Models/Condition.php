@@ -15,13 +15,11 @@ class Condition extends Model
         'condition',
     ];
 
-    public function itemCategoryConditions()  
-    {  
-        return $this->hasMany(ItemCategoryCondition::class);  
+    public function itemCategoryConditions()
+    {
+        return $this->hasMany(ItemCategoryCondition::class);
     }
 
-    //リレーション: コンディションは複数のアイテムとの関連を持つ (多対多)
-    //item_category_conditionテーブルを経由
     public function items()
     {
         return $this->belongsToMany(

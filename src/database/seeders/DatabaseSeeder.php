@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
             ItemsTableSeeder::class,
             ItemCategoryConditionTableSeeder::class,
             LikesTableSeeder::class,
-            OrdersTableSeeder::class,
+            UserItemListsTableSeeder::class,
         ]);
     }
 }

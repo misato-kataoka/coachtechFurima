@@ -30,10 +30,8 @@ class UserController extends Controller
             $user->profile_pic = $imagePath;
         }
 
-        // データベースに保存
         $user->save();
 
-        // mypage.blade.php にリダイレクト
         return redirect()->route('mypage')->with('success', 'プロフィールが更新されました！');
     }
 
@@ -41,19 +39,17 @@ class UserController extends Controller
     {
         $user = Auth::user();
 
-        return view('auth.address', compact('user')); // address.blade.php にユーザー情報を渡す
+        return view('auth.address', compact('user'));
     }
 
     public function show(Request $request)
     {
         $user = Auth::user(); // 現在の認証ユーザーを取得
 
-    // 購入した商品と出品した商品のリストを取得
         $purchasedItems = Item::where('buyer_id', $user->id)->paginate(8); // 購入した商品リスト
         $soldItems = Item::where('user_id', $user->id)->paginate(8); // 出品した商品リスト
 
-    // 'tab' パラメータに基づいて表示するアイテムを選択
-        $activeTab = $request->query('tab', 'sell'); // デフォルトは出品した商品タブ
+        $activeTab = $request->query('tab', 'sell');
         if ($activeTab === 'buy') {
             $itemsToShow = $purchasedItems; // 購入した商品
         } else {
@@ -64,13 +60,13 @@ class UserController extends Controller
     }
 
 
-    public function profile()  
-    {  
-    $purchasedItems = Item::where('buyer_id', Auth::id())->paginate(8); // 購入商品  
-    $soldItems = Item::where('user_id', $user->id)->paginate(8); // 出品商品  
+    public function profile()
+    {
+        $purchasedItems = Item::where('buyer_id', Auth::id())->paginate(8); // 購入商品
+        $soldItems = Item::where('user_id', $user->id)->paginate(8); // 出品商品
 
-    return view('profile', compact('soldItems', 'purchasedItems'));  
-    }  
+        return view('profile', compact('soldItems', 'purchasedItems'));
+    }
 
 }
 

@@ -17,7 +17,6 @@ class ItemCategoryCondition extends Model
         'condition_id',
     ];
 
-    //リレーション: 中間テーブルはitem, category, condition をそれぞれに関連付ける
     public function item()
     {
         return $this->belongsTo(Item::class, 'item_id');

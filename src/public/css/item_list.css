@@ -6,11 +6,9 @@
 
 .header-container {
     display: flex;
-    /* フレックスボックスを使用して横並びにする*/
     justify-content: flex-start;
     margin:0 10px;
     align-items: center;
-    /* 縦方向に中央揃え */
 }
 
 .caption {
@@ -21,16 +19,15 @@
 }
 
 .active {
-    color: red; /* 現在表示されているページの色 */
+    color: red;
 }
 
 .inactive {
-    color: black;/* 表示されていないページの色 */
+    color: black;
 }
 
 .tab-link:hover {
     text-decoration: underline;
-    /* ホバー時に下線を表示 */
 }
 
 .border-line {
@@ -50,7 +47,6 @@ h3 {
 .item-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    /* スマートフォン対応 */
     gap: 40px;
 }
 
@@ -92,7 +88,7 @@ h3 {
 
 .item-title {
     margin: 10px 0 0;
-    font-size: 18px;/* フォントサイズを指定 */
+    font-size: 18px;
     margin-top: 0;
     color: #333;
     text-align: left;
@@ -103,31 +99,19 @@ h3 {
 
 .sold-overlay {
     position: absolute;
-    /* 親要素に対して絶対位置 */
     top: 0;
     left: 0;
     width: 100%;
-    /* 幅を100%に設定 */
     height: 100%;
-    /* 高さを100%に設定 */
     background-color: rgba(0, 0, 0, 0.5);
-    /* 半透明の背景 */
     display: flex;
-    /* 中央揃えにするためにFlexboxを使用 */
     justify-content: center;
-    /* 水平方向の中央揃え */
     align-items: center;
-    /* 垂直方向の中央揃え */
     color: white;
-    /* テキストの色を白に */
     font-size: 24px;
-    /* フォントサイズを設定 */
     font-weight: bold;
-    /* フォントを太字に */
     text-transform: uppercase;
-    /* テキストを大文字に */
     pointer-events: none;
-    /* 他の要素へのイベントを無効にする */
     z-index: 10;
 }
 
@@ -143,48 +127,31 @@ h3 {
 /* ページネーションのリンクスタイル */
 .pagination a {
     margin: 10px;
-    /* 各リンクの左右の間隔 */
     padding: 8px 12px;
-    /* リンクの内側の余白 */
     background-color: #e7e7e7;
-    /* 背景色 */
     color: #333;
-    /* テキスト色 */
     text-decoration: none;
-    /* 下線を無くす */
     border-radius: 8px;
-    /* 角を丸く */
     transition: background-color 0.3s;
-    /* ホバー時のスムーズな色変更 */
 }
 
-/* ホバー時のスタイル */
 .pagination a:hover {
     background-color: #d4d4d4;
-    /* ホバー時の背景色 */
 }
 
 /* 現在のページ番号のスタイル */
 .pagination .active {
     background-color: #96bfec;
-    /* 現在のページの背景色 */
     color: #333;
-    /* 現在のページの文字色 */
     margin: 10px;
-    /* 各リンクの左右の間隔 */
     padding: 8px 12px;
-    /* リンクの内側の余白 */
     text-decoration: none;
-    /* 下線を無くす */
     border-radius: 8px;
-    /* 角を丸く */
     transition: background-color 0.3s;
-    /* ホバー時のスムーズな色変更 */
 }
 
 .pagination .active:hover {
     background-color: #a89ded;
-    /* ホバー時の背景色 */
 }
 
 /* PCサイズ (1400px以上) のスタイル */
@@ -201,8 +168,8 @@ h3 {
 /* タブレットサイズ (768px - 850px) のスタイル */
 @media (max-width: 850px) and (min-width: 768px) {
     .header-container {
-        flex-direction: column;/* 縦に並べる */
-        align-items: flex-start;/* 左揃え */
+        flex-direction: column;
+        align-items: flex-start;
     }
 
     .caption {
@@ -212,7 +179,7 @@ h3 {
     }
 
     .header-nav__link {
-        margin-left: 10px;/* アイテム間のスペースを減らす */
+        margin-left: 10px;
     }
 
     .item-grid {

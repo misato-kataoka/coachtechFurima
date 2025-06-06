@@ -12,11 +12,11 @@ use Illuminate\Support\Facades\Auth;
 
 class RegisterController extends Controller
 {
-    public function showRegistrationForm()  
-    {  
-        return view('auth.register');  
+    public function showRegistrationForm()
+    {
+        return view('auth.register');
     }
-    
+
     public function register(RegisterRequest $request)
     {
         $validatedData = $request->validated();
@@ -41,7 +41,7 @@ class RegisterController extends Controller
         return redirect()->route('register')->with('error', '登録情報が不足しています。お手数ですが、最初からやり直してください。');
     }
         $user = null;
-        $username_from_session = session('username'); // セッションからユーザー名を取得
+        $username_from_session = session('username');
 
         return view('auth.address', compact('user', 'username_from_session'));
     }
@@ -49,7 +49,7 @@ class RegisterController extends Controller
     public function storeAddress(AddressRequest $request)
     {
         \Log::info('storeAddress method called.');
-    // セッションからユーザー情報を取得
+
         $username = session('username');
         $email = session('email');
         $password = session('password');
@@ -57,9 +57,7 @@ class RegisterController extends Controller
     // 画像のアップロード処理
         $profilePicPath = null;
 
-        //if ($request->hasFile('image')) {
-           // $profilePicPath = $request->file('image')->store('images', 'public');
-           if ($request->hasFile('image')) {
+            if ($request->hasFile('image')) {
             \Log::info('Image file is present in the request.'); // ファイルが存在するか確認
             try {
                 $profilePicPath = $request->file('image')->store('images', 'public');
@@ -73,7 +71,6 @@ class RegisterController extends Controller
         } else {
             \Log::info('No image file in the request.'); // ファイルが存在しない場合
         }
-    
 
     // 新しいユーザーを作成
     try{
@@ -91,13 +88,10 @@ class RegisterController extends Controller
         \Log::error('Exception during user creation: ' . $e->getMessage());
     }
 
-        // 完了後、ログイン
         Auth::login($user);
 
-        // セッション情報をクリア
         session()->forget(['username', 'email', 'password']);
 
-        // 完了メッセージと共にトップページにリダイレクト
         return redirect('/mypage')->with('success', '登録が完了しました。');
     }
 
@@ -120,18 +114,4 @@ class RegisterController extends Controller
         return redirect()->route('purchase.index')->with('success', '住所が更新されました。');
     }
 }
-    /* セッションからユーザー情報を取得
-    $user = Auth::user();
-    if (!$user) {
-        return redirect('/login')->with('error', 'ログインしていません。');
-    }
 
-    // アドレス情報をユーザーに保存
-    $user->address = $request->address;
-    $user->post_code = $request->post_code;
-    $user->building = $request->building;
-    $user->save();
-
-    // 完了後、トップ画面にリダイレクト
-    return redirect('/')->with('success', '登録が完了しました。');
-    }*/

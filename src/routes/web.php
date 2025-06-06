@@ -45,9 +45,8 @@ Route::get('/item/search', [ItemController::class, 'search'])->name('item.search
 // 商品詳細のルート
 Route::get('/item/{id}', [ItemController::class, 'show'])->name('item.detail');
 
-// マイリストに追加するためのルート  
-//Route::post('/user_item_lists', [UserItemListController::class, 'store'])->name('user_item_lists.store'); 
-Route::middleware('auth')->group(function () {  
+// マイリストに追加するためのルート
+Route::middleware('auth')->group(function () {
     Route::get('/mylist', [ItemController::class, 'myList'])->name('item.mylist');
 });
 

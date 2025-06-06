@@ -16,13 +16,11 @@ class Like extends Model
         'item_id',
     ];
 
-    //リレーション: いいねは1人のユーザーに属する (多対1)
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    //リレーション: いいねは1つのアイテムに属する (多対1)
     public function item()
     {
         return $this->belongsTo(Item::class, 'item_id');

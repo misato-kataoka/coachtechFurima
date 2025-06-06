@@ -66,7 +66,6 @@ body {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    /* ボタンの間隔 */
 }
 
 .category-label {
@@ -81,7 +80,6 @@ body {
 
 .category-checkbox {
     display: none;
-    /* チェックボックスを隠す */
 }
 
 .category-checkbox:checked+.category-name {
@@ -159,19 +157,16 @@ body {
 @media (min-width: 1400px) and (max-width: 1540px) {
     .container {
         padding: 30px;
-        /* PCの場合のパディング */
     }
 
     .form-group {
         display: flex;
         justify-content: space-between;
-        /* 横並び */
     }
 
     .input,
     .submit-button {
         width: 48%;
-        /* 入力フィールドを少し小さく */
     }
 }
 
@@ -179,22 +174,18 @@ body {
 @media (min-width: 768px) and (max-width: 850px) {
     .container {
         padding: 20px;
-        /* タブレットの場合のパディング */
     }
 
     .title {
         font-size: 1.5em;
-        /* タイトルサイズを小さく */
     }
 
     .form-group {
         flex-direction: column;
-        /* 縦に並べる */
     }
 
     .input,
     .submit-button {
         width: 100%;
-        /* 幅を100%にする */
     }
 }

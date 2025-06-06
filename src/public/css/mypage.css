@@ -16,21 +16,13 @@
 
 .user-image-placeholder {
     width: 100px;
-    /* プレースホルダーの幅 */
     height: 100px;
-    /* プレースホルダーの高さ */
     background-color: #d3d3d3;
-    /* グレーの背景色 */
     border-radius: 50%;
-    /* 円形にする */
     margin-right: 50px;
-    /* 右側のマージン */
     display: flex;
-    /* フレックスボックスで中央揃え */
     align-items: center;
-    /* 中央揃え */
     justify-content: center;
-    /* 中央揃え */
 }
 
 .user-details {
@@ -67,11 +59,8 @@
 
 .tab-container {
     display: flex;
-    /* 横並び */
     justify-content: flex-start;
-    /* 左寄せ */
     margin-bottom: 20px;
-    /* タブ下部のマージン */
 }
 
 .tab-link {
@@ -91,7 +80,6 @@
 
 .tab-link:hover {
     border-color: #007bff;
-    /* ホバー時のボーダー色 */
 }
 
 .container {
@@ -133,31 +121,19 @@
 
 .sold-overlay {
     position: absolute;
-    /* 親要素に対して絶対位置 */
     top: 0;
     left: 0;
     width: 100%;
-    /* 幅を100%に設定 */
     height: 100%;
-    /* 高さを100%に設定 */
     background-color: rgba(0, 0, 0, 0.5);
-    /* 半透明の背景 */
     display: flex;
-    /* 中央揃えにするためにFlexboxを使用 */
     justify-content: center;
-    /* 水平方向の中央揃え */
     align-items: center;
-    /* 垂直方向の中央揃え */
     color: white;
-    /* テキストの色を白に */
     font-size: 24px;
-    /* フォントサイズを設定 */
     font-weight: bold;
-    /* フォントを太字に */
     text-transform: uppercase;
-    /* テキストを大文字に */
     pointer-events: none;
-    /* 他の要素へのイベントを無効にする */
     z-index: 10;
 }
 
@@ -178,7 +154,6 @@
     margin-top: 20px;
     display: flex;
     justify-content: center;
-    /* 中央に配置 */
 }
 
 .pagination {
@@ -194,7 +169,6 @@
 .pagination .active {
     font-weight: bold;
     color: #007bff;
-    /* 現在のページの色 */
 }
 
 .pagination .other {
@@ -204,12 +178,10 @@
 
 .pagination a {
     color: #007bff;
-    /* リンクの色 */
 }
 
 .pagination a:hover {
     text-decoration: underline;
-    /* ホバー時の効果 */
 }
 
 /* レスポンシブデザイン */

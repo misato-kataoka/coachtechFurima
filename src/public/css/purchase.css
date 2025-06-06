@@ -13,7 +13,6 @@
     flex-direction: column;
 }
 
-/* 商品情報、支払い方法、配送先情報のスタイル */
 .product-info,
 .payment-method,
 .shipping-info {
@@ -22,7 +21,6 @@
     margin-bottom: 20px;
 }
 
-/* 商品情報のスタイル */
 .product-info {
     display: flex;
     align-items: center;
@@ -33,7 +31,6 @@
     align-items: center;
 }
 
-/* 商品画像のスタイル */
 .item-image {
     max-width: 150px;
     width: 100%;
@@ -41,12 +38,10 @@
     margin-right: 20px;
 }
 
-/* 商品名と価格のスタイル */
 .item-details {
     flex: 1;
 }
 
-/* 支払い方法のラベル */
 h2 {
     font-size: 1.5rem;
     margin-bottom: 10px;
@@ -80,17 +75,12 @@ select:focus {
 
 .select-wrapper::after {
     content: "▼";
-    /* 矢印を追加 */
     position: absolute;
-    /* 絶対位置を設定 */
     top: 50%;
-    /* 垂直中央揃え */
     right: 10px;
-    /* 右に余白を設定 */
     transform: translateY(-50%);
-    /* 矢印を中央に配置 */
+
     pointer-events: none;
-    /* 矢印がクリックされないように */
 }
 
 /* 注文概要のスタイル */
@@ -104,25 +94,15 @@ select:focus {
 /* 購入ボタンのスタイル */
 .btn-danger {
     background-color: #e63946;
-    /* 背景色 */
     color: white;
-    /* 文字色 */
     padding: 10px 20px;
-    /* 内側の余白 */
     border: none;
-    /* ボーダーなし */
     border-radius: 4px;
-    /* 角を丸く */
     cursor: pointer;
-    /* ポインターを手に */
     font-size: 1rem;
-    /* フォントサイズ */
     transition: background-color 0.3s;
-    /* 背景色のトランジション */
     width: 100%;
-    /* 幅を100%に設定 */
     margin-top: 10px;
-    /* 上にマージンを追加 */
 }
 
 .btn-danger:hover {
@@ -176,16 +156,12 @@ select:focus {
 @media (max-width: 850px) and (min-width: 768px) {
     .container {
         flex-direction: column;
-        /* 縦に並べる */
     }
 
     .left-column,
     .order-summary {
         margin-right: 0;
-        /* 右側のマージンを削除 */
         margin-bottom: 20px;
-        /* 下にマージン追加 */
         flex-basis: auto;
-        /* 幅を自動に戻す */
     }
 }

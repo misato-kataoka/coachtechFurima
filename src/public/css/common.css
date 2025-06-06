@@ -5,12 +5,9 @@
 }
 
 .header__inner {
-    /*margin: 0 auto;
-    padding: 15px;
-    max-width: 1230px;*/
-    display: flex;/* フレックスボックスを使用 */
-    align-items: center;/* 縦方向の中央揃え */
-    justify-content: space-between;/* 左右の要素間にスペースを均等に配置 */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     width: 100%;
 }
 
@@ -44,8 +41,8 @@
 }
 
 .header-nav {
-    display: flex;/* フレックスボックスを使用 */
-    list-style: none;/* リストスタイルを無効 */
+    display: flex;
+    list-style: none;
     padding:0;
     margin: 0;
     justify-content: flex-end;
@@ -57,9 +54,9 @@
 }
 
 .header-nav__link {
-    margin-left: 20px;/* アイテム間のスペース */
-    text-decoration: none;/* 下線を無くす */
-    color: white;/* リンクの色 */
+    margin-left: 20px;
+    text-decoration: none;
+    color: white;
     font-size: 16px;
 }
 
@@ -82,47 +79,34 @@
     /* ホバー時の背景色 */
 }
 
-/* レスポンシブ対応のメディアクエリ */
 @media (max-width: 850px) {
     .header__inner {
         flex-direction: column;
-        /* 縦に並べる */
         align-items: flex-start;
-        /* 左揃え */
     }
 
     .header__logo {
         margin-bottom: 10px;
-        /* ロゴの下にマージンを追加 */
     }
 
     .search {
         width: 100%;
-        /* 検索バーを全幅に設定 */
         margin: 10px 0;
-        /* 上下のマージンを設定 */
     }
 
     .search input[type="text"] {
         width: calc(100% - 20px);
-        /* 幅を100%からパディング分引く */
     }
 
     .header-nav {
         flex-direction: column;
-        /* ナビゲーションを縦に並べる */
         align-items: flex-start;
-        /* 左揃え */
         width: 100%;
-        /* 幅を100%に設定 */
         margin-top: 10px;
-        /* 上部にマージンを追加 */
     }
 
     .header-nav li {
         margin-left: 0;
-        /* 左マージンを削除 */
         margin-top: 5px;
-        /* 上部のマージンを追加 */
     }
 }

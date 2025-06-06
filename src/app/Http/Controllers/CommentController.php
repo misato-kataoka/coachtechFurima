@@ -24,9 +24,6 @@ class CommentController extends Controller
             return redirect()->back()->withErrors(['user' => 'ログインが必要です。']);
         }
 
-         // デバッグ用: リクエスト内容を確認  
-    \Log::info($request->all()); // これで送信されている内容をログに記録 
-
         Comment::create([
             'user_id' => auth()->id(),
             'item_id' => $request->item_id,

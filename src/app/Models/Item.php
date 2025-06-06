@@ -19,32 +19,53 @@ class Item extends Model
         'brand',
         'price',
         'description',
-        'is_sold'
+        'is_sold',
+        'payment_method_id',
     ];
 
     public function getImageAttribute($value)
     {
-        return asset('storage/' . $value);
+        if ($value) {
+            return asset('storage/' . $value);
+        }
+        return null;
     }
 
-    public function getItemName()
+    public function getItemNameAttribute($value)
     {
-        return $this->item ? $this->item->item_name : '未定義';
+        return $value ?? '未定義';
     }
 
-    //リレーション: アイテムは1人のユーザーに属する (多対1)
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function buyer()
+    {
+        return $this->belongsTo(User::class, 'buyer_id');
+    }
+
+    public function paymentMethod()
+    {
+        return $this->belongsTo(PaymentMethod::class, 'payment_method_id');
+    }
+
+    public function isOrdered(): bool
+    {
+        return $this->is_sold && $this->buyer_id !== null;
+    }
+
+    public function categoryConditions()
+    {
+        return $this->hasMany(ItemCategoryCondition::class, 'item_id');
+    }
+
     public function itemCategoryConditions()
     {
         return $this->hasMany(ItemCategoryCondition::class);
-    }  
+    }
 
-    //リレーション: 多対多（中間テーブルで複数のカテゴリ・コンディションと関連づけ）
-    // item_category_conditionテーブルを経由
     public function categories()
     {
         return $this->belongsToMany(Category::class, 'item_category_condition','item_id', 'category_id');
@@ -60,30 +81,18 @@ class Item extends Model
         );
     }
 
-    public function categoryConditions()  
-    {  
-        return $this->hasMany(ItemCategoryCondition::class);  
-    }
-
-    //リレーション: アイテムは複数のいいねを持つ (1対多)
     public function likes()
     {
         return $this->hasMany(Like::class, 'item_id');
     }
 
-    public function comments()  
-    {  
-        return $this->hasMany(Comment::class);  
-    }  
-
-    //リレーション: アイテムはいくつかの注文を持つ (1対多)
-    public function orders()
+    public function comments()
     {
-        return $this->hasMany(Order::class, 'item_id');
+        return $this->hasMany(Comment::class);
     }
 
-    public function isSold()  
-{  
-    return $this->item ? $this->item->is_sold : false;  
-}
+    public function getIsSoldAttribute($value)
+    {
+        return (bool) $value;
+    }
 }
