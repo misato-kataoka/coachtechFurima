@@ -60,17 +60,33 @@ Route::middleware(['auth'])->group(function () {
 });
 
 //商品購入画面へのルート
-Route::get('/purchase/{item_id}', [OrdersController::class, 'show'])->middleware('auth')->name('purchase.show');
-Route::post('/orders/store', [OrdersController::class, 'store'])->name('orders.store');
+//Route::get('/purchase/{item_id}', [OrdersController::class, 'show'])->middleware('auth')->name('purchase.show');
+//Route::post('/orders/store', [OrdersController::class, 'store'])->name('orders.store');
 
 //商品購入時のルート
-Route::post('/create-checkout-session', [OrdersController::class, 'createCheckoutSession'])->name('create.checkout.session');
-Route::get('/success', function () {return view('success');
-})->name('success.page');
+//Route::post('/create-checkout-session', [OrdersController::class, 'createCheckoutSession'])->name('create.checkout.session');
+//Route::get('/success', function () {return view('success');})->name('success.page');
 
-Route::get('/cancel', function () {
-    return view('cancel');
-})->name('cancel.page');
+//Route::get('/cancel', function () {
+    //return view('cancel');})->name('cancel.page');
+
+Route::middleware('auth')->group(function () {
+
+    // 1. 商品購入ページ表示用のルート
+    Route::get('/purchase/{item_id}', [OrdersController::class, 'show'])->name('purchase.show');
+
+    // 2. Stripe Checkoutセッション作成用のルート
+    Route::post('/create-checkout-session', [OrdersController::class, 'createCheckoutSession'])->name('checkout.create');
+
+    // 3. 決済成功時のリダイレクト先ルート
+    Route::get('/success', [OrdersController::class, 'success'])->name('payment.success');
+
+    // 4. 決済キャンセル時のリダイレクト先ルート
+    Route::get('/cancel', [OrdersController::class, 'cancel'])->name('payment.cancel');
+
+});
+
+Route::post('/stripe/webhook', [OrdersController::class, 'handleWebhook'])->name('stripe.webhook');
 
 //住所変更のためのルート
 Route::get('/purchase/address/{item_id}', [RegisterController::class, 'edit'])->name('address.edit')->middleware('auth');
