@@ -12,21 +12,23 @@
                 <div class="form-group">
                     <label for="email">メールアドレス</label>
                     <input type="text" id="email" name="email" value="{{ old('email') }}" />
-                </div>
-                <div class="form__error">
-                    @error('email')
-                    {{ $message }}
-                    @enderror
+
+                    <div class="form__error">
+                        @error('email')
+                            {{ $message }}
+                        @enderror
+                    </div>
                 </div>
 
                 <div class="form-group">
                     <label for="password">パスワード</label>
                     <input type="password" id="password" name="password" />
-                </div>
-                <div class="form__error">
-                    @error('password')
-                    {{ $message }}
-                    @enderror
+
+                    <div class="form__error">
+                        @error('password')
+                            {{ $message }}
+                        @enderror
+                    </div>
                 </div>
 
                 <button type="submit" class="submit-btn">ログインする</button>
