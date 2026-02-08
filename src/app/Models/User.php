@@ -67,12 +67,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Item::class, 'buyer_id');
     }
 
-    public function getProfilePicAttribute($value)
+    public function getProfilePicUrlAttribute()
     {
-        if ($value) {
-            return asset('storage/' . $value);
+        if ($this->profile_pic) {
+            return asset('storage/' . $this->profile_pic);
     }
-
         return null;
     }
 

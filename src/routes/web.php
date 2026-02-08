@@ -103,8 +103,8 @@ Route::get('/', [ItemController::class, 'index'])->name('home');
 // マイページへのルート
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/mypage', [UserController::class, 'show'])->name('mypage');
-    Route::post('/mypage/profile', [UserController::class, 'update'])->name('profile.update');
     Route::get('/mypage/profile/edit', [UserController::class, 'edit'])->name('address.edit'); // プロフィール編集
+    Route::post('/mypage/profile/store', [UserController::class, 'store'])->name('profile.store');
     Route::post('/mypage/profile/update', [UserController::class, 'update'])->name('address.update'); // プロフィール更新
     Route::get('/profile', [UserController::class, 'profile'])->name('user.profile'); // プロフィールページ
 });

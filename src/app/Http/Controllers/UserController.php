@@ -13,6 +13,28 @@ use App\Http\Requests\AddressRequest;
 class UserController extends Controller
 {
 
+    public function store(AddressRequest $request)
+    {
+        // 認証されたユーザーを取得
+        $user = Auth::user();
+
+        // ユーザー情報を新規登録
+        $user->username = $request->username;
+        $user->post_code = $request->post_code;
+        $user->address = $request->address;
+        $user->building = $request->building;
+
+        // プロフィール画像がアップロードされた場合
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('profiles', 'public');
+            $user->profile_pic = $imagePath;
+        }
+
+        $user->save();
+
+        return redirect()->route('mypage')->with('message', 'プロフィールを登録しました！');
+    }
+
     public function update(AddressRequest $request)
     {
         // 認証されたユーザーを取得
@@ -25,14 +47,14 @@ class UserController extends Controller
         $user->building = $request->building;
 
         // プロフィール画像がアップロードされた場合
-        if ($request->hasFile('imageUpload')) {
-            $imagePath = $request->file('imageUpload')->store('profiles', 'public');
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('profiles', 'public');
             $user->profile_pic = $imagePath;
         }
 
         $user->save();
 
-        return redirect()->route('mypage')->with('success', 'プロフィールが更新されました！');
+        return redirect()->route('mypage')->with('message', 'プロフィールが更新されました！');
     }
 
     public function edit()

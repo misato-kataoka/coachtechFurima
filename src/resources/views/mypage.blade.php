@@ -7,7 +7,7 @@
 @section('content')
 <div class="user-info">
     @if(Auth::user()->profile_pic)
-        <img src="{{ asset('storage/' . Auth::user()->profile_pic) }}" alt="ユーザー画像" class="user-image"/>
+        <img src="{{ Auth::user()->profile_pic_url }}" alt="プロフィール画像" class="user-image">
     @else
         <div class="user-image-placeholder"></div>
     @endif
