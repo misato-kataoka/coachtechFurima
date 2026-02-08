@@ -7,7 +7,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\CommentController;
-use Illuminate\Foundation\Auth\EmailVerificationNoticeController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
 
 
 /*
@@ -26,8 +27,10 @@ Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->na
 Route::post('/register', [RegisterController::class, /*'storeUser'*/'register'])->name('register');
 
 // 住所入力ページへのルート
-Route::get('/address/form', [RegisterController::class, 'showAddressForm'])->name('address.form'); // 認証済みユーザーのみ
-Route::post('/address', [RegisterController::class, 'storeAddress'])->name('address.store')/*->middleware('auth')*/; // 住所情報保存のルート
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/address/form', [RegisterController::class, 'showAddressForm'])->name('address.form'); // 認証済みユーザーのみ
+    Route::post('/address', [RegisterController::class, 'storeAddress'])->name('address.store')/*->middleware('auth')*/; // 住所情報保存のルート
+});
 
 //ログアウト機能
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -37,7 +40,9 @@ Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'loginUser']);
 
 // 商品一覧のルート
-Route::get('/items', [ItemController::class, 'index'])->name('item.list');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/items', [ItemController::class, 'index'])->name('item.list');
+});
 
 //商品検索のルート
 Route::get('/item/search', [ItemController::class, 'search'])->name('item.search');
@@ -60,32 +65,29 @@ Route::middleware(['auth'])->group(function () {
 });
 
 //商品購入画面へのルート
-//Route::get('/purchase/{item_id}', [OrdersController::class, 'show'])->middleware('auth')->name('purchase.show');
-//Route::post('/orders/store', [OrdersController::class, 'store'])->name('orders.store');
+Route::get('/purchase/{item_id}', [OrdersController::class, 'show'])->middleware('auth')->name('purchase.show');
+Route::post('/orders/store', [OrdersController::class, 'store'])->name('orders.store');
 
-//商品購入時のルート
-//Route::post('/create-checkout-session', [OrdersController::class, 'createCheckoutSession'])->name('create.checkout.session');
-//Route::get('/success', function () {return view('success');})->name('success.page');
-
-//Route::get('/cancel', function () {
-    //return view('cancel');})->name('cancel.page');
-
-Route::middleware('auth')->group(function () {
-
-    // 1. 商品購入ページ表示用のルート
+/*
+|--------------------------------------------------------------------------
+| 決済関連のルート
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'verified'])->group(function () {
+    // 1. 商品購入ページの表示
     Route::get('/purchase/{item_id}', [OrdersController::class, 'show'])->name('purchase.show');
 
-    // 2. Stripe Checkoutセッション作成用のルート
+    // 2. Stripe Checkoutセッション作成 (JavaScriptから非同期で呼ばれる)
     Route::post('/create-checkout-session', [OrdersController::class, 'createCheckoutSession'])->name('checkout.create');
 
-    // 3. 決済成功時のリダイレクト先ルート
-    Route::get('/success', [OrdersController::class, 'success'])->name('payment.success');
+    // 3. 決済成功時のリダイレクト先
+    Route::get('/payment/success', [OrdersController::class, 'success'])->name('payment.success');
 
-    // 4. 決済キャンセル時のリダイレクト先ルート
-    Route::get('/cancel', [OrdersController::class, 'cancel'])->name('payment.cancel');
-
+    // 4. 決済キャンセル時のリダイレクト先
+    Route::get('/payment/cancel', [OrdersController::class, 'cancel'])->name('payment.cancel');
 });
 
+// Stripe Webhook用のルート
 Route::post('/stripe/webhook', [OrdersController::class, 'handleWebhook'])->name('stripe.webhook');
 
 //住所変更のためのルート
@@ -99,7 +101,7 @@ Route::get('/', [ItemController::class, 'index'])->name('home');
 //});
 
 // マイページへのルート
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/mypage', [UserController::class, 'show'])->name('mypage');
     Route::post('/mypage/profile', [UserController::class, 'update'])->name('profile.update');
     Route::get('/mypage/profile/edit', [UserController::class, 'edit'])->name('address.edit'); // プロフィール編集
@@ -118,17 +120,22 @@ Route::middleware(['auth'])->group(function () {
 // 住所確認ページのルート（認証なしの場合）
 Route::get('/address', [RegisterController::class, 'address'])->name('address');
 
-/*
-// メール確認関連のルート
-Route::get('/email/verify', [EmailVerificationNoticeController::class, '__invoke'])
-    ->middleware(['auth', 'verified'])
-    ->name('verification.notice');
+// 1. 「メールを確認してください」画面を表示するためのルート
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice');
 
-Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verify'])
-    ->middleware(['auth', 'signed']) // 認証済み、署名付きであることをチェック
-    ->name('verification.verify');
+// 2. ユーザーがメール内のリンクをクリックした時の処理ルート
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
 
-Route::post('/email/verification-notification', function () {
-    return 'メール再送信の処理（サンプル）'; // 再送信の処理を実装
-})->middleware(['auth'])->name('verification.resend');
-});*/
+    // 認証が完了したら、商品一覧ページなどにリダイレクト
+    return redirect('/items');
+})->middleware(['auth', 'signed'])->name('verification.verify');
+
+// 3. 認証メールを再送信するための処理ルート
+Route::post('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+
+    return back()->with('message', '新しい認証リンクを送信しました。');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');

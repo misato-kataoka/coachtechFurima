@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Auth\Events\Registered;
 
 class RegisterController extends Controller
 {
@@ -22,37 +23,53 @@ class RegisterController extends Controller
         $validatedData = $request->validated();
 
         // ユーザー情報をセッションに保存
-        session([
+        //session([
+        $user = User::create([
             'username' => $validatedData['username'],
             'email' => $validatedData['email'],
             'password' => $validatedData['password'],
         ]);
 
+        event(new Registered($user));
+
+        Auth::login($user);
+
         // 住所入力フォームへのリダイレクト
-        return redirect()->route('address.form');
+        //return redirect()->route('address.form');
+
+        // 認証メールを送ったことをユーザーに知らせるページへリダイレクト
+        return redirect()->route('verification.notice');
     }
 
     public function showAddressForm()
     {
 
     // 会員登録フローに必要な情報がセッションに存在するか確認
-        if (!session()->has('username') || !session()->has('email') || !session()->has('password')) {
+        //if (!session()->has('username') || !session()->has('email') || !session()->has('password')) {
     // 必要な情報がセッションになければ、登録の初期段階（会員登録フォーム）に戻す
-        return redirect()->route('register')->with('error', '登録情報が不足しています。お手数ですが、最初からやり直してください。');
-    }
-        $user = null;
-        $username_from_session = session('username');
+        //return redirect()->route('register')->with('error', '登録情報が不足しています。お手数ですが、最初からやり直してください。');
+    //}
+        //$user = null;
+        //$username_from_session = session('username');
+        $user = Auth::user();
+        $username_from_session = $user->username;
 
         return view('auth.address', compact('user', 'username_from_session'));
     }
 
     public function storeAddress(AddressRequest $request)
     {
-        \Log::info('storeAddress method called.');
+        //\Log::info('storeAddress method called.');
 
-        $username = session('username');
-        $email = session('email');
-        $password = session('password');
+        //$username = session('username');
+        //$email = session('email');
+        //$password = session('password');
+
+        $user = Auth::user();
+        if (!$user) {
+            // 万が一ユーザーが取得できない場合は、ログインページに戻す
+            return redirect()->route('login')->with('error', 'エラーが発生しました。再度ログインしてください。');
+        }
 
     // 画像のアップロード処理
         $profilePicPath = null;
@@ -73,7 +90,7 @@ class RegisterController extends Controller
         }
 
     // 新しいユーザーを作成
-    try{
+    /*try{
     $user = User::create([
         'username' => $username,
         'email' => $email,
@@ -86,11 +103,18 @@ class RegisterController extends Controller
     \Log::info('User created successfully. User ID: ' . $user->id);
     } catch (\Exception $e) {
         \Log::error('Exception during user creation: ' . $e->getMessage());
-    }
+    }*/
+    // ユーザー情報を「更新 (update)」する
+    $user->update([
+        'post_code' => $request->post_code,
+        'address' => $request->address,
+        'building' => $request->building,
+        'profile_pic' => $profilePicPath,
+    ]);
 
-        Auth::login($user);
+        //Auth::login($user);
 
-        session()->forget(['username', 'email', 'password']);
+        //session()->forget(['username', 'email', 'password']);
 
         return redirect('/mypage')->with('success', '登録が完了しました。');
     }

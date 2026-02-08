@@ -42,7 +42,7 @@ class OrdersController extends Controller
                         'product_data' => [
                             'name' => $item->item_name,
                         ],
-                        'unit_amount' => $item->price,
+                        'unit_amount' => (int) $item->price,
                     ],
                     'quantity' => 1,
                 ]],

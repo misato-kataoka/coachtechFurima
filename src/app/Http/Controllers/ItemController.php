@@ -44,11 +44,38 @@ class ItemController extends Controller
 
     public function search(Request $request)
     {
-        // 商品名の部分一致検索
-        $query = $request->input('query');
-        $items = Item::where('item_name', 'LIKE', '%' . $query . '%')->paginate(8);
+        // フォームから送信された値を取得
+        $query = $request->input('query'); // 検索キーワード
+        $from = $request->input('from');   // どのページから来たか ('mylist' or 'index')
 
-        return view('item_list', compact('items', 'query'));
+        // 'マイリスト' ページから検索された場合の処理
+        if ($from === 'mylist') {
+            $user = Auth::user(); // 現在ログインしているユーザー情報を取得
+
+            // ユーザーのお気に入り商品の中から、さらに商品名で検索
+            $items = $user->likes()
+                            ->where('item_name', 'LIKE', '%' . $query . '%')
+                            ->paginate(8);
+
+            // ページネーションのリンクに検索パラメータを引き継がせる
+            $items->appends($request->all());
+
+            // 検索結果を "マイリスト" のビューに渡して表示
+            // ※ビューファイル名が mylist.blade.php の場合
+            return view('mylist', compact('items', 'query'));
+
+        } else {
+            // 'おすすめ' ページなど、それ以外から検索された場合の処理（従来の処理）
+            $items = Item::where('item_name', 'LIKE', '%' . $query . '%')
+                            ->paginate(8);
+
+            // ページネーションのリンクに検索パラメータを引き継がせる
+            $items->appends($request->all());
+
+            // 検索結果を "おすすめ一覧" のビューに渡して表示
+            // ※ビューファイル名が item_list.blade.php の場合
+            return view('item_list', compact('items', 'query'));
+        }
     }
 
     public function create()

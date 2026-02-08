@@ -23,6 +23,7 @@
                     @if (Auth::check())
                     <div class="search">
                         <form action="{{ route('item.search') }}" method="GET">
+                            <input type="hidden" name="from" value="{{ request()->routeIs('item.mylist') ? 'mylist' : 'index' }}">
                             <input type="text" name="query" placeholder="なにをお探しですか？" value="{{ request('query') }}">
                             <button type="submit">検索</button>
                         </form>
