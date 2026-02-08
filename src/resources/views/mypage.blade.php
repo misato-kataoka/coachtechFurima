@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('css')
-<link rel="stylesheet" href="{{ asset('css/mypage.css') }}">  
-@endsection  
+<link rel="stylesheet" href="{{ asset('css/mypage.css') }}">
+@endsection
 
-@section('content')  
+@section('content')
 <div class="user-info">
     @if(Auth::user()->profile_pic)
         <img src="{{ asset('storage/' . Auth::user()->profile_pic) }}" alt="ユーザー画像" class="user-image"/>
@@ -35,7 +35,9 @@
                         <div class="item-title">{{ $item->item_name }}</div>
                     </a>
 
-                    <div class="sold-overlay">SOLD</div>
+                    @if( ($activeTab === 'sell' && $item->is_sold) || $activeTab === 'buy' )
+                        <div class="sold-overlay">SOLD</div>
+                    @endif
                 </div>
             @endforeach
         </div>

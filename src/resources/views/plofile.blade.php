@@ -7,7 +7,7 @@
 @section('content')
 <div class="profile-container">
     <div class="user-info">
-        <img src="{{ Auth::user()->profile_pic }}" alt="ユーザー画像" class="user-image"/>
+        <img src="{{ Auth::user()->profile_pic ? asset('storage/' . Auth::user()->profile_pic) : asset('images/default_user.png') }}" alt="ユーザー画像" class="user-image"/>
         <h1>{{ Auth::user()->username }}</h1>
         <a href="{{ route('address.edit') }}" class="edit-profile-button">プロフィールを編集</a>
     </div>
@@ -18,39 +18,53 @@
     </div>
 
     <div class="product-list" id="listed">
-        @foreach($listedItems as $item)
-            <div class="product-card">
-                <img src="{{ $item->image }}" alt="商品画像" class="product-image"/>
-                <h2 class="product-name">{{ $item->item_name }}</h2>
-                <p class="product-price">{{ number_format($item->price) }}円</p>
+        @forelse($listedItems as $item)
+            <div class="product-card {{ $item->is_sold ? 'position-relative' : '' }}">
+                <a href="{{ route('item.detail', ['item_id' => $item->id]) }}">
+                    <img src="{{ $item->image }}" alt="商品画像" class="product-image"/>
+                </a>
 
+                @if($item->is_sold)
+                    <div class="sold-overlay">SOLD</div>
+                @endif
+
+                <div class="product-info" style="padding: 0 8px;">
+                    <h2 class="product-name">{{ $item->item_name }}</h2>
+                    <p class="product-price">{{ number_format($item->price) }}円</p>
+                </div>
             </div>
-        @endforeach
+        @empty
+            <p>出品した商品はありません。</p>
+        @endforelse
     </div>
 
     <div class="product-list" id="purchased" style="display: none;">
-        @if($purchasedItems->count() > 0)
-            @foreach($purchasedItems as $item)
-                <div class="product-card">
+        @forelse($purchasedItems as $item)
+            {{-- ★修正点3: sold-overlayは各カードの中に入れる --}}
+            <div class="product-card position-relative">
+                <a href="{{ route('item.detail', ['item_id' => $item->id]) }}">
                     <img src="{{ $item->image }}" alt="商品画像" class="product-image"/>
+                </a>
+                <div class="sold-overlay">SOLD</div>
+                <div class="product-info" style="padding: 0 8px;">
                     <h2 class="product-name">{{ $item->item_name }}</h2>
                     <p class="product-price">{{ number_format($item->price) }}円</p>
-                    <p class="purchase-date">{{ $item->created_at->format('Y年m月d日') }}</p>
-
-                    <div class="sold-overlay">SOLD</div>
                 </div>
-            @endforeach
-        @else
+            </div>
+        @empty
             <p>購入した商品はありません。</p>
-        @endif
+        @endforelse
     </div>
 
     <!-- ページネーション -->
     <div class="pagination">
-        {{ $listedItems->links() }}
-        {{ $purchasedItems->links() }}
+        <div id="listed-pagination">
+            {{ $listedItems->links() }}
+        </div>
+        <div id="purchased-pagination" style="display:none;">
+            {{ $purchasedItems->links() }}
+        </div>
     </div>
-</div>
 
 <script>
 function showTab(tabName) {

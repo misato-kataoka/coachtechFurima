@@ -46,17 +46,27 @@ class UserController extends Controller
     {
         $user = Auth::user(); // 現在の認証ユーザーを取得
 
-        $purchasedItems = Item::where('buyer_id', $user->id)->paginate(8); // 購入した商品リスト
-        $soldItems = Item::where('user_id', $user->id)->paginate(8); // 出品した商品リスト
+        $listedItems = Item::where('user_id', $user->id)
+                        ->latest()
+                        ->paginate(8);
 
-        $activeTab = $request->query('tab', 'sell');
-        if ($activeTab === 'buy') {
-            $itemsToShow = $purchasedItems; // 購入した商品
-        } else {
-            $itemsToShow = $soldItems; // 出品した商品
-        }
+    $purchasedItems = Item::where('buyer_id', $user->id)
+                            ->latest()
+                            ->paginate(8);
 
-        return view('mypage', compact('user', 'itemsToShow', 'activeTab'));
+    $activeTab = $request->query('tab', 'sell');
+
+    if ($activeTab === 'buy') {
+        $itemsToShow = $purchasedItems;
+    } else {
+        $itemsToShow = $listedItems;
+    }
+
+    return view('mypage', [
+        'user' => $user,
+        'itemsToShow' => $itemsToShow,
+        'activeTab' => $activeTab,
+    ]);
     }
 
 
