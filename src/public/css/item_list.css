@@ -58,20 +58,27 @@ h3 {
 }
 
 .item-card {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #f0f0f0;
-    border-radius: 8px;
+    /*display: flex;*/
+    /*flex-direction: column;*/
+    /*justify-content: space-between;*/
+    /*align-items: center;*/
+    background-color: white;
+    border-radius: 2%;
     overflow: hidden;
-    text-align: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    height: auto;
-    aspect-ratio: 1 / 1; /* 正方形にする */
-    width: 100%;
+    /*text-align: center;*/
+    /*box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /*height: auto;*/
+    /*aspect-ratio: 1 / 1; /* 正方形にする */
+    /*width: 100%;*/
     position: relative;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.item-card a {
+    position: relative;/* sold-overlayの基準点 */
+    display: block;/* aタグをブロック要素にする */
+    text-decoration: none;
+    color: inherit;
 }
 
 .item-card:hover {
@@ -82,11 +89,31 @@ h3 {
 
 .item-image {
     width: 100%;
-    height: auto;
+    aspect-ratio: 1 / 1;
     object-fit: cover;
+    display: block;
 }
 
 .item-title {
+    padding: 8px 10px;
+    /* 上下左右の余白 */
+
+    /* 文字がはみ出した場合に「...」で省略する設定 */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    /* フォントスタイル */
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    text-align: left;/* テキストを左揃えに */
+
+    /* 不要なスタイルをリセット */
+    margin: 0;
+}
+
+/*.item-title {
     margin: 10px 0 0;
     font-size: 18px;
     margin-top: 0;
@@ -95,7 +122,7 @@ h3 {
     position: relative;
     text-decoration: none;
     z-index: 1;
-}
+}*/
 
 .sold-overlay {
     position: absolute;

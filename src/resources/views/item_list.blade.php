@@ -23,8 +23,10 @@
                 @foreach ($items as $item)
                     <div class="item-card">
                         <a href="{{ route('item.detail', ['id' => $item->id]) }}">
-                        <img src="{{ $item->image }}" alt="商品画像" class="item-image"/>
-                        <div class="item-title">{{ $item->item_name }}</div>
+                            <div class="item-image-wrapper">
+                                <img src="{{ $item->image }}" alt="商品画像" class="item-image"/>
+                                <div class="item-title">{{ $item->item_name }}</div>
+                            </div>
 
                         @if ($item->is_sold)
                             <div class="sold-overlay">SOLD</div>
