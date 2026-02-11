@@ -70,11 +70,11 @@ class UserController extends Controller
 
         $listedItems = Item::where('user_id', $user->id)
                         ->latest()
-                        ->paginate(8);
+                        ->simplePaginate(8);
 
     $purchasedItems = Item::where('buyer_id', $user->id)
                             ->latest()
-                            ->paginate(8);
+                            ->simplePaginate(8);
 
     $activeTab = $request->query('tab', 'sell');
 

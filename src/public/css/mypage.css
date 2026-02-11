@@ -2,7 +2,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 30px 0;
+    margin: 50px 0;
     text-align: center;
 }
 
@@ -63,7 +63,7 @@
     margin-bottom: 20px;
 }
 
-.tab-link {
+/*.tab-link {
     padding: 10px 20px;
     text-decoration: none;
     color: black;
@@ -80,16 +80,15 @@
 
 .tab-link:hover {
     border-color: #007bff;
-}
+}*/
 
 .container {
     padding: 0 20px;
 }
 
-.item-grid {
+/*.item-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    /* 最大4列 */
     gap: 20px;
 }
 
@@ -149,7 +148,6 @@
     margin-top: 10px;
 }
 
-/* ページネーションのスタイル */
 .pagination {
     margin-top: 20px;
     display: flex;
@@ -183,6 +181,8 @@
 .pagination a:hover {
     text-decoration: underline;
 }
+:
+*/
 
 /* レスポンシブデザイン */
 @media (max-width: 1540px) {
@@ -198,7 +198,7 @@
     .edit-profile-button {
         padding: 6px 12px;
     }
-
+/*
     .item-grid {
         grid-template-columns: repeat(3, 1fr);
     }
@@ -206,6 +206,7 @@
     .item-title {
         font-size: 14px;
     }
+*/
 }
 
 @media (max-width: 850px) {
@@ -218,9 +219,10 @@
         flex-direction: column;
     }
 
+    /*
     .item-grid {
         grid-template-columns: repeat(2, 1fr);
-    }
+    }*/
 
     .user-image {
         width: 50px;
@@ -230,7 +232,9 @@
     .edit-profile-button {
         padding: 4px 8px;
     }
+
+    /*
     .item-title {
         font-size: 12px;
-    }
+    }*/
 }

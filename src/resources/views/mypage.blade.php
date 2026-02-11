@@ -2,6 +2,7 @@
 
 @section('css')
 <link rel="stylesheet" href="{{ asset('css/mypage.css') }}">
+<link rel="stylesheet" href="{{ asset('css/item_list.css') }}">
 @endsection
 
 @section('content')
@@ -17,9 +18,13 @@
     </div>
 </div>
 
-<div class="tab-container">
-    <a href="{{ url('/mypage?tab=sell') }}" class="tab-link {{ $activeTab === 'sell' ? 'active' : '' }}">出品した商品</a>
-    <a href="{{ url('/mypage?tab=buy') }}" class="tab-link {{ $activeTab === 'buy' ? 'active' : '' }}">購入した商品</a>
+<div class="header-container">
+    <span class="caption">
+        <a href="{{ url('/mypage?tab=sell') }}" class="tab-link {{ $activeTab === 'sell' ? 'active' : '' }}">出品した商品</a>
+    </span>
+    <span class="caption">
+        <a href="{{ url('/mypage?tab=buy') }}" class="tab-link {{ $activeTab === 'buy' ? 'active' : '' }}">購入した商品</a>
+    </span>
 </div>
 <div class="border-line"></div>
 
@@ -31,38 +36,21 @@
             @foreach ($itemsToShow as $item)
                 <div class="item-card">
                     <a href="{{ route('item.detail', ['id' => $item->id]) }}">
-                        <img src="{{ $item->image }}" alt="商品画像" class="item-image"/>
-                        <div class="item-title">{{ $item->item_name }}</div>
-                    </a>
+                        @if( ($activeTab === 'sell' && $item->is_sold) || $activeTab === 'buy' )
+                            <div class="sold-overlay">SOLD</div>
+                        @endif
 
-                    @if( ($activeTab === 'sell' && $item->is_sold) || $activeTab === 'buy' )
-                        <div class="sold-overlay">SOLD</div>
-                    @endif
+                        <img src="{{ $item->image }}" alt="{{ $item->item_name }}" class="item-image"/>
+                        <p class="item-title">{{ $item->item_name }}</p>
+                    </a>
                 </div>
             @endforeach
         </div>
     @endif
 </div>
 
-<div class="pagination">  
-    @if ($itemsToShow->onFirstPage())  
-        <span class="disabled">前へ</span>  
-    @else  
-        <a href="{{ $itemsToShow->previousPageUrl() }}" class="previous">前へ</a>  
-    @endif  
+<div class="pagination">
+    {{ $itemsToShow->links() }}
+</div>
 
-    @for ($i = 1; $i <= $itemsToShow->lastPage(); $i++)  
-        @if ($i === $itemsToShow->currentPage())  
-            <span class="active">{{ $i }}</span>  
-        @else  
-            <a href="{{ $itemsToShow->url($i) }}" class="other">{{ $i }}</a>  
-        @endif  
-    @endfor  
-
-    @if ($itemsToShow->hasMorePages())  
-        <a href="{{ $itemsToShow->nextPageUrl() }}" class="next">次へ</a>  
-    @else  
-        <span class="disabled">次へ</span>  
-    @endif  
-</div>  
 @endsection

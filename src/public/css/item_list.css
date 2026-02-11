@@ -1,5 +1,5 @@
 .container {
-    max-width: 1200px;
+    max-width: 1500px;
     margin: auto;
     padding: 20px 0;
 }
@@ -7,13 +7,23 @@
 .header-container {
     display: flex;
     justify-content: flex-start;
-    margin:0 10px;
     align-items: center;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    margin-left: 60px;
+}
+
+.header-container a.active {
+    color: #ff5555;
+}
+
+.header-container .tab-link.active {
+    color: red;
+    font-weight: bold;
 }
 
 .caption {
-    margin-top: 30px;
-    margin-left: 40px;
+    margin-left: 60px;
     font-size: 20px;
 
 }
@@ -26,8 +36,16 @@
     color: black;
 }
 
+.tab-link {
+    text-decoration: none;
+    padding: 10px 20px;
+    color: black;
+    transition: color 0.3s;
+}
+
 .tab-link:hover {
-    text-decoration: underline;
+    text-decoration: none;
+    opacity: 0.7;
 }
 
 .border-line {
@@ -36,7 +54,7 @@
     position: relative;
     left: 0;
     right: 0;
-    margin: 20px 0;
+    margin: 0 0 20px 0;
 }
 
 /*h2,
@@ -46,7 +64,7 @@ h3 {
 
 .item-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 40px;
 }
 
@@ -58,25 +76,16 @@ h3 {
 }
 
 .item-card {
-    /*display: flex;*/
-    /*flex-direction: column;*/
-    /*justify-content: space-between;*/
-    /*align-items: center;*/
     background-color: white;
     border-radius: 2%;
     overflow: hidden;
-    /*text-align: center;*/
-    /*box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    /*height: auto;*/
-    /*aspect-ratio: 1 / 1; /* 正方形にする */
-    /*width: 100%;*/
     position: relative;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .item-card a {
-    position: relative;/* sold-overlayの基準点 */
-    display: block;/* aタグをブロック要素にする */
+    position: relative;
+    display: block;
     text-decoration: none;
     color: inherit;
 }
