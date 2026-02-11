@@ -13,8 +13,8 @@
 
         <div class="item-info-container">
             <h1 class="item-title">{{ $item->item_name }}</h1>
-            <div class="item-brand">ブランド: {{ $item->brand }}</div>
-            <div class="item-price">価格: ¥{{ number_format($item->price) }}（税込）</div>
+            <div class="item-brand">ブランド名: {{ $item->brand }}</div>
+            <div class="item-price"> ¥{{ number_format($item->price) }}（税込）</div>
 
         <div class="likes-and-comments">
             <div class="likes">
@@ -48,53 +48,63 @@
         </div>
 
         <div class="product-info">
-            <h2>商品情報</h2>
-            <ul>
-                @if ($item->categoryConditions->isNotEmpty())
-                    <li>カテゴリ:</li>
-                    <ul>
-                        @foreach ($item->categoryConditions as $categoryCondition)
-                            <li>{{ $categoryCondition->category->category_name ?? '未定義' }}</li>
-                        @endforeach
-                    </ul>
-                    <li>状態: {{ $item->categoryConditions->first()->condition->condition ?? '未定義' }}</li>
-                @else
-                    <li>カテゴリ: 未定義</li>
-                    <li>状態: 未定義</li>
-                @endif
-            </ul>
+            <h2>商品の情報</h2>
+            <div class="info-group">
+                <span class="info-label">カテゴリー</span>
+                <div class="category-tags">
+                    @forelse ($item->categoryConditions as $categoryCondition)
+                        <span class="category-tag">{{ $categoryCondition->category->category_name ?? '未定義' }}</span>
+                    @empty
+                        <span class="category-tag">未定義</span>
+                    @endforelse
+                </div>
+            </div>
+            <div class="info-group">
+                <span class="info-label">商品の状態</span>
+                <span class="info-value">{{ $item->categoryConditions->first()->condition->condition ?? '未定義' }}</span>
+            </div>
         </div>
 
-        <div class="comments">
+        <div class="comment-area">
             <h2>コメント ({{ $item->comments->count() }})</h2>
 
-            @if (session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-            @endif
+            <div class="comment-list">
+                @forelse ($item->comments as $comment)
+                    <div class="comment-item">
 
-            @foreach ($item->comments as $comment)
-                <div class="comment">
-                    <img src="{{ $comment->user->profile_image_url }}" alt="{{ $comment->user->name }}のアイコン" class="user-icon">
-                    <strong class="username">{{ $comment->user->name }}</strong>
-                    <p class="comment-content">{{ $comment->content }}</p>
-                </div>
-            @endforeach
+                        <div class="comment-header">
+                            @if ($comment->user->profile_pic_url)
+                                {{-- 画像がある場合 --}}
+                                <img src="{{ $comment->user->profile_pic_url }}" alt="{{ $comment->user->name }}のアイコン" class="user-icon">
+                            @else
+                                {{-- 画像がない場合 --}}
+                                <div class="user-icon-default"></div>
+                            @endif
+                            <strong class="username">{{ $comment->user->username }}</strong>
+                        </div>
 
-            <form action="{{ route('comments.store') }}" method="POST">
-                @csrf
-                <textarea name="content" placeholder="こちらにコメントが入ります。"></textarea>
-                <input type="hidden" name="item_id" value="{{ $item->id }}">
-                <button type="submit" class="comment-submit-button">コメントを送信する</button>
-            </form>
-        </div>
-        <div class="form__error">
-            @error('content')
-                {{ $message }}
-            @enderror
-        </div>
+                        <div class="comment-body">
+                            <p class="comment-content">{{ $comment->content }}</p>
+                        </div>
+                    </div>
+                @empty
+                    <p class="no-comments">まだコメントはありません。</p>
+                @endforelse
+            </div>
 
+    {{-- コメント投稿フォームのエリア --}}
+            <div class="comment-form-section">
+                <h3>商品へのコメント</h3>
+                <form action="{{ route('comments.store') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="item_id" value="{{ $item->id }}">
+                    <textarea name="content" class="comment-textarea" placeholder="コメントを入力して下さい。">{{ old('content') }}</textarea>
+                    @error('content')
+                        <div class="form__error">{{ $message }}</div>
+                    @enderror
+                    <button type="submit" class="comment-submit-button">コメントを送信する</button>
+                </form>
+            </div>
         </div>
 
 </div>
