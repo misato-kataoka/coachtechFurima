@@ -11,39 +11,46 @@
     @yield('css')
 </head>
 
+{{-- app.blade.php --}}
 <body>
     <header class="header">
         <div class="header__inner">
-            <div class="header-utilities">
-                <a class="header__logo" href="/">
+
+            {{-- ★★★ 1. ロゴグループ ★★★ --}}
+            <div class="header__logo">
+                <a href="/">
                     <img src="{{ asset('image/logo.png') }}" alt="COACHTECH Logo" />
                 </a>
-                <nav>
-                <ul class="header-nav">
-                    @if (Auth::check())
-                    <div class="search">
-                        <form action="{{ route('item.search') }}" method="GET">
-                            <input type="hidden" name="from" value="{{ request()->routeIs('item.mylist') ? 'mylist' : 'index' }}">
-                            <input type="text" name="query" placeholder="なにをお探しですか？" value="{{ request('query') }}">
-                            <button type="submit">検索</button>
-                        </form>
-                    </div>
-                    <li>
-                        <form class="form" action="{{ route('logout') }}" method="post">
-                            @csrf
-                            <button type="submit" class="header-nav__link" style="background: none; border: none; padding: 0;">ログアウト</button>
-                        </form>
-                    </li>
-                    <li>
-                        <a class="header-nav__link" href="/mypage">マイページ</a>
-                    </li>
-                    <li>
-                        <a class="header-nav__button" href="{{ route('items.create') }}">出品</a>
-                    </li>
-                    @endif
-                </ul>
-                </nav>
             </div>
+
+            {{-- ★★★ 2. 検索グループ（ログイン時のみ表示） ★★★ --}}
+            @auth
+            <div class="header__search">
+                <form action="{{ route('item.search') }}" method="GET">
+                    <input type="text" name="query" placeholder="なにをお探しですか？" value="{{ request('query') }}">
+
+                    <button type="submit" class="header__search-button">検索</button>
+                </form>
+            </div>
+            @endauth
+
+            {{-- ★★★ 3. ナビゲーショングループ ★★★ --}}
+            <nav class="header__nav">
+                @if (Auth::check())
+                    {{-- ログインしている場合のナビゲーション --}}
+                    <form action="{{ route('logout') }}" method="post">
+                        @csrf
+                        <button type="submit" class="header__nav-item">ログアウト</button>
+                    </form>
+                    <a class="header__nav-item" href="/mypage">マイページ</a>
+                    <a class="header__nav-item header__nav-item--button" href="{{ route('items.create') }}">出品</a>
+                @else
+                    {{-- ログインしていない場合のナビゲーション --}}
+                    <a class="header__nav-item" href="{{ route('login') }}">ログイン</a>
+                    <a class="header__nav-item" href="{{ route('register') }}">会員登録</a>
+                @endif
+            </nav>
+
         </div>
     </header>
 
