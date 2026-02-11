@@ -3,7 +3,7 @@ body {
 }
 
 .container {
-    max-width: 700px;
+    max-width: 800px;
     margin: 0 auto;
     padding: 20px;
 }
@@ -20,12 +20,14 @@ body {
 
 .form-group {
     margin-bottom: 15px;
+    position: relative;
 }
 
 .label {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
+    margin-top: 30px;
 }
 
 .subtitle {
@@ -33,6 +35,7 @@ body {
     font-size: 20px;
     padding-bottom: 5px;
     position: relative;
+    margin-top: 40px;
 }
 
 .subtitle::after {
@@ -52,6 +55,28 @@ body {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding-right: 30px;
+}
+
+.select-wrapper {
+    position: relative;
+}
+
+.select-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 13px solid #676666;
+    pointer-events: none;
 }
 
 .textarea {
@@ -65,27 +90,46 @@ body {
 .categories {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 15px 10px;
 }
 
 .category-label {
-    padding: 0 10px;
-    border: 2px solid red;
+    position: relative;
+    display: inline-block;
+    padding: 5px 18px;
+    border: 2px solid #ff6f61;
+    overflow: hidden;
     border-radius: 20px;
     background-color: white;
-    color: red;
+    color: #ff6f61;
     cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
+    transition: background-color 0.3s;
+}
+
+.category-name {
+    display: block;
+    padding: 0 10px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #ff6f61;
+    transition: color 0.3s;
+    user-select: none;
 }
 
 .category-checkbox {
-    display: none;
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
 }
 
 .category-checkbox:checked+.category-name {
-    background-color: red;
+    /* チェックが入ったら文字色を白に */
     color: white;
-    border: 2px solid red;
+}
+
+.category-label:has(.category-checkbox:checked) {
+    /* チェックが入ったチェックボックスを持つlabelの背景色を変える */
+    background-color: #ff6f61;
 }
 
 .image-upload {
@@ -129,6 +173,37 @@ body {
 
 .file-input {
     display: none;
+}
+
+.price-input-container {
+    position: relative;
+}
+
+/* 「¥」マークを疑似要素として生成 */
+.price-input-container::before {
+    content: "¥";
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #555;
+    font-size: 1em;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.price-input-container input#price {
+    padding-left: 28px !important;
+}
+
+input#price {
+    -moz-appearance: textfield;
+}
+
+input#price::-webkit-inner-spin-button,
+input#price::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 .submit-button {

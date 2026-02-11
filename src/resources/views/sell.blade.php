@@ -19,11 +19,11 @@
                 </div>
                 <img id="preview" class="preview-image" alt="画像のプレビュー" style="display:none;">
             </div>
-            <div class="form__error">
-                @error('image')
-                    {{ $message }}
-                @enderror
-            </div>
+        </div>
+        <div class="form__error">
+            @error('image')
+                {{ $message }}
+            @enderror
         </div>
 
         <h2 class="subtitle">商品の詳細</h2>
@@ -48,15 +48,16 @@
 
         <div class="form-group">
             <label for="condition" class="label">商品の状態</label>
-            <select name="condition_id" id="condition" class="select">
-                <option value="">選択してください</option>
-                @foreach ($conditions as $condition)
-                    <option value="{{ $condition->id }}" {{ old('condition_id') == $condition->id ? 'selected' : '' }}>
-                        {{ $condition->condition }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
+            <div class="select-wrapper">
+                <select name="condition_id" id="condition" class="select">
+                    <option value="">選択してください</option>
+                    @foreach ($conditions as $condition)
+                        <option value="{{ $condition->id }}" {{ old('condition_id') == $condition->id ? 'selected' : '' }}>
+                            {{ $condition->condition }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
         <div class="form__error">
                 @error('condition_id')
                 {{ $message }}
@@ -92,7 +93,9 @@
 
         <div class="form-group">
             <label for="price" class="label">販売価格</label>
-            <input type="number" name="price" id="price" value="{{ old('price') }}" class="input">
+            <div class="price-input-container">
+                <input type="number" name="price" id="price" value="{{ old('price') }}" class="input">
+            </div>
         </div>
         <div class="form__error">
             @error('price')
