@@ -38,7 +38,7 @@ class ItemController extends Controller
             }
         })
             ->paginate(8); // 1ページあたり8件
-
+ 
         return view('item_list', compact('items', 'query'));
     }
 

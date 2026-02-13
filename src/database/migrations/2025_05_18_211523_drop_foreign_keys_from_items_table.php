@@ -13,10 +13,12 @@ class DropForeignKeysFromItemsTable extends Migration
      */
     public function up()
     {
-        Schema::table('items', function (Blueprint $table) {
-            $table->dropForeign(['buyer_id']);
-            $table->dropForeign(['user_id']);
-        });
+        if (DB::getDriverName() !== 'sqlite') {
+            Schema::table('items', function (Blueprint $table) {
+                $table->dropForeign(['buyer_id']);
+                $table->dropForeign(['user_id']);
+            });
+        }
     }
 
     /**

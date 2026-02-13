@@ -25,14 +25,14 @@
                         <a href="{{ route('item.detail', ['id' => $item->id]) }}">
                             <div class="item-image-wrapper">
                                 <img src="{{ $item->image }}" alt="商品画像" class="item-image"/>
+
+                                @if ($item->is_sold)
+                                    <div class="sold-overlay">Sold</div>
+                                @endif
                                 <div class="item-title">{{ $item->item_name }}</div>
                             </div>
-
-                        @if ($item->is_sold)
-                            <div class="sold-overlay">SOLD</div>
-                        @endif
-                    </a>
-                </div>
+                        </a>
+                    </div>
                 @endforeach
             </div>
         @endif

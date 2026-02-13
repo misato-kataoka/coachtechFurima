@@ -27,11 +27,12 @@ class AddPaymentMethodIdToItemsTable extends Migration
      *
      * @return void
      */
+
     public function down()
     {
-        Schema::table('items', function (Blueprint $table) {
-            $table->dropForeign(['payment_method_id']);
-            $table->dropColumn('payment_method_id');
-        });
-    }
+    Schema::table('posts', function (Blueprint $table) {
+        // $table->dropForeign(['user_id']);
+        $table->dropColumn('user_id');
+    });
+}
 }
