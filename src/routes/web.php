@@ -7,6 +7,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\MypageController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 
@@ -102,11 +104,21 @@ Route::get('/', [ItemController::class, 'index'])->name('home');
 
 // マイページへのルート
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/mypage', [UserController::class, 'show'])->name('mypage');
+    //Route::get('/mypage', [UserController::class, 'show'])->name('mypage');
+    Route::get('/mypage', [MypageController::class, 'index'])->name('mypage');
     Route::get('/mypage/profile/edit', [UserController::class, 'edit'])->name('address.edit'); // プロフィール編集
     Route::post('/mypage/profile/store', [UserController::class, 'store'])->name('profile.store');
     Route::post('/mypage/profile/update', [UserController::class, 'update'])->name('address.update'); // プロフィール更新
     Route::get('/profile', [UserController::class, 'profile'])->name('user.profile'); // プロフィールページ
+});
+
+//取引チャット関連のルート
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::delete('/chat/{chat_id}', [ChatController::class, 'destroy'])->name('chat.destroy');
+    // {item} はルートモデルバインディングを使い、Itemモデルのインスタンスを自動的に注入します。
+    Route::get('/items/{item}/chat', [ChatController::class, 'show'])->name('chat.show');
+    // POST: 特定の商品のチャットにメッセージを投稿する
+    Route::post('/item/{item}/chat', [ChatController::class, 'store'])->name('chat.store');
 });
 
 //商品登録のルート

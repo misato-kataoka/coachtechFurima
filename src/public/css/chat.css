@@ -1,0 +1,298 @@
+.main-container {
+    display: flex;
+    max-width: none !important; /* 最大幅の制限を解除 */
+    transition: max-width 0.3s ease-in-out; /* 幅の変更を滑らかに */
+}
+
+.sidebar {
+    width: 250px;
+    flex-shrink: 0; /* サイドバーの幅を固定 */
+    background-color: #777;
+    color: #fff;
+    padding: 20px;
+    transition: all 0.3s ease-in-out; /* 表示/非表示を滑らかに */
+}
+
+.sidebar p {
+    margin: 0 0 10px 0;
+    font-size: 25px;
+}
+
+.chat-window {
+    flex-grow: 1;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    min-width: 0; /* flexアイテムが縮小できるように */
+}
+
+/* チャットヘッダー */
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 3px solid #cacaca;
+}
+.chat-header h1 {
+    font-size: 30px;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.btn-complete {
+    background-color: #ef8484;
+    color: white;
+    border: none;
+    font-size: 16px;
+    padding: 10px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+/* 商品情報 */
+.item-info {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 3px solid #cacaca;
+}
+.item-info__image {
+    width: 200px;
+    height: 200px;
+    background-color: #cacaca;
+    margin-right: 20px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+.item-info__name {
+    font-size: 40px;
+    font-weight: bold;
+    margin: 0 20px 10px 0;
+}
+.item-info__price {
+    font-size: 28px;
+    margin: 0;
+}
+
+/* メッセージエリア全体 */
+.message-area {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background-color: transparent;
+}
+
+/* 個々のメッセージのコンテナ */
+.message {
+    display: flex; /* ★超重要: アイコンとコンテンツを横に並べる */
+    align-items: flex-start; /* 上揃えにする */
+    margin-bottom: 20px;
+    max-width: 100%; /* はみ出し防止 */
+}
+
+/* アイコンのラッパー */
+.message__avatar img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* コンテンツ（名前と吹き出し）のラッパー */
+.message__content {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.message__username {
+    font-size: 16px;
+    color: #555;
+    font-weight: bold;
+    margin-bottom: 5px; /* 吹き出しとの隙間 */
+}
+
+.message__bubble {
+    background-color: #e0e0e0;
+    padding: 10px 15px;
+    border-radius: 6px; /* 画像に合わせて四角く */
+    max-width: 450px;
+    word-wrap: break-word;
+}
+
+.message__bubble p {
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* --- 左右の配置調整 --- */
+
+/* 相手のメッセージ (左側) */
+.message--other .message__avatar {
+    margin-right: 15px; /* アイコンとコンテンツの間の隙間 */
+}
+.message--other .message__content {
+    align-items: flex-start; /* 中身を左揃え */
+}
+
+/* 自分のメッセージ (右側) */
+.message--self {
+    justify-content: flex-end; /* 全体を右に寄せる */ 
+}
+.message--self .message__avatar {
+    order: 2; /* ★重要: アイコンの表示順を2番目にする */
+    margin-left: 15px; /* アイコンとコンテンツの間の隙間 */
+}
+.message--self .message__content {
+    order: 1; /* ★重要: コンテンツの表示順を1番目にする */
+    align-items: flex-end; /* 中身を右揃え */
+}
+.message--self .message__bubble {
+    background-color: #e0e0e0;
+}
+
+/* 編集・削除ボタン */
+.message__actions {
+    font-size: 12px;
+    margin-top: 5px;
+}
+.action-btn {
+    background: none;
+    border: none;
+    color: #777;
+    cursor: pointer;
+    padding: 0 5px;
+}
+
+/* メッセージ入力フォーム */
+.message-form {
+    padding: 15px 20px;
+    background-color: #fff;
+}
+.form-group {
+    display: flex;
+    align-items: center;
+}
+.message-input {
+    flex-grow: 1;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin-right: 10px;
+}
+.image-upload-label {
+    background-color: white;
+    border: 2px solid red;
+    color: red;
+    padding: 5px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+    white-space: nowrap;
+}
+.image-upload-input {
+    display: none;
+}
+.send-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+.send-icon {
+    width: 30px;
+    height: 30px;
+    color: #555;
+}
+
+
+/* ======================================= */
+/* ここからレスポンシブ対応のスタイル */
+/* ======================================= */
+
+/* --- 1. PCサイズ (1400px - 1540px) --- */
+/* この幅では、サイドバーを表示したまま全体のコンテナ幅を広げます */
+@media screen and (min-width: 1400px) and (max-width: 1540px) {
+    .main-container {
+        /*
+         * 画面幅いっぱいに広げるのではなく、
+         * 少しマージンを残すために95%などに設定します。
+         * または固定値で max-width: 1380px; などと指定しても良いでしょう。
+         */
+        max-width: 1380px;
+    }
+}
+
+/* --- 2. タブレットサイズ (768px - 850px) --- */
+/* この幅では、サイドバーを非表示にし、チャットウィンドウを画面全体に広げます */
+@media screen and (min-width: 768px) and (max-width: 850px) {
+    .sidebar {
+        /*
+         * display: none; だと急に消えるので、
+         * widthを0にして見えなくすることで、アニメーションの余地を残します。
+         */
+        width: 0;
+        padding: 20px 0; /* 横パディングをなくす */
+        overflow: hidden; /* はみ出した内容を隠す */
+        visibility: hidden; /* スクリーンリーダーなどからも隠す */
+    }
+
+    .main-container {
+        /* タブレット幅では、左右のマージンを少しだけにする */
+        padding: 0 15px;
+        max-width: 100%; /* 最大幅の制限を解除 */
+        box-sizing: border-box; /* paddingを含めて幅を計算 */
+    }
+
+    .message__bubble {
+        /* 画面幅が狭くなるので、吹き出しの最大幅も少し狭めます */
+        max-width: 350px;
+    }
+}
+
+
+/* --- 3. スマホサイズ (767px以下) --- */
+/* 768px未満の画面幅で適用されるスタイル。タブレットの設定を継承しつつ、さらに調整します。*/
+@media screen and (max-width: 767px) {
+    .sidebar {
+        display: none; /* スマホでは完全に非表示 */
+    }
+
+    .main-container {
+        padding: 0; /* 画面いっぱいに表示 */
+    }
+
+    .chat-header h1 {
+        font-size: 14px; /* タイトルをさらに小さく */
+    }
+    .btn-complete {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+
+    .item-info {
+        padding: 15px;
+    }
+    .item-info__image {
+        width: 60px;
+        height: 60px;
+    }
+
+    .message-area {
+        padding: 15px;
+    }
+
+    /* メッセージ入力欄の画像追加ボタンのテキストを非表示にする例 */
+    .image-upload-label {
+        font-size: 0; /* テキストを消す */
+        padding: 8px;
+    }
+    .image-upload-label::before {
+        content: "🖼️"; /* 絵文字やアイコンフォントで代替 */
+        font-size: 16px;
+    }
+}
