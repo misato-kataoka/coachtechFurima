@@ -115,7 +115,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 //取引チャット関連のルート
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/chat/{chat_id}', [ChatController::class, 'destroy'])->name('chat.destroy');
-    // {item} はルートモデルバインディングを使い、Itemモデルのインスタンスを自動的に注入します。
+    Route::patch('/chat/{chat_id}', [ChatController::class, 'update'])->name('chat.update');
     Route::get('/items/{item}/chat', [ChatController::class, 'show'])->name('chat.show');
     // POST: 特定の商品のチャットにメッセージを投稿する
     Route::post('/item/{item}/chat', [ChatController::class, 'store'])->name('chat.store');

@@ -51,9 +51,9 @@ class ChatPolicy
      * @param  \App\Models\Chat  $chat
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Chat $chat)
+    public function update(User $user, Chat $chat): bool
     {
-        //
+        return $user->id === $chat->user_id;
     }
 
     /**

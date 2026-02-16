@@ -83,5 +83,32 @@ class ChatController extends Controller
 
         // 元のチャット画面にリダイレクト
         return back()->with('success', 'メッセージを削除しました。');
-}
+    }
+
+    public function update(Request $request, $chat_id)
+    {
+        // --- バリデーション ---
+        $request->validate([
+            'message' => 'required|string|max:1000',
+        ]);
+
+        // --- 更新対象のメッセージを取得 ---
+        $chat = Chat::findOrFail($chat_id);
+
+        // --- 認可 (Policy) ---
+        // ログインユーザーがこのメッセージを更新する権限があるかチェック
+        $this->authorize('update', $chat);
+
+        // --- データベースを更新 ---
+        $chat->message = $request->message;
+        $chat->save();
+
+        // --- 成功レスポンスを返す ---
+        // Ajax通信なので、ページ全体ではなくJSON形式でデータを返すのが一般的
+        return response()->json([
+            'success' => true,
+            'message' => 'メッセージを更新しました。',
+            'updated_message' => $chat->message // 更新後のメッセージを返す
+        ]);
+    }
 }
