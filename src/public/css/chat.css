@@ -29,11 +29,24 @@
 /* チャットヘッダー */
 .chat-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     padding: 15px 20px;
     border-bottom: 3px solid #cacaca;
 }
+
+.chat-header-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    margin-right: 30px;
+    background-color: #e0e0e0
+}
+
+.chat-header-icon {
+    object-fit: cover;     /* 画像の比率を保ったまま領域を埋める */
+}
+
+
 .chat-header h1 {
     font-size: 30px;
     margin: 0;
@@ -41,6 +54,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
 .btn-complete {
     background-color: #ef8484;
     color: white;
@@ -51,6 +65,7 @@
     cursor: pointer;
     font-weight: bold;
     flex-shrink: 0;
+    margin-left: auto;
 }
 
 /* 商品情報 */

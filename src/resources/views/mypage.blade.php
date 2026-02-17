@@ -25,9 +25,14 @@
     <span class="caption">
         <a href="{{ url('/mypage?tab=buy') }}" class="tab-link {{ $activeTab === 'buy' ? 'active' : '' }}">購入した商品</a>
     </span>
-    <span class="caption">
-        <a href="{{ url('/mypage?tab=chat') }}" class="tab-link {{ $activeTab === 'chat' ? 'active' : '' }}">取引中の商品</a>
-    </span>
+    <div class="tab-item">
+        <a href="{{ route('mypage', ['tab' => 'chat']) }}" class="tab-link @if($activeTab === 'chat') active @endif">
+            取引中の商品
+        </a>
+        @if ($unreadChatCount > 0)
+            <span class="unread-badge">{{ $unreadChatCount }}</span>
+        @endif
+    </div>
 </div>
 <div class="border-line"></div>
 
@@ -37,22 +42,34 @@
     @else
         <div class="item-grid">
             @foreach ($items as $item)
-                <div class="item-card">
-                    @if($activeTab === 'chat')
-                        <a href="{{ route('chat.show', ['item' => $item->id]) }}">
-                    @else
-                        <a href="{{ route('item.detail', ['id' => $item->id]) }}">
-                    @endif
+    <div class="item-card">
+        {{-- リンクはカード全体を囲む --}}
+        <a href="{{ $activeTab === 'chat' ? route('chat.show', ['item' => $item->id]) : route('item.detail', ['id' => $item->id]) }}">
+            
+            {{-- ★★★ 画像とバッジだけを囲むコンテナ ★★★ --}}
+            <div class="item-image-container">
 
-                        @if($item->buyer_id)
-                            <div class="sold-overlay">SOLD</div>
-                        @endif
+                {{-- 未読バッジの表示ロジック --}}
+                @if ($activeTab === 'chat' && isset($item->unread_messages_count) && $item->unread_messages_count > 0)
+                    <div class="unread-item-badge">{{ $item->unread_messages_count }}</div>
+                @endif
+                
+                {{-- "SOLD"の表示 --}}
+                @if($item->buyer_id)
+                    <div class="sold-overlay">SOLD</div>
+                @endif
 
-                        <img src="{{ $item->image }}" alt="{{ $item->item_name }}" class="item-image"/>
-                        <p class="item-title">{{ $item->item_name }}</p>
-                    </a>
-                </div>
-            @endforeach
+                {{-- 商品画像 --}}
+                <img src="{{ $item->image }}" alt="{{ $item->item_name }}" class="item-image"/>
+            
+            </div> {{-- ★★★ item-image-container の閉じタグ ★★★ --}}
+
+            {{-- ★★★ 商品名はコンテナの外に出す ★★★ --}}
+            <p class="item-title">{{ $item->item_name }}</p>
+
+        </a> {{-- ★★★ aタグの閉じタグ ★★★ --}}
+    </div> {{-- ★★★ item-card の閉じタグ ★★★ --}}
+@endforeach
         </div>
     @endif
 </div>

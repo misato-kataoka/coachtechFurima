@@ -63,6 +63,79 @@
     margin-bottom: 20px;
 }
 
+.tabs {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.tab-item {
+    display: inline-flex; 
+    align-items: center; 
+    position: relative;
+    padding: 10px 50px;
+}
+
+/* 画像とバッジを重ねるための親コンテナ */
+.item-image-container {
+    position: relative; /* 子要素を絶対配置(absolute)するための基準点にする */
+    display: block; /* aタグの中に置くことを考慮 */
+}
+
+/* 個別商品の未読バッジ */
+.unread-item-badge {
+    position: absolute; /* 親(item-image-container)を基準に位置を決める */
+    
+    /* ▼▼▼ ここから変更 ▼▼▼ */
+    top: 5px;   /* 画像の内側、上から5pxの位置 */
+    left: 5px;  /* 画像の内側、左から5pxの位置 */
+    /* ▲▲▲ ここまで変更 ▲▲▲ */
+
+    z-index: 20;        /* "SOLD"表示よりも手前に表示する */
+    
+    background-color: #ff5252; /* 赤色 */
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    
+    /* 円形にする */
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    
+    /* 数字を中央に配置 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* 枠線（内側に配置する場合は白枠が映える） */
+    border: 2px solid white;
+
+    /* 影をつけて視認性を上げる（お好みで） */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* 念のため、画像コンテナとSOLD表示のCSSも確認 */
+.item-image-container {
+    position: relative; 
+    display: block; 
+}
+
+.unread-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 6px;
+    margin-left: 8px;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+    background-color: red;
+    border-radius: 50%;
+}
+
 /*.tab-link {
     padding: 10px 20px;
     text-decoration: none;

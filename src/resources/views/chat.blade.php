@@ -31,6 +31,17 @@
                 @endphp
 
              {{-- $otherUserが存在する場合のみ名前を表示 --}}
+                {{-- アイコンの表示 --}}
+                @php
+                // 表示するアイコンのパスを決定する
+                // $otherUser が存在し、かつ profile_pic がある場合はその画像
+                // それ以外の場合は default-icon.png を使う
+                    $iconPath = ($otherUser && $otherUser->profile_pic)
+                        ? asset('storage/' . $otherUser->profile_pic)
+                        : asset('image/default-icon.png');
+                @endphp
+                <img src="{{ $iconPath }}" alt="ユーザーアイコン" class="chat-header-icon">
+             
                 <h1>「{{ $otherUser ? $otherUser->username : '相手' }}」さんとの取引画面</h1>
                 <button class="btn btn-complete">取引を完了する</button>
             </div>

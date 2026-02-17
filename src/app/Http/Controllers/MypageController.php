@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Item;
+use App\Models\Chat;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -14,51 +15,61 @@ class MypageController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        // クエリパラメータから 'tab' を取得。なければ 'sell' をデフォルトにする
         $activeTab = $request->query('tab', 'sell');
-
-        $items = collect(); // 表示するアイテムを初期化
-
+        $items = collect();
+        
         $perPage = 8;
 
-        if ($activeTab === 'sell') {
-            // 出品した商品は paginate() を直接使える
-            $items = $user->items()->latest()->paginate($perPage);
-        } elseif ($activeTab === 'buy') {
-            // 購入した商品も paginate() を直接使える
-            $items = $user->purchasedItems()->latest()->paginate($perPage);
-        } elseif ($activeTab === 'chat') {
-            // 取引中の商品は手動でページネーションを作成する
+        // --- 全てのタブで共通の未読チャット数を先に計算する ---
+        // 自分が関わる商品（出品者 or 購入者）の中から、
+        // 相手からの未読メッセージの数を数える
+        $unreadChatCount = Chat::whereHas('item', function ($query) use ($user) {
+                                $query->where(function ($subQuery) use ($user) {
+                                    $subQuery->where('user_id', $user->id)
+                                             ->orWhere('buyer_id', $user->id);
+                                });
+                            })
+                            ->where('user_id', '!=', $user->id) // 相手からのメッセージ
+                            ->where('is_read', false)          // 未読のもの
+                            ->count();
 
-            // 自分が売った取引中の商品
+        // --- タブごとの処理 ---
+        if ($activeTab === 'sell') {
+            $items = $user->items()->latest()->paginate($perPage);
+
+        } elseif ($activeTab === 'buy') {
+            $items = $user->purchasedItems()->latest()->paginate($perPage);
+
+        } elseif ($activeTab === 'chat') {
             $soldItems = Item::where('user_id', $user->id)
                              ->whereNotNull('buyer_id')
                              ->get();
-            // 自分が買った商品
             $boughtItems = Item::where('buyer_id', $user->id)->get();
-
-            // 結合し、重複を排除し、新しい順に並び替える
             $mergedItems = $soldItems->merge($boughtItems)->unique('id')->sortByDesc('updated_at');
 
-            // 現在のページ番号を取得
             $currentPage = Paginator::resolveCurrentPage('page');
-
-            // コレクションを指定した数で分割し、現在のページ部分のみを取得
             $currentPageItems = $mergedItems->slice(($currentPage - 1) * $perPage, $perPage)->values();
 
-            // Paginatorインスタンスを生成
+            // ページ内の各商品について、未読メッセージ数を計算して追加する
+            foreach ($currentPageItems as $item) {
+                $unreadCountForItem = Chat::where('item_id', $item->id)
+                                          ->where('user_id', '!=', $user->id)
+                                          ->where('is_read', false)
+                                          ->count();
+                $item->unread_messages_count = $unreadCountForItem;
+            }
+
+            // 手動でページネーターを生成
             $items = new LengthAwarePaginator(
-                $currentPageItems,    // 現在のページに表示するデータ
-                $mergedItems->count(), // 全体のアイテム数
-                $perPage,             // 1ページあたりの表示件数
-                $currentPage,         // 現在のページ番号
-                ['path' => Paginator::resolveCurrentPath(), 'query' => $request->query()] // URLを正しく生成するためのオプション
+                $currentPageItems,
+                $mergedItems->count(),
+                $perPage,
+                $currentPage,
+                ['path' => Paginator::resolveCurrentPath(), 'query' => $request->query()]
             );
         }
-
-        return view('mypage', [
-            'items' => $items,
-            'activeTab' => $activeTab
-        ]);
+        
+        // --- 最後に全ての変数をビューに渡す ---
+        return view('mypage', compact('user', 'activeTab', 'items', 'unreadChatCount'));
     }
 }

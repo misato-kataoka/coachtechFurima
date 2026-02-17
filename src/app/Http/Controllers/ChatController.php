@@ -18,6 +18,8 @@ class ChatController extends Controller
      */
     public function show(Item $item)
     {
+        $this->authorize('view', $item); 
+    
         // --- 認可 (Authorization) ---
         // このチャットページを閲覧できるのは、商品の出品者か購入者のみに限定するべき
         $user = Auth::user();
@@ -26,6 +28,12 @@ class ChatController extends Controller
             abort(403, 'Unauthorized action.'); 
         }
 
+        // このチャットルームに含まれる、相手からの未読メッセージをすべて既読にする
+        Chat::where('item_id', $item->id)
+            ->where('user_id', '!=', $user->id) // 相手が送信したメッセージ
+            ->where('is_read', false)          // 未読のもの
+            ->update(['is_read' => true]);     // 既読に更新
+
         // --- データの取得 ---
         // この商品に関連するチャットメッセージをすべて取得する
         // ※リレーションを後で定義する必要があります
@@ -33,10 +41,7 @@ class ChatController extends Controller
 
         // --- ビューを返す ---
         // 取得したデータと共に、チャットビューを表示する
-        return view('chat', [
-            'item' => $item,
-            'chats' => $chats,
-        ]);
+        return view('chat', compact('item', 'chats'));
     }
 
     /**
