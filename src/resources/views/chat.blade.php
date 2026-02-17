@@ -54,7 +54,14 @@
                         <div class="message__content">
                             <p class="message__username">{{ $chat->user->username }}</p>
                             <div class="message__bubble">
-                                <p class="message-text">{{ $chat->message }}</p>
+                                {{-- ★★★ 画像がある場合は画像を表示 ★★★ --}}
+                                @if($chat->image_path)
+                                    <img src="{{ asset('storage/' . $chat->image_path) }}" alt="投稿画像" class="message-image">
+                                @endif
+                                {{-- ★★★ メッセージがある場合はメッセージを表示 ★★★ --}}
+                                @if($chat->message)
+                                    <p class="message-text">{{ $chat->message }}</p>
+                                @endif
                                 {{-- 編集フォーム（初期状態では非表示） --}}
                                 <form class="edit-form" action="{{ route('chat.update', ['chat_id' => $chat->id]) }}" method="POST">
                                     @csrf
@@ -88,8 +95,14 @@
                         <div class="message__content">
                             <p class="message__username">{{ $chat->user->username }}</p>
                             <div class="message__bubble">
-                                {{-- ★★★ typo修正: $chat->content -> $chat->message ★★★ --}}
-                                <p>{{ $chat->message }}</p>
+                                {{-- ★★★ 画像がある場合は画像を表示 ★★★ --}}
+                                @if($chat->image_path)
+                                    <img src="{{ asset('storage/' . $chat->image_path) }}" alt="投稿画像" class="message-image">
+                                @endif
+                                {{-- ★★★ メッセージがある場合はメッセージを表示 ★★★ --}}
+                                @if($chat->message)
+                                    <p>{{ $chat->message }}</p>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -98,10 +111,32 @@
         </div>
 
         <!-- メッセージ入力フォーム -->
-        <form action="{{ route('chat.store', ['item' => $item->id]) }}" method="post" class="message-form">
+        <form action="{{ route('chat.store', ['item' => $item->id]) }}" method="post" class="message-form" enctype="multipart/form-data" novalidate data-item-id="{{ $item->id }}">
             @csrf
+
+            @if ($errors->any())
+                <div class="validation-errors">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li class="validation-error-message">{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <div class="form-group">
-                <input type="text" name="message" class="message-input" placeholder="取引メッセージを記入してください">
+                {{-- テキストメッセージの入力欄 --}}
+                <input type="text" name="message" class="message-input" placeholder="取引メッセージを記入してください" value="{{ old('message') }}">
+
+                {{-- ★★★ 1. これが本体。name="image" を持ち、クラス名を指定する ★★★ --}}
+                <input type="file" name="image" id="image-upload" class="image-upload-input">
+
+                {{-- ★★★ 2. これは本体を操作するための「ボタン」。順番を先頭に。 ★★★ --}}
+                <label for="image-upload" class="image-upload-label">
+                    画像を追加
+                </label>
+
+                {{-- 送信ボタン --}}
                 <button type="submit" class="send-button">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="send-icon"><path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z" /></svg>
                 </button>
@@ -114,6 +149,38 @@
 @section('js')
 <script>
 $(function() {
+
+    // 1. 操作対象の要素を特定
+    const messageInput = $('.message-input');
+    const messageForm = $('.message-form');
+    
+    // 2. このチャットページ固有の保存キーを生成
+    //    itemのIDをbladeから受け取るために、formにdata属性を追加
+    const itemId = messageForm.data('item-id');
+    const storageKey = `chat-draft-item-${itemId}`;
+
+    // 3. ページ読み込み時の処理
+    //    もしLaravelのold()で値がセットされていたら、そちらを優先する
+    //    old()が空の場合のみ、sessionStorageから下書きを読み込む
+    if (!messageInput.val()) {
+        const draft = sessionStorage.getItem(storageKey);
+        if (draft) {
+            messageInput.val(draft);
+        }
+    }
+
+    // 4. テキスト入力時の処理
+    messageInput.on('input', function() {
+        // 入力されるたびに、内容をsessionStorageに保存
+        sessionStorage.setItem(storageKey, $(this).val());
+    });
+
+    // 5. フォーム送信時の処理
+    messageForm.on('submit', function() {
+        // メッセージを送信したら、保存しておいた下書きは不要なので削除
+        sessionStorage.removeItem(storageKey);
+    });
+
     // 「編集」ボタンがクリックされた時の処理
     $('.message-area').on('click', '.edit-btn', function() {
         const messageContent = $(this).closest('.message__content');

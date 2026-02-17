@@ -17,8 +17,8 @@ class CreateChatsTable extends Migration
         $table->id();
         $table->foreignId('item_id')->constrained()->onDelete('cascade'); // どの商品に対するチャットか
         $table->foreignId('user_id')->constrained()->onDelete('cascade'); // 誰が投稿したか
-        $table->text('message'); // メッセージ本文
-        $table->string('image_path')->nullable(); // 画像のパス
+        $table->string('message', 400); // メッセージ本文
+        $table->string('image_path')->nullable();
         $table->timestamps();
     });
     }
@@ -30,6 +30,8 @@ class CreateChatsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('chats');
+        Schema::table('chats', function (Blueprint $table) {
+        $table->dropColumn('image_path');
+    });
     }
 }

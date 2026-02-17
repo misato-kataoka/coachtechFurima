@@ -138,6 +138,24 @@
     line-height: 1.5;
 }
 
+.message-image {
+    max-width: 100%;       /* 吹き出しの幅に合わせる */
+    height: auto;          /* 高さは自動調整 */
+    border-radius: 6px;    /* 吹き出しの角丸と合わせる */
+    display: block;        /* 画像下の余白をなくす */
+}
+
+/* テキストと画像が両方ある場合の調整 */
+.message-image + .message-text {
+    margin-top: 10px; /* 画像とテキストの間に少し隙間をあける */
+}
+
+/* 画像のみの場合、吹き出しのパディングをなくす */
+.message__bubble:has(.message-image:only-child) {
+    padding: 0;
+    background-color: transparent; /* 背景も透明にする */
+}
+
 /* --- 左右の配置調整 --- */
 
 /* 相手のメッセージ (左側) */
@@ -199,7 +217,7 @@
     color: red;
     padding: 5px 12px;
     border-radius: 5px;
-    cursor: pointer;
+    cursor: pointer !important;
     margin-right: 10px;
     white-space: nowrap;
 }
@@ -216,6 +234,32 @@
     width: 30px;
     height: 30px;
     color: #555;
+}
+
+.validation-errors {
+  margin-bottom: 1rem; /* 下側の余白 */
+  padding: 0.25rem; /* 内側の余白 */
+  border: 1px solid #e53e3e; /* 赤系の枠線 */
+  background-color: #fff5f5; /* 薄い赤系の背景色 */
+  border-radius: 0.25rem; /* 角を少し丸める */
+}
+
+/* エラーリスト（ul）のスタイル */
+.validation-errors ul {
+  margin: 0;
+  padding-left: 1.25rem; /* 左側の箇条書きの点のスペース */
+  list-style-type: disc; /* 箇条書きの点を表示 */
+}
+
+/* 各エラーメッセージ（li）のスタイル */
+.validation-error-message {
+  color: #c53030; /* 文字色を赤系に */
+  font-weight: bold; /* 文字を太字に */
+}
+
+/* エラーメッセージ間の余白（任意） */
+.validation-error-message + .validation-error-message {
+  margin-top: 0.5rem; /* エラーが複数ある場合、項目間に少し隙間を空ける */
 }
 
 

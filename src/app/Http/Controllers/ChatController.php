@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\StoreChatRequest;
 use App\Models\Item;
 use App\Models\Chat;
 
@@ -41,33 +42,39 @@ class ChatController extends Controller
     /**
      * チャットメッセージを投稿する
      *
-     * @param Request $request
+     * @param Request StoreChatRequest $request
      * @param Item $item
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request, Item $item)
+    public function store(StoreChatRequest $request, Item $item)
     {
-        // --- 認可 (Authorization) ---
-        $user = Auth::user();
-        if ($user->id !== $item->user_id && $user->id !== $item->buyer_id) {
-            abort(403, 'Unauthorized action.');
-        }
+        $validatedData = $request->validated();
 
-        // --- バリデーション ---
-        $request->validate([
-            'message' => 'required|string|max:1000', // メッセージは必須、最大1000文字
-            'image' => 'nullable|image|max:2048', // 画像は任意、画像ファイルであること、最大2MB
-        ]);
-    
-        $item->chats()->create([
-            'user_id' => Auth::id(),
-            'message' => $request->message,
-            // 画像があれば保存処理を追加
-        ]);
-        
-        // 投稿後、同じチャットページにリダイレクトして戻る
+    // メッセージも画像も空の場合は、何もせず元のページに戻る
+    if (!$request->filled('message') && !$request->hasFile('image')) {
         return back();
     }
+
+    // --- データベースへの保存処理 ---
+
+    $chat = new Chat();
+        $chat->user_id = Auth::id();
+        $chat->item_id = $item->id;
+        $chat->message = $validatedData['message'];
+
+    // 画像があれば保存し、パスを設定
+    if ($request->hasFile('image')) {
+        // 'public'ディスクの'chat_images'フォルダに保存し、そのパスを$pathに格納
+        $path = $request->file('image')->store('chat_images', 'public');
+        $chat->image_path = $path;
+    }
+
+    // すべての設定が終わった$chatをデータベースに保存
+    $chat->save();
+
+    // チャット画面にリダイレクトする
+    return redirect()->route('chat.show', ['item' => $item->id]);
+}
 
     /**
  * チャットメッセージを削除する
