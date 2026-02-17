@@ -115,79 +115,63 @@
 
 .header {
     background: #000;
-    /* ★元の黒背景に戻す */
     padding: 0 40px;
-    /* 上下のpaddingは0、左右に余白 */
     height: 80px;
-    /* ヘッダーの高さを固定 */
 }
 
-/* ★★★ 親コンテナをFlexboxに ★★★ */
 .header__inner {
     height: 100%;
     display: flex;
     justify-content: space-between;
-    /* 要素間のスペースを均等に配置 */
     align-items: center;
-    /* 要素を垂直方向の中央に */
 }
 
-/* ★★★ 1/3の幅を持つ3つの子要素 ★★★ */
 .header__logo,
-.header__search,
-.header__nav {
-    flex: 1;
-    /* これが魔法のプロパティ！利用可能なスペースを均等に分け合う */
+.header__utility-group { 
+    flex: 1; 
+}
+
+.header__utility-group {
+    display: flex;
+    align-items: center;
 }
 
 /* 1. ロゴグループのスタイル */
 .header__logo {
-    /* 左寄せはデフォルトなので特に指定不要 */
 }
 
 .header__logo img {
     height: 30px;
-    /* ロゴの高さを指定 */
-    vertical-align: middle;
-    /* 画像がテキストと並んだ時の位置ずれを防ぐ */
+    vertical-align: middle; /* 画像がテキストと並んだ時の位置ずれを防ぐ */
 }
 
 /* 2. 検索グループのスタイル */
 .header__search {
+    flex: 1;
     text-align: center;
 }
 
-/* ★★★ form のスタイルを修正 ★★★ */
 .header__search form {
     display: flex;
-    /* ★ input と button を横並びにする */
     position: relative;
     width: 90%;
     max-width: 450px;
     margin: 0 auto;
     border-radius: 6px;
-    /* ★ 親のformに角丸を設定 */
     overflow: hidden;
-    /* ★ 角丸からはみ出した子要素を隠す */
 }
 
-/* ★★★ input のスタイルを修正 ★★★ */
 .header__search input[type="text"] {
     flex-grow: 1;
-    /* ★ 残りのスペースを全て埋めるように広がる */
     width: auto;
-    /* ★ width指定をリセット */
     height: 40px;
     padding: 0 15px;
     border: none;
     font-size: 16px;
-    /* ★ 角丸は親に設定したので不要 */
 }
 
-/* ★★★ 新しく検索ボタンのスタイルを追加 ★★★ */
 .header__search-button {
     background-color: #555;
-    /* ボタンの背景色（元のCSSになかったので仮設定） */
     color: white;
     border: none;
     height: 40px;
@@ -201,12 +185,9 @@
     background-color: #777;
 }
 
-
-/* 3. ナビゲーショングループのスタイル */
 .header__nav {
     display: flex;
     justify-content: flex-end;
-    /* ナビゲーションアイテムを右に寄せる */
     align-items: center;
 }
 
@@ -250,51 +231,60 @@
 @media (max-width: 850px) {
     .header {
         height: auto;
-        /* 高さを自動に */
         padding: 15px;
     }
 
     .header__inner {
         flex-direction: column;
-        /* 縦並びに変更 */
         align-items: stretch;
-        /* 横幅いっぱいに広げる */
-    }
-
-    .header__logo,
-    .header__search,
-    .header__nav {
-        flex: none;
-        /* flex:1 をリセット */
-        width: 100%;
-        margin-bottom: 15px;
     }
 
     .header__logo {
+        flex: none;
+        width: 100%;
+        margin-bottom: 15px;
         text-align: center;
     }
 
-    .header__search form {
+    /* 検索とナビをまとめたグループのスタイル */
+    .header__utility-group {
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
         width: 100%;
     }
 
+    /* 検索窓のスタイル調整 */
+    .header__search {
+        flex: 1; 
+        width: auto; 
+        margin-bottom: 0; 
+    }
+
+    .header__search form {
+        width: 100%; 
+        max-width: 350px; 
+        margin: 0; 
+    }
+
+    /* ナビゲーションのスタイル調整 */
     .header__nav {
-        flex-direction: column;
-        /* ナビゲーションも縦並びに */
-        align-items: stretch;
-        /* ボタンを横幅いっぱいに */
+        flex: none; 
+        width: auto;
+        margin-bottom: 0;
+        margin-left: 20px; 
     }
 
     .header__nav-item {
-        margin: 8px 0;
-        /* ★スマホ表示時の上下マージン調整 */
-        text-align: center;
-        padding: 8px;
-        /* ★スマホ表示時にタップしやすいように少し余白 */
+        margin: 0 30px 0 0;
+        text-align: right;
+        padding: 8px 0;
+        &:last-child {
+            margin-left: 0;
+        }
     }
 
     .header__nav-item--button {
-        padding: 12px;
-        /* ★出品ボタンはさらに少し大きく */
+        padding: 0 8px;
     }
 }

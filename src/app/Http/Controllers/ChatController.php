@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreChatRequest;
+use Illuminate\Http\Request;
 use App\Models\Item;
 use App\Models\Chat;
 
@@ -39,9 +40,30 @@ class ChatController extends Controller
         // ※リレーションを後で定義する必要があります
         $chats = Chat::where('item_id', $item->id)->orderBy('created_at', 'asc')->get();
 
+        $user = Auth::user();
+
+        // 1. 自分が「出品者」として取引中の商品リストを取得
+        $sellingItems = Item::where('user_id', $user->id)
+            ->whereNotNull('buyer_id') // 購入者がいるもの
+            ->get();
+
+        // 2. 自分が「購入者」として取引中の商品リストを取得
+        $buyingItems = Item::where('buyer_id', $user->id)
+            ->get();
+
+        // 3. ２つのリストを結合し、重複を削除し、現在表示中の商品を除外する
+        $otherChatItems = $sellingItems->merge($buyingItems) // 結合
+            ->unique('id')         // 重複を削除
+            ->where('id', '!=', $item->id); // 現在の商品を除外
+
+
         // --- ビューを返す ---
         // 取得したデータと共に、チャットビューを表示する
-        return view('chat', compact('item', 'chats'));
+        return view('chat', [
+            'item' => $item,
+            'chats' => $chats,
+            'otherChatItems' => $otherChatItems,
+        ]);
     }
 
     /**
@@ -87,40 +109,70 @@ class ChatController extends Controller
     public function destroy($chat_id)
     {
         $chat = Chat::findOrFail($chat_id);
-        // ポリシーを使って、このメッセージを削除する権限があるかチェック
         $this->authorize('delete', $chat);
 
-        // メッセージを削除
+        // ★★★ メッセージに画像があればストレージから削除する処理を追加 ★★★
+        if ($chat->image_path) {
+            Storage::disk('public')->delete($chat->image_path);
+        }
+        
         $chat->delete();
 
-        // 元のチャット画面にリダイレクト
         return back()->with('success', 'メッセージを削除しました。');
     }
 
     public function update(Request $request, $chat_id)
     {
         // --- バリデーション ---
-        $request->validate([
-            'message' => 'required|string|max:1000',
+        $validatedData = $request->validate([
+            'message' => 'required_without_all:image,remove_image|nullable|string|max:1000',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'remove_image' => 'nullable|boolean',
         ]);
 
-        // --- 更新対象のメッセージを取得 ---
         $chat = Chat::findOrFail($chat_id);
-
-        // --- 認可 (Policy) ---
-        // ログインユーザーがこのメッセージを更新する権限があるかチェック
         $this->authorize('update', $chat);
 
-        // --- データベースを更新 ---
-        $chat->message = $request->message;
+        // --- テキストメッセージの更新 ---
+        $chat->message = $validatedData['message'] ?? null;
+
+        // --- 画像の削除処理 ---
+        if ($request->boolean('remove_image') && !$request->hasFile('image')) {
+            if ($chat->image_path) {
+                Storage::disk('public')->delete($chat->image_path);
+                $chat->image_path = null;
+            }
+        }
+
+        // --- 新しい画像のアップロード処理 ---
+        if ($request->hasFile('image')) {
+            if ($chat->image_path) {
+                Storage::disk('public')->delete($chat->image_path);
+            }
+            $path = $request->file('image')->store('chat_images', 'public');
+            $chat->image_path = $path;
+        }
+        
+        // --- メッセージと画像が両方空になるのを防ぐ最終チェック ---
+        if (empty($chat->message) && empty($chat->image_path)) {
+            // メッセージ削除はdestroyメソッドで行うべきなので、updateではエラーとする
+            return response()->json([
+                'success' => false,
+                'message' => 'メッセージと画像の両方を空にすることはできません。削除する場合は削除ボタンを使用してください。',
+            ], 422);
+        }
+
         $chat->save();
 
         // --- 成功レスポンスを返す ---
-        // Ajax通信なので、ページ全体ではなくJSON形式でデータを返すのが一般的
         return response()->json([
             'success' => true,
             'message' => 'メッセージを更新しました。',
-            'updated_message' => $chat->message // 更新後のメッセージを返す
+            'updated_chat' => [
+                'message' => $chat->message,
+                'image_path' => $chat->image_path,
+            ]
         ]);
     }
+
 }

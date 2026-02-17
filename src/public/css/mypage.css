@@ -1,9 +1,10 @@
 .user-info {
     display: flex;
+    flex-wrap: wrap; /* 画面幅が足りない時に折り返す設定 */
     align-items: center;
-    justify-content: center;
+    justify-content: center; /* 全体を中央揃えに */
+    gap: 20px; /* 各要素間の隙間 */
     margin: 50px 0;
-    text-align: center;
 }
 
 .user-image {
@@ -28,14 +29,14 @@
 .user-details {
     display: flex;
     align-items: center;
+    gap: 20px;
 }
 
 .edit-profile-button {
-    margin-left: 200px;
     border: 2px solid #f00;
     color: #f00;
     background-color: #fff;
-    padding: 5px 15;
+    padding: 5px 15px;
     border-radius: 4px;
     text-decoration: none;
     transition: background-color 0.2s;
@@ -283,31 +284,50 @@
 }
 
 @media (max-width: 850px) {
-    .user-info {
-        flex-direction: column;
-        align-items: flex-start;
+    
+    /* アイコンのサイズを少し小さくする */
+    .user-image, .user-image-placeholder {
+        width: 60px;
+        height: 60px;
+        /* ★重要★ アイコンとユーザー名の間の余白を小さくする */
+        margin-right: 20px; 
     }
 
-    .header-container {
-        flex-direction: column;
+    /* ユーザー名のフォントサイズを少し小さくする（お好みで調整） */
+    .user-details .user-name {
+        font-size: 1rem; 
     }
 
-    /*
-    .item-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }*/
-
-    .user-image {
-        width: 50px;
-        height: 50px;
-    }
-
+    /* ★重要★ ユーザー名と編集ボタンの間の大きな余白を小さくする */
     .edit-profile-button {
-        padding: 4px 8px;
+        margin-left: 30px; 
     }
 
-    /*
-    .item-title {
-        font-size: 12px;
-    }*/
+    /* --- その他の調整（以前のコードから引用） --- */
+    .header-container {
+        flex-direction: row !important; 
+        justify-content: space-around; 
+        width: 100%; /* 幅を画面いっぱいに広げる */
+        padding: 10px 0;
+    }
+
+    /* 各タブの領域を均等に広げる */
+    .header-container .caption, 
+    .header-container .tab-item {
+        flex-grow: 1;    /* ★重要★ 空きスペースを均等に分け合って伸びる */
+        text-align: center; /* タブ内のテキストを中央揃えにする */
+        margin-left: 0;
+    }
+
+    /* リンクのスタイル調整 */
+    .header-container .tab-link {
+        display: block;        /* クリック領域を広げる */
+        padding: 15px 5px;   /* 上下の余白を確保し、左右は少し狭める */
+    }
+
+    /* バッジの位置調整（お好みで） */
+    .header-container .unread-badge {
+        top: 10px;
+        right: 15px; /* 3等分で少し窮屈になるため、右からの位置を調整 */
+    }
 }

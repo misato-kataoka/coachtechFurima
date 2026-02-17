@@ -13,9 +13,61 @@
     transition: all 0.3s ease-in-out; /* 表示/非表示を滑らかに */
 }
 
-.sidebar p {
-    margin: 0 0 10px 0;
+.sidebar-title {
     font-size: 25px;
+    text-align: center;
+    font-weight: 500;
+    color: #e9ecef;
+    margin-top: 0;
+    margin-bottom: 30px;
+    padding-bottom: 12px;
+}
+
+.other-chats-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.other-chats-list li {
+    margin-bottom: 0.5rem; /* 8px */
+}
+
+/* 各商品へのリンク */
+.other-chat-link {
+    display: block;
+    padding: 10px 14px;
+    background-color: #e9ecef;
+    color: #212529;    
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 20px;
+    font-weight: 500;
+    text-align: center;
+    margin-bottom: 30px;
+    
+    /* はみ出した文字を「...」で省略 */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.other-chat-link:hover {
+    background-color: #b2d2f4;
+    color: #212529;
+    text-decoration: none;
+}
+
+/* 他に取引がない場合のメッセージ */
+.no-other-chats {
+    font-size: 0.875rem; /* 14px */
+    color: #6c757d; /* 少し薄いグレー */
+    padding: 1rem;
+    text-align: center;
+    background-color: #f1f3f5;
+    border-radius: 0.375rem;
 }
 
 .chat-window {
@@ -199,15 +251,76 @@
 
 /* 編集・削除ボタン */
 .message__actions {
-    font-size: 12px;
+    font-size: 14px;
     margin-top: 5px;
 }
+
 .action-btn {
     background: none;
     border: none;
     color: #777;
     cursor: pointer;
     padding: 0 5px;
+}
+
+.action-btn:hover {
+    color: #fb7070; 
+}
+
+/* --- メッセージ編集時の画像コントロール --- */
+.edit-image-controls {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+}
+
+/* 現在の画像のプレビュー */
+.current-image-preview {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+.current-image-preview img {
+    max-width: 80px;
+    max-height: 80px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+/* 「画像を削除」チェックボックス */
+.remove-image-wrapper {
+    display: flex;
+    align-items: center;
+}
+.remove-image-wrapper input[type="checkbox"] {
+    margin-right: 5px;
+}
+.remove-image-wrapper label {
+    font-size: 13px;
+    color: #e53e3e; /* 赤色にして注意を引く */
+    cursor: pointer;
+}
+
+/* 「画像を変更/追加」ボタン */
+.change-image-wrapper {
+    margin-top: 5px;
+}
+.btn-change-image {
+    display: inline-block;
+    padding: 6px 12px;
+    font-size: 13px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.btn-change-image:hover {
+    background-color: #e0e0e0;
+}
+/* 実際のinput[type=file]は非表示にする */
+.edit-image-input {
+    display: none;
 }
 
 /* メッセージ入力フォーム */

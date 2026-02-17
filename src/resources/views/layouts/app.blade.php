@@ -23,33 +23,35 @@
                 </a>
             </div>
 
+            <div class="header__utility-group">
             {{-- ★★★ 2. 検索グループ（ログイン時のみ表示） ★★★ --}}
-            @auth
-            <div class="header__search">
-                <form action="{{ route('item.search') }}" method="GET">
-                    <input type="text" name="query" placeholder="なにをお探しですか？" value="{{ request('query') }}">
+                @auth
+                <div class="header__search">
+                    <form action="{{ route('item.search') }}" method="GET">
+                        <input type="text" name="query" placeholder="なにをお探しですか？" value="{{ request('query') }}">
 
-                    <button type="submit" class="header__search-button">検索</button>
-                </form>
-            </div>
-            @endauth
+                        <button type="submit" class="header__search-button">検索</button>
+                    </form>
+                </div>
+                @endauth
 
             {{-- ★★★ 3. ナビゲーショングループ ★★★ --}}
-            <nav class="header__nav">
-                @if (Auth::check())
-                    {{-- ログインしている場合のナビゲーション --}}
-                    <form action="{{ route('logout') }}" method="post">
-                        @csrf
-                        <button type="submit" class="header__nav-item">ログアウト</button>
-                    </form>
-                    <a class="header__nav-item" href="/mypage">マイページ</a>
-                    <a class="header__nav-item header__nav-item--button" href="{{ route('items.create') }}">出品</a>
-                @else
-                    {{-- ログインしていない場合のナビゲーション --}}
-                    <a class="header__nav-item" href="{{ route('login') }}">ログイン</a>
-                    <a class="header__nav-item" href="{{ route('register') }}">会員登録</a>
-                @endif
-            </nav>
+                <nav class="header__nav">
+                    @if (Auth::check())
+                        {{-- ログインしている場合のナビゲーション --}}
+                        <form action="{{ route('logout') }}" method="post">
+                            @csrf
+                            <button type="submit" class="header__nav-item">ログアウト</button>
+                        </form>
+                        <a class="header__nav-item" href="/mypage">マイページ</a>
+                        <a class="header__nav-item header__nav-item--button" href="{{ route('items.create') }}">出品</a>
+                    @else
+                        {{-- ログインしていない場合のナビゲーション --}}
+                        <a class="header__nav-item" href="{{ route('login') }}">ログイン</a>
+                        <a class="header__nav-item" href="{{ route('register') }}">会員登録</a>
+                    @endif
+                </nav>
+            </div>
 
         </div>
     </header>

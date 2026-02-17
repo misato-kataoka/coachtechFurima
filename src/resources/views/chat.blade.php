@@ -13,8 +13,25 @@
 <main class="main-container">
         <!-- サイドバー（スマホでは非表示を想定） -->
         <aside class="sidebar">
-            <p>その他の取引</p>
-            <!-- 他の取引へのリンクなどをここに配置 -->
+            {{-- サイドバーのタイトル --}}
+            <h3 class="sidebar-title">その他の取引</h3>
+
+            {{-- 商品リストのコンテナ --}}
+            <ul class="other-chats-list">
+            {{-- コントローラーから渡された$otherChatItemsをループ処理 --}}
+                @forelse ($otherChatItems as $otherItem)
+                    <li>
+                        {{-- 各商品のチャットページへのリンクを生成 --}}
+                        <a href="{{ route('chat.show', ['item' => $otherItem->id]) }}" class="other-chat-link">
+                            {{-- 商品名を表示 --}}
+                            {{ $otherItem->item_name }}
+                        </a>
+                    </li>
+                @empty
+                    {{-- 他に取引中の商品が一つもなかった場合に表示されるメッセージ --}}
+                    <p class="no-other-chats">他に取引中の商品はありません。</p>
+                @endforelse
+            </ul>
         </aside>
 
         <!-- メインのチャット画面 -->
@@ -74,10 +91,32 @@
                                     <p class="message-text">{{ $chat->message }}</p>
                                 @endif
                                 {{-- 編集フォーム（初期状態では非表示） --}}
-                                <form class="edit-form" action="{{ route('chat.update', ['chat_id' => $chat->id]) }}" method="POST">
+                                <form class="edit-form" action="{{ route('chat.update', ['chat_id' => $chat->id]) }}" method="POST" enctype="multipart/form-data">
                                     @csrf
                                     @method('PATCH')
+
                                     <textarea name="message" rows="3">{{ $chat->message }}</textarea>
+
+                                    <div class="edit-image-controls">
+                                        {{-- もし、このメッセージに元々画像があれば、プレビューと削除チェックボックスを表示 --}}
+                                        @if($chat->image_path)
+                                        <div class="current-image-preview">
+                                            <img src="{{ asset('storage/' . $chat->image_path) }}" alt="現在の画像">
+                                            <div class="remove-image-wrapper">
+                                                {{-- 「画像を削除」チェックボックス --}}
+                                                <input type="checkbox" name="remove_image" id="remove-image-{{ $chat->id }}">
+                                                <label for="remove-image-{{ $chat->id }}">画像を削除する</label>
+                                            </div>
+                                        </div>
+                                        @endif
+
+                                        {{-- 「画像を変更」するためのファイル選択ボタン --}}
+                                        <div class="change-image-wrapper">
+                                            <label for="edit-image-{{ $chat->id }}" class="btn-change-image">画像を変更/追加</label>
+                                            <input type="file" name="image" id="edit-image-{{ $chat->id }}" class="edit-image-input">
+                                        </div>
+                                    </div>
+
                                     <button type="submit">保存</button>
                                     <button type="button" class="cancel-edit-btn">キャンセル</button>
                                 </form>
@@ -216,32 +255,68 @@ $(function() {
 
         const form = $(this);
         const url = form.attr('action');
-        const formData = form.serialize();
+        const formData = new FormData(this);
 
         $.ajax({
             type: 'POST',
             url: url,
             data: formData,
+            processData: false,
+            contentType: false,
+            
             success: function(response) {
+                const updatedChat = response.updated_chat; 
                 const messageContent = form.closest('.message__content');
                 // 画面の表示を更新
-                messageContent.find('.message-text').text(response.updated_message).show();
-                messageContent.find('.edit-form').hide();
-                messageContent.find('.edit-form textarea').val(response.updated_message);
-                // アクションボタンを再表示
-                messageContent.find('.message__actions').show();
-                console.log(response.message); // 成功メッセージをコンソールに表示
-            },
-            error: function(xhr) {
-                const errors = xhr.responseJSON.errors;
-                let errorMessage = '更新に失敗しました。';
-                if (errors && errors.message) {
-                    errorMessage += '\n' + errors.message[0];
-                }
-                alert(errorMessage);
+                // 1. テキスト部分の更新
+            const messageTextElement = messageContent.find('.message-text');
+            if (updatedChat.message) {
+                messageTextElement.text(updatedChat.message).show();
+            } else {
+                messageTextElement.text('').hide(); // テキストがなければ非表示
             }
-        });
+
+            // 2. 画像部分の更新
+            let imageElement = messageContent.find('.message-image');
+            if (updatedChat.image_path) {
+                const imageUrl = '{{ asset('storage/') }}' + '/' + updatedChat.image_path;
+                if (imageElement.length > 0) {
+                    // 既存のimgタグのsrcを更新
+                    imageElement.attr('src', imageUrl).show();
+                } else {
+                    // imgタグがなければ、新しく作成して追加
+                    messageContent.find('.message__bubble').prepend(`<img src="${imageUrl}" alt="投稿画像" class="message-image">`);
+                }
+            } else {
+                // 画像がなければimgタグを削除
+                imageElement.remove();
+            }
+            
+            // 3. フォームとUIの状態をリセット
+            form.hide();
+            form.find('textarea').val(updatedChat.message);
+            // ファイル入力とチェックボックスをリセット
+            form.find('.edit-image-input').val('');
+            form.find('input[type="checkbox"]').prop('checked', false);
+            
+            messageContent.find('.message__actions').show(); // アクションボタンを再表示
+
+            console.log(response.message);
+        },
+        error: function(xhr) {
+            // エラー処理は変更なし
+            const errors = xhr.responseJSON.errors;
+            let errorMessage = xhr.responseJSON.message || '更新に失敗しました。';
+            if (errors) {
+                // バリデーションエラーメッセージを連結
+                Object.keys(errors).forEach(function(key) {
+                    errorMessage += '\n' + errors[key][0];
+                });
+            }
+            alert(errorMessage);
+        }
     });
+});
 });
 </script>
 @endsection
