@@ -22,7 +22,7 @@ class ItemFactory extends Factory
             'brand' => $this->faker->company(),
             'price' => $this->faker->numberBetween(300, 50000),
             'description' => $this->faker->sentence(),
-            'is_sold' => false,                         // デフォルトでは未購入
+            'status' => 'on_sale',                        // デフォルトでは未購入
         ];
     }
 }

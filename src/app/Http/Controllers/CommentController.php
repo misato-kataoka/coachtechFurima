@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CommentRequest;
 use App\Http\Requests\ExhibitionRequest;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Item;
 use App\Models\Condition;
@@ -30,6 +29,6 @@ class CommentController extends Controller
             'content' => $request->content,
         ]);
 
-        return redirect()->back()->with('success', 'コメントが送信されました。');
+        return back();
     }
 }

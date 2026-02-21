@@ -33,11 +33,11 @@
             </div>
         </div>
 
-        <form action="{{ url('/purchase/' . $item->id) }}" method="GET">
-            @if ($item->is_sold)
-                <button type="button" class="sold-out-button">売り切れ</button>
-            @else
+        <form action="{{ route('purchase.show', ['item_id' => $item->id]) }}" method="GET">
+            @if ($item->status === 'on_sale')
                 <button type="submit" class="buy-button">購入手続きへ</button>
+            @else
+                <button type="button" class="sold-out-button" disabled>売り切れました</button>
             @endif
         </form>
         <a href="{{ url('/') }}" class="back-button">戻る</a>

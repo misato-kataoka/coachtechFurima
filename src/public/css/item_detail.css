@@ -249,6 +249,10 @@ item-info {
     transition: background-color 0.3s;
     width: 100%;
     max-width: 100%;
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    box-sizing: border-box;
 }
 
 .buy-button:hover,
@@ -278,6 +282,7 @@ item-info {
     padding: 10px 15px;
     font-size: 16px;
     cursor: pointer;
+    text-decoration: none;
     transition: background-color 0.3s;
     width: 100%;
     max-width: 100%;

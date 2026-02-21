@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Chat;
 use App\Models\User;
+use App\Models\Item;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ChatPolicy
@@ -37,11 +38,19 @@ class ChatPolicy
      * Determine whether the user can create models.
      *
      * @param  \App\Models\User  $user
+     * @param  \App\Models\Item  $item  // ★★★ @param を追加 ★★★
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function create(User $user)
+    public function create(User $user, Item $item)
     {
-        //
+        // ログインユーザーのIDが、商品の出品者IDと一致する
+        $isSeller = $user->id === $item->user_id;
+
+        // ログインユーザーのIDが、商品の購入者IDと一致する
+        $isBuyer = $user->id === $item->buyer_id;
+
+        // 出品者 または 購入者 であれば true (許可) を返す
+        return $isSeller || $isBuyer;
     }
 
     /**

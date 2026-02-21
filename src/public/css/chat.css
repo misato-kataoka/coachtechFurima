@@ -38,7 +38,10 @@
 
 /* 各商品へのリンク */
 .other-chat-link {
-    display: block;
+    display: flex;
+    justify-content: space-between; /* ★追加: 中の要素を両端に寄せる */
+    align-items: center;          /* ★追加: 中の要素を上下中央に揃える */
+    
     padding: 10px 14px;
     background-color: #e9ecef;
     color: #212529;    
@@ -46,13 +49,13 @@
     border-radius: 6px;
     font-size: 20px;
     font-weight: 500;
-    text-align: center;
+    /* text-align: center; は不要になるので削除 */
     margin-bottom: 30px;
     
-    /* はみ出した文字を「...」で省略 */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    /* はみ出した文字を「...」で省略 (Flexboxの子要素に適用するため、移動します) */
+    /* white-space: nowrap; */ /* ← 移動 */
+    /* overflow: hidden; */     /* ← 移動 */
+    /* text-overflow: ellipsis; */ /* ← 移動 */
     
     transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 }
@@ -61,6 +64,31 @@
     background-color: #b2d2f4;
     color: #212529;
     text-decoration: none;
+}
+
+/* 商品名のスタイル */
+.other-chat-link__name {
+    /* はみ出した文字を「...」で省略する設定をこちらに移動 */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 8px; /* バッジとの間に余白を設ける */
+}
+
+/* 未読バッジのスタイル */
+.other-chat-link__badge {
+    /* 基本的なスタイル */
+    background-color: #ef4444; /* 目立つ赤色 */
+    color: white;
+    font-size: 14px;           /* 文字サイズを少し小さく */
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 12px;       /* 角を丸くしてカプセル型に */
+    
+    /* 幅と配置 */
+    min-width: 24px;           /* 1桁でも形が崩れないように最小幅を指定 */
+    text-align: center;
+    flex-shrink: 0;            /* ★重要: バッジが商品名に押されて縮まないようにする */
 }
 
 /* 他に取引がない場合のメッセージ */
@@ -123,6 +151,18 @@
     font-weight: bold;
     flex-shrink: 0;
     margin-left: auto;
+}
+
+.btn-complete:hover {
+    background-color: #f16a6a;
+}
+
+.btn-complete:disabled {
+    background-color: #cccccc;
+    border-color: #cccccc;
+    color: #666666;
+    cursor: not-allowed; /* カーソルを「禁止」マークに */
+    opacity: 0.8;
 }
 
 /* 商品情報 */
@@ -395,6 +435,113 @@
 /* エラーメッセージ間の余白（任意） */
 .validation-error-message + .validation-error-message {
   margin-top: 0.5rem; /* エラーが複数ある場合、項目間に少し隙間を空ける */
+}
+
+/* ===============================================
+ *          評価モーダル関連のスタイル
+ * =============================================== */
+
+/* モーダルの背景 (画面全体を覆うオーバーレイ) */
+.rating-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* モーダルの本体 */
+.rating-modal__content {
+    background-color: #faf7de; /* デザインに合わせた薄いベージュ色 */
+    width: 90%;
+    max-width: 560px;
+    border: 1px solid #999797;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    padding: 0;
+}
+
+/* モーダルのタイトル */
+.rating-modal__title {
+    font-size: 30px;
+    padding: 15px 20px;
+    margin: 0;
+    border-bottom: 1px solid #999797;
+}
+
+/* フォーム本体のエリア */
+.rating-form-body {
+    padding: 20px 20px 0;
+}
+
+/* サブタイトル */
+.rating-modal__subtitle {
+    font-size: 20px;
+    color: #999797;
+    margin: 0 0 10px 0;
+}
+
+/* 星評価のスタイル */
+.rating-stars {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 25px;
+    user-select: none;
+    width: 100%;
+}
+
+.star {
+    font-size: 80px;
+    color: #d8d8d8; /* 未選択の星の色 */
+    cursor: pointer;
+    transition: color 0.2s;
+    padding: 0;
+}
+
+/* JavaScriptで付与されるクラス */
+.star.hover,
+.star.selected {
+    color: #ffd700; /* ホバー/選択された星の色 (黄色) */
+}
+
+/* モーダルフッター (ボタンのコンテナ) */
+.rating-modal__footer {
+    padding: 15px 20px;
+    border-top: 1px solid #999797;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+/* 送信ボタン */
+.btn-submit-rating {
+    background-color: #f97f7f;
+    color: white;
+    border: 1px solid #e58f8f;
+    border-radius: 4px;
+    padding: 8px 24px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-submit-rating:hover {
+    background-color: #f49b9b;
+}
+.btn-submit-rating:disabled {
+    background-color: #ccc;
+    border-color: #bbb;
+    cursor: not-allowed;
+}
+
+/* バリデーションエラー */
+#rating-errors {
+    margin-bottom: 15px;
 }
 
 

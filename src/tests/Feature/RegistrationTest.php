@@ -113,5 +113,5 @@ class RegistrationTest extends TestCase
 
     // 3. ユーザー登録後にメール認証ページにリダイレクトされることを確認
     $response->assertRedirect('/email/verify');
-}
+    }
 }

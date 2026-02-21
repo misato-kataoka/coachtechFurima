@@ -21,10 +21,14 @@
             {{-- コントローラーから渡された$otherChatItemsをループ処理 --}}
                 @forelse ($otherChatItems as $otherItem)
                     <li>
-                        {{-- 各商品のチャットページへのリンクを生成 --}}
                         <a href="{{ route('chat.show', ['item' => $otherItem->id]) }}" class="other-chat-link">
                             {{-- 商品名を表示 --}}
-                            {{ $otherItem->item_name }}
+                            <span class="other-chat-link__name">{{ $otherItem->item_name }}</span>
+                    
+                            {{-- 未読メッセージ数が1以上あれば、バッジを表示する --}}
+                            @if ($otherItem->unread_count > 0)
+                                <span class="other-chat-link__badge">{{ $otherItem->unread_count }}</span>
+                            @endif
                         </a>
                     </li>
                 @empty
@@ -60,7 +64,14 @@
                 <img src="{{ $iconPath }}" alt="ユーザーアイコン" class="chat-header-icon">
              
                 <h1>「{{ $otherUser ? $otherUser->username : '相手' }}」さんとの取引画面</h1>
-                <button class="btn btn-complete">取引を完了する</button>
+                
+                @if ($isAlreadyRated)
+                    {{-- 評価済みの場合のボタン --}}
+                    <button class="btn btn-complete" disabled>評価済みです</button>
+                @else
+                    {{-- 未評価の場合のボタン (これまで通り) --}}
+                    <button class="btn btn-complete">取引を完了する</button>
+                @endif
             </div>
 
             <!-- 取引商品情報 -->
@@ -104,7 +115,7 @@
                                             <img src="{{ asset('storage/' . $chat->image_path) }}" alt="現在の画像">
                                             <div class="remove-image-wrapper">
                                                 {{-- 「画像を削除」チェックボックス --}}
-                                                <input type="checkbox" name="remove_image" id="remove-image-{{ $chat->id }}">
+                                                <input type="checkbox" name="remove_image" id="remove-image-{{ $chat->id }}" value="true">
                                                 <label for="remove-image-{{ $chat->id }}">画像を削除する</label>
                                             </div>
                                         </div>
@@ -121,7 +132,7 @@
                                     <button type="button" class="cancel-edit-btn">キャンセル</button>
                                 </form>
                             </div>
-                            {{-- ★★★ 編集・削除ボタンはバブルの外 ★★★ --}}
+                            {{--  編集・削除ボタン --}}
                             <div class="message__actions">
                                 <button type="button" class="action-btn edit-btn">編集</button>
                                 <form action="{{ route('chat.destroy', ['chat_id' => $chat->id]) }}" method="post" style="display: inline;">
@@ -137,7 +148,7 @@
                     </div>
                 @else
                     {{-- もし、メッセージの投稿者IDが、自分のものでは「ない」なら --}}
-                    <!-- ★★★相手のメッセージ (左側)★★★ -->
+                    <!-- 相手のメッセージ (左側) -->
                     <div class="message message--other">
                         <div class="message__avatar {{ $chat->user->profile_pic ? '' : 'message__avatar--default' }}">
                             <img src="{{ $chat->user->profile_pic ? asset('storage/' . $chat->user->profile_pic) : asset('image/default-icon.png') }}" alt="{{ $chat->user->username }}のアイコン">
@@ -145,11 +156,11 @@
                         <div class="message__content">
                             <p class="message__username">{{ $chat->user->username }}</p>
                             <div class="message__bubble">
-                                {{-- ★★★ 画像がある場合は画像を表示 ★★★ --}}
+                                {{--  画像がある場合は画像を表示  --}}
                                 @if($chat->image_path)
                                     <img src="{{ asset('storage/' . $chat->image_path) }}" alt="投稿画像" class="message-image">
                                 @endif
-                                {{-- ★★★ メッセージがある場合はメッセージを表示 ★★★ --}}
+                                {{--  メッセージがある場合はメッセージを表示  --}}
                                 @if($chat->message)
                                     <p>{{ $chat->message }}</p>
                                 @endif
@@ -178,10 +189,8 @@
                 {{-- テキストメッセージの入力欄 --}}
                 <input type="text" name="message" class="message-input" placeholder="取引メッセージを記入してください" value="{{ old('message') }}">
 
-                {{-- ★★★ 1. これが本体。name="image" を持ち、クラス名を指定する ★★★ --}}
                 <input type="file" name="image" id="image-upload" class="image-upload-input">
 
-                {{-- ★★★ 2. これは本体を操作するための「ボタン」。順番を先頭に。 ★★★ --}}
                 <label for="image-upload" class="image-upload-label">
                     画像を追加
                 </label>
@@ -194,24 +203,56 @@
         </form>
     </div>
 </main>
+
+<div id="rating-modal" class="rating-modal" style="display: none;">
+    <div class="rating-modal__content">
+        
+        <h2 class="rating-modal__title">取引が完了しました。</h2>
+        
+        {{-- 評価フォーム --}}
+        <form id="rating-form" class="rating-form-body">
+            @csrf
+            
+            <p class="rating-modal__subtitle">今回の取引相手はどうでしたか？</p>
+
+            {{-- ★★★ 5段階評価の星 ★★★ --}}
+            <div class="rating-stars">
+                <span class="star" data-value="1">★</span>
+                <span class="star" data-value="2">★</span>
+                <span class="star" data-value="3">★</span>
+                <span class="star" data-value="4">★</span>
+                <span class="star" data-value="5">★</span>
+                <input type="hidden" name="rating" id="rating-value" value="">
+            </div>
+            
+            {{-- バリデーションエラー表示用 --}}
+            <div id="rating-errors" class="validation-errors" style="display: none;"></div>
+
+            <div class="rating-modal__footer">
+                <button type="submit" class="btn btn-submit-rating">送信する</button>
+            </div>
+        </form>
+    </div>
+</div>
 @endsection
 
 @section('js')
 <script>
 $(function() {
 
+    // ===================================
+    //  下書き保存 & メッセージ編集のJS
+    // ===================================
+
     // 1. 操作対象の要素を特定
     const messageInput = $('.message-input');
     const messageForm = $('.message-form');
     
     // 2. このチャットページ固有の保存キーを生成
-    //    itemのIDをbladeから受け取るために、formにdata属性を追加
     const itemId = messageForm.data('item-id');
     const storageKey = `chat-draft-item-${itemId}`;
 
     // 3. ページ読み込み時の処理
-    //    もしLaravelのold()で値がセットされていたら、そちらを優先する
-    //    old()が空の場合のみ、sessionStorageから下書きを読み込む
     if (!messageInput.val()) {
         const draft = sessionStorage.getItem(storageKey);
         if (draft) {
@@ -221,13 +262,11 @@ $(function() {
 
     // 4. テキスト入力時の処理
     messageInput.on('input', function() {
-        // 入力されるたびに、内容をsessionStorageに保存
         sessionStorage.setItem(storageKey, $(this).val());
     });
 
     // 5. フォーム送信時の処理
     messageForm.on('submit', function() {
-        // メッセージを送信したら、保存しておいた下書きは不要なので削除
         sessionStorage.removeItem(storageKey);
     });
 
@@ -236,7 +275,6 @@ $(function() {
         const messageContent = $(this).closest('.message__content');
         messageContent.find('.message-text').hide();
         messageContent.find('.edit-form').show();
-        // アクションボタン全体を隠す
         $(this).closest('.message__actions').hide();
     });
 
@@ -245,78 +283,199 @@ $(function() {
         const messageContent = $(this).closest('.message__content');
         messageContent.find('.edit-form').hide();
         messageContent.find('.message-text').show();
-        // アクションボタンを再表示
         messageContent.find('.message__actions').show();
     });
 
     // 編集フォームが送信された時の処理 (Ajax)
     $('.message-area').on('submit', '.edit-form', function(e) {
-        e.preventDefault();
+    e.preventDefault(); // フォームのデフォルト送信をキャンセル
 
-        const form = $(this);
-        const url = form.attr('action');
-        const formData = new FormData(this);
+    const form = $(this);
+    const url = form.attr('action');
 
-        $.ajax({
-            type: 'POST',
-            url: url,
-            data: formData,
-            processData: false,
-            contentType: false,
-            
-            success: function(response) {
-                const updatedChat = response.updated_chat; 
+    // 1. new FormData() でフォーム要素から基本データを作成
+    //    これには message と image (ファイル) が含まれます
+    const formData = new FormData(this);
+
+    // 2.【最重要】_methodを手動で追加
+    const method = form.find('input[name="_method"]').val();
+    formData.append('_method', method);
+
+    // 3.【重要】remove_imageの値を手動で設定
+    //    チェックボックスの状態に応じて 'true' または 'false' の【文字列】を設定
+    const isRemoveChecked = form.find('input[name="remove_image"]').is(':checked');
+    // formData.set() を使うことで、キーが存在しない場合でも確実に追加/上書き
+    formData.set('remove_image', isRemoveChecked ? 'true' : 'false');
+
+
+    // 4. Ajaxで送信
+    $.ajax({
+        type: 'POST', // typeは'POST'のまま。Laravelは_methodを見て判断します。
+        url: url,
+        data: formData,
+        processData: false, // FormDataを送信するため必須
+        contentType: false, // FormDataを送信するため必須
+        success: function(response) {
+            // Controllerからのレスポンスが成功(success: true)の場合
+            if (response.success) {
+                const updatedChat = response.updated_chat;
                 const messageContent = form.closest('.message__content');
-                // 画面の表示を更新
-                // 1. テキスト部分の更新
-            const messageTextElement = messageContent.find('.message-text');
-            if (updatedChat.message) {
-                messageTextElement.text(updatedChat.message).show();
-            } else {
-                messageTextElement.text('').hide(); // テキストがなければ非表示
-            }
+                const messageBubble = messageContent.find('.message__bubble');
 
-            // 2. 画像部分の更新
-            let imageElement = messageContent.find('.message-image');
-            if (updatedChat.image_path) {
-                const imageUrl = '{{ asset('storage/') }}' + '/' + updatedChat.image_path;
-                if (imageElement.length > 0) {
-                    // 既存のimgタグのsrcを更新
-                    imageElement.attr('src', imageUrl).show();
+                // --- テキストの更新 ---
+                const messageTextElement = messageBubble.find('.message-text');
+                if (updatedChat.message) {
+                    messageTextElement.text(updatedChat.message).show();
                 } else {
-                    // imgタグがなければ、新しく作成して追加
-                    messageContent.find('.message__bubble').prepend(`<img src="${imageUrl}" alt="投稿画像" class="message-image">`);
+                    messageTextElement.hide().text(''); // テキストがなければ隠す
                 }
-            } else {
-                // 画像がなければimgタグを削除
-                imageElement.remove();
-            }
-            
-            // 3. フォームとUIの状態をリセット
-            form.hide();
-            form.find('textarea').val(updatedChat.message);
-            // ファイル入力とチェックボックスをリセット
-            form.find('.edit-image-input').val('');
-            form.find('input[type="checkbox"]').prop('checked', false);
-            
-            messageContent.find('.message__actions').show(); // アクションボタンを再表示
 
-            console.log(response.message);
+                // --- 画像の更新 ---
+                let imageElement = messageBubble.find('.message-image');
+                if (updatedChat.image_path) {
+                    // 新しい画像パスがあれば、画像のURLを生成
+                    const imageUrl = '{{ asset('storage/') }}' + '/' + updatedChat.image_path;
+                    if (imageElement.length > 0) {
+                        // 既存のimgタグがあればsrcを更新
+                        imageElement.attr('src', imageUrl).show();
+                    } else {
+                        // 既存のimgタグがなければ、新しくprepend（先頭に追加）
+                        messageBubble.prepend(`<img src="${imageUrl}" alt="投稿画像" class="message-image">`);
+                    }
+                } else {
+                    // 新しい画像パスがなければ、imgタグを削除
+                    imageElement.remove();
+                }
+
+                // --- フォームの状態をリセット ---
+                form.hide(); // 編集フォームを隠す
+                form.find('textarea').val(updatedChat.message); // 次回の編集のためにtextareaを更新
+                form.find('.edit-image-input').val(''); // ファイル選択をクリア
+                form.find('input[type="checkbox"]').prop('checked', false); // チェックボックスをクリア
+                messageContent.find('.message__actions').show(); // 編集・削除ボタンを再表示
+
+                console.log(response.message); // "メッセージを更新しました。"
+            } else {
+                 // Controllerが success: false で返した場合 (例: メッセージと画像が両方空)
+                alert(response.message);
+            }
         },
         error: function(xhr) {
-            // エラー処理は変更なし
-            const errors = xhr.responseJSON.errors;
-            let errorMessage = xhr.responseJSON.message || '更新に失敗しました。';
-            if (errors) {
+            // バリデーションエラーやその他のサーバーエラー
+            const response = xhr.responseJSON;
+            let errorMessage = response.message || '更新に失敗しました。';
+            if (response.errors) {
                 // バリデーションエラーメッセージを連結
-                Object.keys(errors).forEach(function(key) {
-                    errorMessage += '\n' + errors[key][0];
+                Object.keys(response.errors).forEach(function(key) {
+                    errorMessage += '\n' + response.errors[key][0];
                 });
             }
             alert(errorMessage);
         }
     });
 });
+
+    // ===================================
+    //  評価モーダルのJS
+    // ===================================
+
+    // === 変数定義 ===
+    const ratingModal = $('#rating-modal');
+    const stars = $('.star');
+    const ratingValueInput = $('#rating-value');
+    const ratingForm = $('#rating-form');
+    const submitButton = $('.btn-submit-rating');
+    const ratingErrors = $('#rating-errors');
+
+    // === 関数定義 ===
+    function openRatingModal() {
+        ratingModal.css('display', 'flex');
+    }
+
+    function closeRatingModal() {
+        ratingModal.hide();
+        stars.removeClass('selected');
+        ratingValueInput.val('');
+        submitButton.prop('disabled', true);
+        ratingErrors.hide().empty();
+    }
+
+    // === イベントリスナー ===
+    $('.btn-complete').on('click', function(e) {
+        e.preventDefault();
+
+        // もしボタンが disabled なら、何もしない
+        if ($(this).is(':disabled')) {
+            alert('すでに評価済みです。');
+            return; 
+        }       
+        openRatingModal();
+    });
+
+    stars.on('mouseover', function() {
+        const value = $(this).data('value');
+        stars.removeClass('hover');
+        stars.slice(0, value).addClass('hover');
+    }).on('mouseout', function() {
+        stars.removeClass('hover');
+    });
+
+    stars.on('click', function() {
+        const value = $(this).data('value');
+        ratingValueInput.val(value);
+        stars.removeClass('selected');
+        stars.slice(0, value).addClass('selected');
+        submitButton.prop('disabled', false);
+        ratingErrors.hide().empty();
+    });
+    
+    ratingForm.on('submit', function(e) {
+        e.preventDefault();
+        submitButton.prop('disabled', true).text('送信中...');
+        
+        const formData = $(this).serialize();
+        const postUrl = `/item/{{ $item->id }}/rating`;
+
+        $.ajax({
+            url: postUrl,
+            type: 'POST',
+            data: formData,
+            dataType: 'json',
+        })
+        .done(function(response) {
+            alert(response.message);
+            window.location.href = response.redirect_url;
+        })
+        .fail(function(jqXHR) {
+            ratingErrors.show().empty();
+            if (jqXHR.status === 422) {
+                const errors = jqXHR.responseJSON.errors;
+                let errorHtml = '<ul>';
+                $.each(errors, function(key, value) {
+                    errorHtml += `<li class="validation-error-message">${value[0]}</li>`;
+                });
+                errorHtml += '</ul>';
+                ratingErrors.html(errorHtml);
+            } else {
+                const message = jqXHR.responseJSON?.message || 'エラーが発生しました。時間をおいて再度お試しください。';
+                ratingErrors.html(`<p class="validation-error-message">${message}</p>`);
+            }
+        })
+        .always(function() {
+            if (ratingForm.find('.btn-submit-rating').text() === '送信中...') {
+                submitButton.prop('disabled', false).text('送信する');
+            }
+        });
+    });
+
+    // 初期状態では送信ボタンを無効化
+    submitButton.prop('disabled', true);
+
+    // === ページ読み込み時の処理 ===
+    @if($shouldShowRatingModal)
+        openRatingModal();
+    @endif
+
 });
 </script>
 @endsection

@@ -14,7 +14,8 @@ class LikeTest extends TestCase
 
     /**
      * @test
-     * ユーザーは商品を「いいね」できる
+     * いいねアイコンを押下することによって、いいねした商品として登録することができる。
+     * 追加済みのアイコンは色が変化する
      */
     public function a_user_can_like_an_item()
     {
@@ -41,7 +42,7 @@ class LikeTest extends TestCase
 
     /**
      * @test
-     * ユーザーは「いいね」した商品を解除できる
+     * 再度いいねアイコンを押下することによって、いいねを解除することができる。
      */
     public function a_user_can_unlike_an_item()
     {

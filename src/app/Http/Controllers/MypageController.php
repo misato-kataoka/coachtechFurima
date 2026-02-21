@@ -17,6 +17,12 @@ class MypageController extends Controller
         $user = Auth::user();
         $activeTab = $request->query('tab', 'sell');
         $items = collect();
+
+        $averageRating = $user->ratingsReceived()->avg('rating');
+
+        $roundedAverageRating = $averageRating ? round($averageRating) : 0;
+
+        $activeTab = $request->query('tab', 'sell');
         
         $perPage = 8;
 
@@ -41,35 +47,56 @@ class MypageController extends Controller
             $items = $user->purchasedItems()->latest()->paginate($perPage);
 
         } elseif ($activeTab === 'chat') {
+            // 1. 取引中の商品（出品・購入）を取得
             $soldItems = Item::where('user_id', $user->id)
                              ->whereNotNull('buyer_id')
                              ->get();
             $boughtItems = Item::where('buyer_id', $user->id)->get();
-            $mergedItems = $soldItems->merge($boughtItems)->unique('id')->sortByDesc('updated_at');
 
+            // 2. コレクションを結合して重複を排除
+            $mergedItems = $soldItems->merge($boughtItems)->unique('id');
+
+            // 3. 各商品に「最新のチャット投稿日時」を追加
+            $mergedItems->each(function ($item) {
+                // with('chats') を使わず、最新の1件だけを取得して効率化
+                $latestChat = Chat::where('item_id', $item->id)
+                                  ->latest('created_at') // created_atが最新のものを
+                                  ->first();             // 1件だけ取得
+                
+                // 最新チャットがあればその日時を、なければ商品の更新日時を代替として使用
+                $item->last_activity_at = $latestChat ? $latestChat->created_at : $item->updated_at;
+            });
+
+            // 4. 「最新の活動日時」でコレクションを降順ソート
+            $sortedItems = $mergedItems->sortByDesc('last_activity_at');
+            
+            // 5. 手動でページネーションを生成
             $currentPage = Paginator::resolveCurrentPage('page');
-            $currentPageItems = $mergedItems->slice(($currentPage - 1) * $perPage, $perPage)->values();
+            $currentPageItems = $sortedItems->slice(($currentPage - 1) * $perPage, $perPage)->values();
 
-            // ページ内の各商品について、未読メッセージ数を計算して追加する
+            // 6. ページ内の各商品について、未読メッセージ数を計算して追加する
             foreach ($currentPageItems as $item) {
-                $unreadCountForItem = Chat::where('item_id', $item->id)
-                                          ->where('user_id', '!=', $user->id)
-                                          ->where('is_read', false)
-                                          ->count();
-                $item->unread_messages_count = $unreadCountForItem;
+                $item->unread_messages_count = Chat::where('item_id', $item->id)
+                                                   ->where('user_id', '!=', $user->id)
+                                                   ->where('is_read', false)
+                                                   ->count();
             }
 
-            // 手動でページネーターを生成
+            // 7. 手動でページネーターを生成
             $items = new LengthAwarePaginator(
                 $currentPageItems,
-                $mergedItems->count(),
+                $sortedItems->count(), // 全体の件数はソート後のコレクションから取得
                 $perPage,
                 $currentPage,
                 ['path' => Paginator::resolveCurrentPath(), 'query' => $request->query()]
             );
         }
-        
         // --- 最後に全ての変数をビューに渡す ---
-        return view('mypage', compact('user', 'activeTab', 'items', 'unreadChatCount'));
+        return view('mypage', [
+        'items' => $items,
+        'activeTab' => $activeTab,
+        'unreadChatCount' => $unreadChatCount,
+        'roundedAverageRating' => $roundedAverageRating,
+        ]);
     }
 }

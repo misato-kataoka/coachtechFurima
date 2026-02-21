@@ -56,14 +56,25 @@ class ProductTest extends TestCase
         $response->assertSee($otherItem->name);  // 他人の商品名は表示される
     }
 
+    public function soldStatusProvider()
+    {
+        return [
+            '取引中の商品' => ['in_progress'],
+            '取引完了の商品' => ['complete'],
+        ];
+    }
+
     /**
      * @test
+     * @dataProvider soldStatusProvider
      * 購入済み商品は「Sold」と表示される
      */
-    public function it_displays_sold_label_for_purchased_items()
+    public function it_displays_sold_label_for_purchased_items($status)
     {
-        // 準備: is_soldがtrueの商品を1つだけ作成する
-        $soldItem = Item::factory()->create(['is_sold' => true]);
+        // 準備: データプロバイダから受け取ったステータスの商品を作成
+        $soldItem = Item::factory()->create(['status' => $status]);
+        // 比較用に販売中の商品も作成
+        $onSaleItem = Item::factory()->create(['status' => 'on_sale']);
 
         // 実行
         $response = $this->get('/');
@@ -71,12 +82,14 @@ class ProductTest extends TestCase
         // 検証
         $response->assertStatus(200);
 
-        // 1. 「Sold」というテキストが表示されていることを確認する
-        $response->assertSee('Sold');
-        // 2. 次に、そのSold商品の名前が表示されていることを確認する
+        // Sold商品のカードに「Sold」ラベルが表示されていることを確認
+        // (より厳密なテストにするため、商品名とセットで確認)
         $response->assertSee($soldItem->item_name);
-    }
+        $response->assertSee('Sold');
 
+        // 販売中の商品名も表示されていることを確認
+        $response->assertSee($onSaleItem->item_name);
+    }
 
     /**
      * @test
@@ -183,5 +196,85 @@ class ProductTest extends TestCase
         // 紐づけたカテゴリ名が両方とも表示されていることを確認
         $response->assertSee('レディース');
         $response->assertSee('トップス');
+    }
+
+    /**
+     * @test
+     * 「商品名」で部分一致検索ができる
+     */
+    public function it_can_search_items_by_partial_item_name()
+    {
+        // 1. 検索キーワードにヒットする商品と、しない商品を作成
+        $matchingItem = Item::factory()->create(['item_name' => '高品質なテスト用スマホケース']);
+        $nonMatchingItem = Item::factory()->create(['item_name' => 'ただのパソコン']);
+
+        // 2. 検索キーワードをクエリパラメータに含めてGETリクエストを送信
+        $response = $this->get('/item/search?query=スマホ');
+
+        // 3. 検証
+        $response->assertStatus(200);
+        $response->assertSee($matchingItem->item_name);    // ヒットする商品は表示される
+        $response->assertDontSee($nonMatchingItem->item_name); // ヒットしない商品は表示されない
+    }
+
+     /**
+     * @test
+     * 検索状態がマイリストでも保持されている
+     */
+    /*public function it_retains_search_keyword_when_navigating_to_mylist()
+    {
+
+        // 1. ログインユーザーを作成
+        $user = User::factory()->create();
+
+        // 2. 検索キーワードを定義
+        $keyword = '引き継ぎテスト';
+
+        // 3. ログイン状態でまずトップページを検索
+        $this->actingAs($user)->get('/?query=' . $keyword);
+
+        // 4. 次にマイリストページへアクセス
+        $response = $this->actingAs($user)->get(route('item.mylist'));
+
+        // 5. マイリストページが正常に表示されることを確認
+        $response->assertStatus(200);
+
+        // 6. マイリストページに、検索キーワードが値として設定されたinput要素があることを確認
+        $response->assertSee('<input type="search" name="query" value="' . $keyword . '"', false);
+    }*/
+
+    /**
+     * @test
+     * マイリスト内で商品名検索ができる
+     */
+    public function it_can_search_within_the_mylist_by_item_name()
+    {
+        // 1. テスト用のユーザーを作成し、ログイン
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        // 2. 検索にヒットする商品としない商品を作成
+        $matchingItemInList = Item::factory()->create(['item_name' => 'お気に入りのカメラ']);
+        $nonMatchingItemInList = Item::factory()->create(['item_name' => 'お気に入りの本']);
+
+        // 3. 上記2つの商品をユーザーの「いいね（マイリスト）」に追加
+        Like::factory()->create([
+            'user_id' => $user->id,
+            'item_id' => $matchingItemInList->id,
+        ]);
+        Like::factory()->create([
+            'user_id' => $user->id,
+            'item_id' => $nonMatchingItemInList->id,
+        ]);
+
+        // 4. マイリスト内検索を実行
+        // /search?query=カメラ&from=mylist
+        $response = $this->get('/item/search?from=mylist&query=カメラ');
+
+        $response->assertStatus(200);
+
+        // 5. 検索結果の検証
+        $response->assertSee($matchingItemInList->item_name); // ヒットする商品は表示される
+        $response->assertDontSee($nonMatchingItemInList->item_name); // ヒットしない商品は表示されない
     }
 }

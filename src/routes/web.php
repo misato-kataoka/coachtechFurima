@@ -9,6 +9,7 @@ use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\MypageController;
+use App\Http\Controllers\RatingController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 
@@ -53,7 +54,7 @@ Route::get('/item/search', [ItemController::class, 'search'])->name('item.search
 Route::get('/item/{id}', [ItemController::class, 'show'])->name('item.detail');
 
 // マイリストに追加するためのルート
-Route::middleware('auth')->group(function () {
+Route::middleware('auth','verified')->group(function () {
     Route::get('/mylist', [ItemController::class, 'myList'])->name('item.mylist');
 });
 
@@ -120,6 +121,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // POST: 特定の商品のチャットにメッセージを投稿する
     Route::post('/item/{item}/chat', [ChatController::class, 'store'])->name('chat.store');
 });
+
+// 評価を保存するためのルート
+Route::post('/item/{item}/rating', [RatingController::class, 'store'])->name('rating.store')->middleware('auth');
 
 //商品登録のルート
 Route::middleware(['auth'])->group(function () {

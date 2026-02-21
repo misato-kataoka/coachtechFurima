@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Chat;
+use App\Models\Order;
 
 class Item extends Model
 {
@@ -20,8 +20,7 @@ class Item extends Model
         'brand',
         'price',
         'description',
-        'is_sold',
-        'payment_method_id',
+        'status',
     ];
 
     public function getImageAttribute($value)
@@ -54,7 +53,7 @@ class Item extends Model
 
     public function isOrdered(): bool
     {
-        return $this->is_sold && $this->buyer_id !== null;
+        return $this->status !== 'on_sale' && $this->buyer_id !== null;
     }
 
     public function categoryConditions()
@@ -97,8 +96,14 @@ class Item extends Model
         return $this->hasMany(Chat::class);
     }
 
-    public function getIsSoldAttribute($value)
+    public function ratings()
     {
-        return (bool) $value;
+        return $this->hasMany(Rating::class);
     }
+
+    public function order()
+    {
+        return $this->hasOne(Order::class);
+    }
+
 }

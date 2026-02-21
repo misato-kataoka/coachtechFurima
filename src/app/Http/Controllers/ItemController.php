@@ -25,7 +25,7 @@ class ItemController extends Controller
         $userId = auth()->id();
 
         // 商品を検索する
-        $items = Item::where(function($q) use ($query) {
+        $items = Item::with('order')->where(function($q) use ($query) {
             if ($query) {
             // 商品名に部分一致する場合
             $q->where('item_name', 'LIKE', '%' . $query . '%');

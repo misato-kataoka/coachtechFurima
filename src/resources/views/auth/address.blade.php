@@ -11,15 +11,14 @@
     <form action="{{ isset($user) ? route('address.update') : route('address.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="profile-pic">
-        <label for="imageUpload" class="image-placeholder">
-            @if(isset($user) && $user->profile_pic)
-                <img id="imagePreview" src="{{ asset('storage/' . $user->profile_pic) }}" alt="選択した画像のプレビュー" style="display: block;" />
-            @else
-                <img id="imagePreview" src="" alt="選択した画像のプレビュー" style="display: none;" />
-            @endif
-        </label>
-            <input type="file" id="imageUpload" name="image" accept="image/*" style="display: none;" onchange="previewImage(event)" />
-            <span class="image-label" onclick="document.getElementById('imageUpload').click();">画像を選択する</span>
+            <div class="image-placeholder">
+                {{-- プレビュー画像を表示するためのimgタグを追加 --}}
+                <img id="imagePreview"
+                     src="{{ isset($user) && $user->profile_pic ? asset('storage/' . $user->profile_pic) : '' }}"
+                     alt="プロフィール画像プレビュー" />
+            </div>
+            <input type="file" id="imageUpload" name="image" accept="image/*" />
+            <button type="button" class="select-image-button" onclick="document.getElementById('imageUpload').click();">画像を選択する</button>
         </div>
 
         <label for="username">ユーザー名</label>
@@ -59,19 +58,35 @@
 </div>
 @endsection
 
-@section('javascript')
+@section('js')
 <script>
-    function previewImage(event) {
-        const input = event.target;
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const imagePreview = document.getElementById('imagePreview');
-                imagePreview.src = e.target.result; // 画像のデータURLを設定
-                imagePreview.style.display = 'block'; // 画像を表示
+    document.addEventListener('DOMContentLoaded', function() {
+        // --- プレビュー処理の定義 ---
+        function previewImage(event) {
+            const input = event.target;
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imagePreview = document.getElementById('imagePreview');
+                    imagePreview.src = e.target.result;
+                    // 画像がない場合に備えて、表示をblockにする
+                    imagePreview.style.display = 'block';
+                }
+                reader.readAsDataURL(input.files[0]);
             }
-            reader.readAsDataURL(input.files[0]); // 画像ファイルを読み込む
         }
-    }
+
+        // --- イベントリスナーの登録 ---
+        const imageUpload = document.getElementById('imageUpload');
+        // imageUpload要素（ファイル選択）に変更があったら、previewImage関数を実行する
+        imageUpload.addEventListener('change', previewImage);
+
+
+        // --- ページ読み込み時の画像表示制御 ---
+        const imagePreview = document.getElementById('imagePreview');
+        if (!imagePreview.getAttribute('src')) {
+            imagePreview.style.display = 'none';
+        }
+    });
 </script>
 @endsection

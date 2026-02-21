@@ -13,6 +13,7 @@
     height: 100px;
     object-fit: cover;
     margin-right: 50px;
+    background-color: #d3d3d3;
 }
 
 .user-image-placeholder {
@@ -28,8 +29,25 @@
 
 .user-details {
     display: flex;
+    justify-content: space-between;
     align-items: center;
     gap: 20px;
+}
+
+.user-identity {
+    display: flex;
+    flex-direction: column;
+    margin-right: 200px;
+}
+
+.user-rating {
+    margin: 4px; 
+    font-size: 24px;
+    color: #f8e800; 
+}
+
+.user-rating .star-empty {
+    color: #ccc;
 }
 
 .edit-profile-button {
@@ -38,6 +56,7 @@
     background-color: #fff;
     padding: 5px 15px;
     border-radius: 4px;
+    white-space: nowrap;
     text-decoration: none;
     transition: background-color 0.2s;
 }

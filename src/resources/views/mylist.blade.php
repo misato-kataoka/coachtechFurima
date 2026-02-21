@@ -27,8 +27,9 @@
                             <img src="{{ $item->image }}" alt="商品画像" class="item-image"/>
                             <div class="item-title">{{ $item->item_name }}</div>
 
-                            @if ($item->is_sold) <!-- 商品が売却済みかどうかをチェック -->
-                                <div class="sold-indicator">Sold</div>
+                            @if ($item->status !== 'on_sale')
+                                {{-- 商品が出品中(on_sale)でなければ 'Sold' を表示 --}}
+                                <div class="sold-overlay">Sold</div>
                             @endif
                         </a>
                     </div>

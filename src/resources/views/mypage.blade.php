@@ -13,7 +13,20 @@
         <div class="user-image-placeholder"></div>
     @endif
     <div class="user-details">
-        <h1 class="text-xl font-semibold">{{ Auth::user()->username }}</h1>
+        <div class="user-identity">
+            <h1 class="text-xl font-semibold">{{ Auth::user()->username }}</h1>
+            @if($roundedAverageRating > 0)
+                <div class="user-rating">
+                    @for ($i = 1; $i <= $roundedAverageRating; $i++)
+                        <span class="star-filled">★</span>
+                    @endfor
+                    @for ($i = $roundedAverageRating + 1; $i <= 5; $i++)
+                        <span class="star-empty">☆</span>
+                    @endfor
+                </div>
+            @endif
+        </div>
+
         <a href="{{ route('address.edit')}}" class="edit-profile-button">プロフィールを編集</a>
     </div>
 </div>
@@ -55,8 +68,8 @@
                 @endif
                 
                 {{-- "SOLD"の表示 --}}
-                @if($item->buyer_id)
-                    <div class="sold-overlay">SOLD</div>
+                @if($item->status !== 'on_sale')
+                    <div class="sold-overlay">Sold</div>
                 @endif
 
                 {{-- 商品画像 --}}

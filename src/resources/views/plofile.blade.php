@@ -24,8 +24,8 @@
                     <img src="{{ $item->image }}" alt="商品画像" class="product-image"/>
                 </a>
 
-                @if($item->is_sold)
-                    <div class="sold-overlay">SOLD</div>
+                @if($item->status !== 'on_sale')
+                    <div class="sold-overlay">Sold</div>
                 @endif
 
                 <div class="product-info" style="padding: 0 8px;">
@@ -40,12 +40,14 @@
 
     <div class="product-list" id="purchased" style="display: none;">
         @forelse($purchasedItems as $item)
-            {{-- ★修正点3: sold-overlayは各カードの中に入れる --}}
             <div class="product-card position-relative">
                 <a href="{{ route('item.detail', ['item_id' => $item->id]) }}">
                     <img src="{{ $item->image }}" alt="商品画像" class="product-image"/>
                 </a>
-                <div class="sold-overlay">SOLD</div>
+
+                @if($item->status !== 'on_sale')
+                    <div class="sold-overlay">Sold</div>
+                @endif
                 <div class="product-info" style="padding: 0 8px;">
                     <h2 class="product-name">{{ $item->item_name }}</h2>
                     <p class="product-price">{{ number_format($item->price) }}円</p>

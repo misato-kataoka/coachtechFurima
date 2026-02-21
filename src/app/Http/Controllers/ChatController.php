@@ -8,100 +8,137 @@ use App\Http\Requests\StoreChatRequest;
 use Illuminate\Http\Request;
 use App\Models\Item;
 use App\Models\Chat;
+use App\Models\Rating;
 
 class ChatController extends Controller
 {
     /**
      * 特定の商品のチャットページを表示する
      *
-     * @param Item $item ルートモデルバインディングにより、URLのIDからItemインスタンスが自動的に渡される
+     * @param Item $item 
      * @return \Illuminate\View\View
      */
     public function show(Item $item)
     {
         $this->authorize('view', $item); 
-    
-        // --- 認可 (Authorization) ---
-        // このチャットページを閲覧できるのは、商品の出品者か購入者のみに限定するべき
         $user = Auth::user();
-        if ($user->id !== $item->user_id && $user->id !== $item->buyer_id) {
-            // 権限がない場合は、トップページなどにリダイレクトする
-            abort(403, 'Unauthorized action.'); 
+
+        // --- 未読メッセージを既読に更新 ---
+        Chat::where('item_id', $item->id)
+            ->where('user_id', '!=', $user->id)
+            ->where('is_read', false)
+            ->update(['is_read' => true]);
+
+        // --- チャットメッセージ一覧を取得 ---
+        $chats = Chat::with('user')->where('item_id', $item->id)->orderBy('created_at', 'asc')->get();
+
+        // --- 他のチャットルーム一覧用のデータを取得 ---
+        // ログインユーザーが出品者である取引と、購入者である取引を両方取得
+        $sellingItems = Item::where('user_id', $user->id)->whereNotNull('buyer_id')->get();
+        $buyingItems = Item::where('buyer_id', $user->id)->get();
+        // ２つのコレクションを結合し、重複を除外し、現在のチャットルームは除外する
+        $mergedItems = $sellingItems->merge($buyingItems)
+                                      ->unique('id')
+                                      ->where('id', '!=', $item->id);
+
+        // 3. 各商品に「最新のチャット投稿日時」と「未読メッセージ数」を追加
+        $mergedItems->each(function ($chatItem) use ($user) {
+            // 最新のチャットを1件だけ取得
+            $latestChat = Chat::where('item_id', $chatItem->id)->latest('created_at')->first();
+            
+            // 並び替え用の日時を設定 (最新チャットがなければ商品の更新日時を使用)
+            $chatItem->last_activity_at = $latestChat ? $latestChat->created_at : $chatItem->updated_at;
+
+            // サイドバー表示用の未読メッセージ数を計算
+            $chatItem->unread_count = Chat::where('item_id', $chatItem->id)
+                                          ->where('user_id', '!=', $user->id)
+                                          ->where('is_read', false)
+                                          ->count();
+        });
+
+        // 4. 「最新の活動日時」でコレクションを降順ソート
+        $otherChatItems = $mergedItems->sortByDesc('last_activity_at');                              
+
+        // --- 評価関連のロジック ---
+
+        // 1. ログインユーザーが、この取引において出品者か購入者かを判定
+        $isSeller = ($user->id === $item->user_id);
+        $isBuyer = ($user->id === $item->buyer_id);
+
+        // 2. 自分が（相手を）すでに評価済みかどうかを判定（ボタンのdisabled制御用）
+        $isAlreadyRated = false;
+        if ($isSeller) {
+            // 自分(出品者)が購入者を評価した記録があるか
+            $isAlreadyRated = Rating::where('item_id', $item->id)
+                                    ->where('evaluator_id', $user->id)
+                                    ->where('evaluated_id', $item->buyer_id)
+                                    ->exists();
+        } elseif ($isBuyer) {
+            // 自分(購入者)が出品者を評価した記録があるか
+            $isAlreadyRated = Rating::where('item_id', $item->id)
+                                    ->where('evaluator_id', $user->id)
+                                    ->where('evaluated_id', $item->user_id)
+                                    ->exists();
         }
 
-        // このチャットルームに含まれる、相手からの未読メッセージをすべて既読にする
-        Chat::where('item_id', $item->id)
-            ->where('user_id', '!=', $user->id) // 相手が送信したメッセージ
-            ->where('is_read', false)          // 未読のもの
-            ->update(['is_read' => true]);     // 既読に更新
+        // 3. 評価モーダルを自動表示すべきか判定（出品者向けの機能）
+        $shouldShowRatingModal = false;
+        // もし自分が「出品者」なら、モーダルを自動表示すべきか判定する
+        if ($isSeller) {
+            // 条件A: 購入者からの評価が存在するか？
+            $hasBuyerRated = Rating::where('item_id', $item->id)
+                                   ->where('evaluator_id', $item->buyer_id) // 評価者 = 購入者
+                                   ->where('evaluated_id', $user->id)    // 被評価者 = 自分
+                                   ->exists();
 
-        // --- データの取得 ---
-        // この商品に関連するチャットメッセージをすべて取得する
-        // ※リレーションを後で定義する必要があります
-        $chats = Chat::where('item_id', $item->id)->orderBy('created_at', 'asc')->get();
+            // 条件B: 自分はまだ評価していない (!isAlreadyRated)
+            // 両方の条件を満たす場合にモーダルを自動表示する
+            if ($hasBuyerRated && !$isAlreadyRated) {
+                $shouldShowRatingModal = true;
+            }
+        }
 
-        $user = Auth::user();
-
-        // 1. 自分が「出品者」として取引中の商品リストを取得
-        $sellingItems = Item::where('user_id', $user->id)
-            ->whereNotNull('buyer_id') // 購入者がいるもの
-            ->get();
-
-        // 2. 自分が「購入者」として取引中の商品リストを取得
-        $buyingItems = Item::where('buyer_id', $user->id)
-            ->get();
-
-        // 3. ２つのリストを結合し、重複を削除し、現在表示中の商品を除外する
-        $otherChatItems = $sellingItems->merge($buyingItems) // 結合
-            ->unique('id')         // 重複を削除
-            ->where('id', '!=', $item->id); // 現在の商品を除外
-
-
-        // --- ビューを返す ---
-        // 取得したデータと共に、チャットビューを表示する
+        // --- ビューに渡すデータをまとめて返す ---
         return view('chat', [
             'item' => $item,
             'chats' => $chats,
             'otherChatItems' => $otherChatItems,
+            'isAlreadyRated' => $isAlreadyRated,
+            'shouldShowRatingModal' => $shouldShowRatingModal,
         ]);
     }
 
     /**
      * チャットメッセージを投稿する
      *
-     * @param Request StoreChatRequest $request
+     * @param StoreChatRequest $request
      * @param Item $item
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(StoreChatRequest $request, Item $item)
     {
+        $this->authorize('create', [Chat::class, $item]);
+
         $validatedData = $request->validated();
-
-    // メッセージも画像も空の場合は、何もせず元のページに戻る
-    if (!$request->filled('message') && !$request->hasFile('image')) {
-        return back();
-    }
-
     // --- データベースへの保存処理 ---
-
-    $chat = new Chat();
+        $chat = new Chat();
         $chat->user_id = Auth::id();
         $chat->item_id = $item->id;
-        $chat->message = $validatedData['message'];
+        $chat->message = $validatedData['message'] ?? null;
 
-    // 画像があれば保存し、パスを設定
-    if ($request->hasFile('image')) {
-        // 'public'ディスクの'chat_images'フォルダに保存し、そのパスを$pathに格納
-        $path = $request->file('image')->store('chat_images', 'public');
-        $chat->image_path = $path;
+        // 画像があれば保存し、パスを設定
+        if ($request->hasFile('image')) {
+            // 'public'ディスクの'chat_images'フォルダに保存し、そのパスを$pathに格納
+            $path = $request->file('image')->store('chat_images', 'public');
+            $chat->image_path = $path;
+        }
+
+        // すべての設定が終わった$chatをデータベースに保存
+        $chat->save();
+
+        // チャット画面にリダイレクトする
+        return redirect()->route('chat.show', ['item' => $item->id]);
     }
-
-    // すべての設定が終わった$chatをデータベースに保存
-    $chat->save();
-
-    // チャット画面にリダイレクトする
-    return redirect()->route('chat.show', ['item' => $item->id]);
-}
 
     /**
  * チャットメッセージを削除する
