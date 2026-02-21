@@ -439,6 +439,9 @@ $(function() {
         $.ajax({
             url: postUrl,
             type: 'POST',
+            headers: { // ←【追記】
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },  
             data: formData,
             dataType: 'json',
         })

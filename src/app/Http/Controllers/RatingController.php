@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
+use App\Models\User;
 use App\Models\Rating;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use App\Notifications\TransactionCompletedNotification;
 
 class RatingController extends Controller
 {
@@ -17,33 +20,32 @@ class RatingController extends Controller
             'comment' => 'nullable|string|max:1000',
         ]);
 
-        $user = Auth::user();
+        $buyer = Auth::user(); // ←【変更】評価者を$buyerとして明確化
 
-        // 評価相手のIDを決定
-        $evaluatedId = null;
-        if ($user->id === $item->buyer_id) {
-            $evaluatedId = $item->user_id;
-        } else if ($user->id === $item->user_id) {
-            $evaluatedId = $item->buyer_id;
+        // 評価相手（出品者）のIDを決定
+        $sellerId = null;
+        if ($buyer->id === $item->buyer_id) { // ←【変更】$userを$buyerに変更
+            $sellerId = $item->user_id; // 出品者のID
         }
 
         // 不正なリクエストをチェック
-        if (!$evaluatedId || $evaluatedId === $user->id) {
+        // 購入者が評価する場合以外は、この先の処理に進めないようにする
+        if (!$sellerId) { // ←【変更】出品者が特定できない場合は不正なリクエストとする
             return response()->json([
                 'message' => '不正な評価リクエストです。'
-            ], 400); // 400 Bad Request
+            ], 400);
         }
 
         // すでに評価済みかチェック
-        $alreadyRated = Rating::where('evaluator_id', $user->id)
-                               ->where('evaluated_id', $evaluatedId)
+        $alreadyRated = Rating::where('evaluator_id', $buyer->id) // ←【変更】$userを$buyerに変更
+                               ->where('evaluated_id', $sellerId) // ←【変更】$evaluatedIdを$sellerIdに変更
                                ->where('item_id', $item->id)
                                ->exists();
 
         if ($alreadyRated) {
             return response()->json([
                 'message' => 'すでにこの取引の評価は完了しています。'
-            ], 409); // 409 Conflict
+            ], 409);
         }
 
         try {
@@ -51,17 +53,23 @@ class RatingController extends Controller
 
             // 1. 評価をデータベースに保存
             Rating::create([
-                'evaluator_id' => $user->id,
-                'evaluated_id' => $evaluatedId, // ★★★ ここを $ratedUserId から $evaluatedId に修正 ★★★
+                'evaluator_id' => $buyer->id,   // 評価者 = 購入者
+                'evaluated_id' => $sellerId,    // 被評価者 = 出品者
                 'item_id'      => $item->id,
                 'rating'       => $request->rating,
                 'comment'      => $request->comment,
             ]);
 
-            // 2. もし「購入者」が評価した場合、商品のステータスを 'completed' に更新
-            if ($user->id === $item->buyer_id) {
-                $item->status = 'completed';
-                $item->save();
+            // 2. 商品のステータスを 'completed' に更新
+            $item->status = 'completed';
+            $item->save();
+
+            // ★★★ ここから通知処理 ★★★
+            // 3. 出品者を取得して通知を送信
+            $seller = User::find($sellerId);
+            if ($seller) {
+                // 出品者に通知（引数には商品と購入者の情報を持たせる）
+                $seller->notify(new TransactionCompletedNotification($item->id, $buyer->id));
             }
 
             DB::commit();
