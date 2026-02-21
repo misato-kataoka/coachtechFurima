@@ -44,11 +44,11 @@ STRIPE_SECRET=sk_test_51RRVovH1ap6ABKzg5R9B8ykI65tfvTttnAGKPKddAWvG606XMgkbXmRNJ
 ```
 ### メール認証
   mailtrapを使用しています。  
-  以下のリンクから会員登録をしてください。  　
+  以下のリンクから会員登録をしてください。  
   https://mailtrap.io/  
   
-  メールボックスのIntegrationsから 「laravel 7.x and 8.x」を選択し、  　
-  .envファイルのMAIL_MAILERからMAIL_ENCRYPTIONまでの項目をコピー＆ペーストしてください。  　
+  メールボックスのIntegrationsから 「laravel 7.x and 8.x」を選択し、  
+  .envファイルのMAIL_MAILERからMAIL_ENCRYPTIONまでの項目をコピー＆ペーストしてください。  
   MAIL_FROM_ADDRESSは任意のメールアドレスを入力してください。
 
 ## ER図
