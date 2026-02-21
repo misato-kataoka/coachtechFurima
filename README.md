@@ -43,28 +43,29 @@ STRIPE_SECRET=sk_test_51RRVovH1ap6ABKzg5R9B8ykI65tfvTttnAGKPKddAWvG606XMgkbXmRNJ
   php artisan key:generate
 ```
 
-6. サンプル画像の配置
-
-```bash
-docker compose exec php cp -r /var/www/../seed_images/. /var/www/storage/app/public/
-```
-
-7. シンボリックリンクの作成
-
-```
-  php artisan storage:link
-```
-
-8. マイグレーションの実行
+6. マイグレーションの実行
 
 ```
   php artisan migrate
 ```
 
-9. シーディングを実行する
+7. シーディングを実行する
 
 ```
   php artisan db:seed
+```
+
+8. シンボリックリンクの作成
+
+```
+  php artisan storage:link
+```
+
+9. ディレクトリの権限を変更
+
+```
+  chmod -R 777 storage
+  chmod -R 777 bootstrap/cache
 ```
 
 ### メール認証
