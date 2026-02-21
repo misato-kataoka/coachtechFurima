@@ -71,23 +71,22 @@ class RatingController extends Controller
 
             // 通知とステータス更新の分岐
             if ($isSellerRating) {
-                // 出品者が評価した場合 → 取引完了
-                $item->status = 'completed'; // 商品ステータスを「取引完了」に
-                $item->save();
+            // 【出品者が評価した場合】
+            // （もし必要なら、購入者向けの別の通知を作成して送る）
 
-                // 購入者に「取引が完了しました」と通知
-                $buyer = User::find($evaluatedId);
-                if ($buyer) {
-                    $buyer->notify(new TransactionCompletedNotification($item->id,$evaluatedId)); // 通知クラスに合わせて引数を調整
-                }
             } else {
-                // 購入者が評価した場合
-                // (必要であれば)出品者に「購入者から評価されました」と通知
-                // $seller = User::find($evaluatedId);
-                // if ($seller) {
-                //     $seller->notify(new BuyerRatedNotification($item));
-                // }
-            }
+            // 【購入者が評価した場合】
+
+            // 1. 商品ステータスを「取引完了」に更新
+            $item->status = 'completed';
+            $item->save();
+
+            // 2. 出品者に「取引が完了しました」と通知
+            $seller = User::find($evaluatedId);
+            if ($seller) {
+
+            $seller->notify(new TransactionCompletedNotification($item->id, $evaluator->id));
+        }
 
             DB::commit();
 
