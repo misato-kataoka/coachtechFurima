@@ -15,6 +15,7 @@ services:
     build: ./docker/php
     volumes:
       - ./src:/var/www/
+      - laravel-storage:/var/www/storage
 
   mysql:
     image: mysql:8.0.26
@@ -26,7 +27,7 @@ services:
     command:
       mysqld --default-authentication-plugin=mysql_native_password
     volumes:
-      - ./docker/mysql/data:/var/lib/mysql
+      - mysql-data:/var/lib/mysql
       - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
 
   phpmyadmin:
@@ -40,3 +41,13 @@ services:
       - mysql
     ports:
       - 8080:80
+
+volumes:
+  laravel-storage:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./src/storage
+
+  mysql-data:
