@@ -42,13 +42,30 @@ STRIPE_SECRET=sk_test_51RRVovH1ap6ABKzg5R9B8ykI65tfvTttnAGKPKddAWvG606XMgkbXmRNJ
 ```
   php artisan db:seed
 ```
+### メール認証
+  mailtrapを使用しています。
+  以下のリンクから会員登録をしてください。　
+  https://mailtrap.io/
+
+  メールボックスのIntegrationsから 「laravel 7.x and 8.x」を選択し、　
+  .envファイルのMAIL_MAILERからMAIL_ENCRYPTIONまでの項目をコピー＆ペーストしてください。　
+  MAIL_FROM_ADDRESSは任意のメールアドレスを入力してください。
 
 ## ER図
 ![Image](https://github.com/user-attachments/assets/b6f3634f-dc57-45c7-9baf-06ba36d2703f)
 
-## テストユーザー
+## テストアカウント
+* **Email:** '鈴木　一郎'
 * **Email:** 'testuser@example.com'
 * **password:** 'password123'
+
+* **Email:** '山田　花子'
+* **Email:** 'sampleuser@example.com'
+* **password:** 'password456'
+
+* **Email:** '田中　次郎'
+* **Email:** 'tanakajirou@example.com'
+* **password:** 'password789'
 
 ## 使用技術
 
