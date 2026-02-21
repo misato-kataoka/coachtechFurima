@@ -41,7 +41,7 @@ class ChatController extends Controller
                                       ->unique('id')
                                       ->where('id', '!=', $item->id);
 
-        // 3. 各商品に「最新のチャット投稿日時」と「未読メッセージ数」を追加
+        // 各商品に「最新のチャット投稿日時」と「未読メッセージ数」を追加
         $mergedItems->each(function ($chatItem) use ($user) {
             // 最新のチャットを1件だけ取得
             $latestChat = Chat::where('item_id', $chatItem->id)->latest('created_at')->first();
@@ -56,16 +56,16 @@ class ChatController extends Controller
                                           ->count();
         });
 
-        // 4. 「最新の活動日時」でコレクションを降順ソート
+        // 最新の活動日時でコレクションを降順
         $otherChatItems = $mergedItems->sortByDesc('last_activity_at');                              
 
         // --- 評価関連のロジック ---
 
-        // 1. ログインユーザーが、この取引において出品者か購入者かを判定
+        // ログインユーザーが、この取引において出品者か購入者かを判定
         $isSeller = ($user->id === $item->user_id);
         $isBuyer = ($user->id === $item->buyer_id);
 
-        // 2. 自分が（相手を）すでに評価済みかどうかを判定（ボタンのdisabled制御用）
+        // 自分が（相手を）すでに評価済みかどうかを判定
         $isAlreadyRated = false;
         if ($isSeller) {
             // 自分(出品者)が購入者を評価した記録があるか
@@ -81,24 +81,23 @@ class ChatController extends Controller
                                     ->exists();
         }
 
-        // 3. 評価モーダルを自動表示すべきか判定（出品者向けの機能）
+        // 評価モーダルを自動表示すべきか判定
         $shouldShowRatingModal = false;
         // もし自分が「出品者」なら、モーダルを自動表示すべきか判定する
         if ($isSeller) {
             // 条件A: 購入者からの評価が存在するか？
             $hasBuyerRated = Rating::where('item_id', $item->id)
-                                   ->where('evaluator_id', $item->buyer_id) // 評価者 = 購入者
-                                   ->where('evaluated_id', $user->id)    // 被評価者 = 自分
+                                   ->where('evaluator_id', $item->buyer_id) 
+                                   ->where('evaluated_id', $user->id)
                                    ->exists();
 
-            // 条件B: 自分はまだ評価していない (!isAlreadyRated)
+            // 条件B: 自分はまだ評価していない
             // 両方の条件を満たす場合にモーダルを自動表示する
             if ($hasBuyerRated && !$isAlreadyRated) {
                 $shouldShowRatingModal = true;
             }
         }
 
-        // --- ビューに渡すデータをまとめて返す ---
         return view('chat', [
             'item' => $item,
             'chats' => $chats,
@@ -148,7 +147,6 @@ class ChatController extends Controller
         $chat = Chat::findOrFail($chat_id);
         $this->authorize('delete', $chat);
 
-        // ★★★ メッセージに画像があればストレージから削除する処理を追加 ★★★
         if ($chat->image_path) {
             Storage::disk('public')->delete($chat->image_path);
         }
@@ -192,7 +190,6 @@ class ChatController extends Controller
         
         // --- メッセージと画像が両方空になるのを防ぐ最終チェック ---
         if (empty($chat->message) && empty($chat->image_path)) {
-            // メッセージ削除はdestroyメソッドで行うべきなので、updateではエラーとする
             return response()->json([
                 'success' => false,
                 'message' => 'メッセージと画像の両方を空にすることはできません。削除する場合は削除ボタンを使用してください。',

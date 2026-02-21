@@ -56,13 +56,10 @@
         <div class="item-grid">
             @foreach ($items as $item)
     <div class="item-card">
-        {{-- リンクはカード全体を囲む --}}
         <a href="{{ $activeTab === 'chat' ? route('chat.show', ['item' => $item->id]) : route('item.detail', ['id' => $item->id]) }}">
             
-            {{-- ★★★ 画像とバッジだけを囲むコンテナ ★★★ --}}
             <div class="item-image-container">
-
-                {{-- 未読バッジの表示ロジック --}}
+                {{-- 未読バッジの表示 --}}
                 @if ($activeTab === 'chat' && isset($item->unread_messages_count) && $item->unread_messages_count > 0)
                     <div class="unread-item-badge">{{ $item->unread_messages_count }}</div>
                 @endif
@@ -75,13 +72,12 @@
                 {{-- 商品画像 --}}
                 <img src="{{ $item->image }}" alt="{{ $item->item_name }}" class="item-image"/>
             
-            </div> {{-- ★★★ item-image-container の閉じタグ ★★★ --}}
+            </div>
 
-            {{-- ★★★ 商品名はコンテナの外に出す ★★★ --}}
             <p class="item-title">{{ $item->item_name }}</p>
 
-        </a> {{-- ★★★ aタグの閉じタグ ★★★ --}}
-    </div> {{-- ★★★ item-card の閉じタグ ★★★ --}}
+        </a>
+    </div>
 @endforeach
         </div>
     @endif

@@ -123,12 +123,10 @@ body {
 }
 
 .category-checkbox:checked+.category-name {
-    /* チェックが入ったら文字色を白に */
     color: white;
 }
 
 .category-label:has(.category-checkbox:checked) {
-    /* チェックが入ったチェックボックスを持つlabelの背景色を変える */
     background-color: #ff6f61;
 }
 

@@ -18,6 +18,7 @@ class UserItemListsTableSeeder extends Seeder
             ['user_id' => 1, 'item_id' => 2],
             ['user_id' => 2, 'item_id' => 4],
             ['user_id' => 1, 'item_id' => 10],
+            ['user_id' => 3, 'item_id' => 3],
         ];
 
         // 配列をループしてデータを投入

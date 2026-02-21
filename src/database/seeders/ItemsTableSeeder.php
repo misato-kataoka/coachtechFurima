@@ -17,7 +17,7 @@ class ItemsTableSeeder extends Seeder
     {
         Item::create([
                 'user_id' => 1,
-                'buyer_id' => null,
+                'buyer_id' => 2,
                 'image' => 'images/Armani+Mens+Clock.jpg',
                 'item_name' => '腕時計',
                 'brand' => 'アルマーニ',
@@ -26,7 +26,7 @@ class ItemsTableSeeder extends Seeder
                 'status' => 'on_sale',
             ]);
             Item::create([
-                'user_id'       => 2,
+                'user_id' => 2,
                 'buyer_id' => null,
                 'image' => 'images/HDD+Hard+Disk.jpg',
                 'item_name' => 'HDD',
@@ -57,7 +57,7 @@ class ItemsTableSeeder extends Seeder
             ]);
             Item::create([
                 'user_id' => 2,
-                'buyer_id' => 1,
+                'buyer_id' => null,
                 'image' => 'images/Laptop.jpg',
                 'item_name' => 'ノートPC',
                 'brand' => 'DELL',

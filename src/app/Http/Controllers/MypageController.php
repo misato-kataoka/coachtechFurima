@@ -27,8 +27,7 @@ class MypageController extends Controller
         $perPage = 8;
 
         // --- 全てのタブで共通の未読チャット数を先に計算する ---
-        // 自分が関わる商品（出品者 or 購入者）の中から、
-        // 相手からの未読メッセージの数を数える
+        // 自分が関わる商品（出品者 or 購入者）の中から、相手からの未読メッセージの数を数える
         $unreadChatCount = Chat::whereHas('item', function ($query) use ($user) {
                                 $query->where(function ($subQuery) use ($user) {
                                     $subQuery->where('user_id', $user->id)
@@ -58,10 +57,9 @@ class MypageController extends Controller
 
             // 3. 各商品に「最新のチャット投稿日時」を追加
             $mergedItems->each(function ($item) {
-                // with('chats') を使わず、最新の1件だけを取得して効率化
                 $latestChat = Chat::where('item_id', $item->id)
-                                  ->latest('created_at') // created_atが最新のものを
-                                  ->first();             // 1件だけ取得
+                                  ->latest('created_at')
+                                  ->first();
                 
                 // 最新チャットがあればその日時を、なければ商品の更新日時を代替として使用
                 $item->last_activity_at = $latestChat ? $latestChat->created_at : $item->updated_at;
@@ -85,13 +83,13 @@ class MypageController extends Controller
             // 7. 手動でページネーターを生成
             $items = new LengthAwarePaginator(
                 $currentPageItems,
-                $sortedItems->count(), // 全体の件数はソート後のコレクションから取得
+                $sortedItems->count(),
                 $perPage,
                 $currentPage,
                 ['path' => Paginator::resolveCurrentPath(), 'query' => $request->query()]
             );
         }
-        // --- 最後に全ての変数をビューに渡す ---
+
         return view('mypage', [
         'items' => $items,
         'activeTab' => $activeTab,

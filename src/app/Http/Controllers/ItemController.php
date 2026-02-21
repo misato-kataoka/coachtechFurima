@@ -37,7 +37,7 @@ class ItemController extends Controller
                 $q->where('user_id', '<>', $userId);
             }
         })
-            ->paginate(8); // 1ページあたり8件
+            ->paginate(8);
  
         return view('item_list', compact('items', 'query'));
     }
@@ -46,7 +46,7 @@ class ItemController extends Controller
     {
         // フォームから送信された値を取得
         $query = $request->input('query'); // 検索キーワード
-        $from = $request->input('from');   // どのページから来たか ('mylist' or 'index')
+        $from = $request->input('from');   // どのページから来たか
 
         // 'マイリスト' ページから検索された場合の処理
         if ($from === 'mylist') {
@@ -61,19 +61,14 @@ class ItemController extends Controller
             $items->appends($request->all());
 
             // 検索結果を "マイリスト" のビューに渡して表示
-            // ※ビューファイル名が mylist.blade.php の場合
             return view('mylist', compact('items', 'query'));
 
         } else {
-            // 'おすすめ' ページなど、それ以外から検索された場合の処理（従来の処理）
             $items = Item::where('item_name', 'LIKE', '%' . $query . '%')
                             ->paginate(8);
 
-            // ページネーションのリンクに検索パラメータを引き継がせる
             $items->appends($request->all());
 
-            // 検索結果を "おすすめ一覧" のビューに渡して表示
-            // ※ビューファイル名が item_list.blade.php の場合
             return view('item_list', compact('items', 'query'));
         }
     }
@@ -95,14 +90,14 @@ class ItemController extends Controller
         ])->findOrFail($id);
 
     // 現在のユーザーIDを取得
-        $userId = auth()->id(); // ユーザーがログインしていない場合に備えてnullになることを考慮する
+        $userId = auth()->id(); 
 
     // いいねのカウントとユーザーのいいね状況を同時に取得
         $likesData = Like::select([
             DB::raw('COUNT(id) as count'),
             DB::raw('MAX(CASE WHEN user_id = ? THEN 1 ELSE 0 END) as userLiked')
         ])
-        ->setBindings([$userId]) // バインディングを使用してuser_idを伝達
+        ->setBindings([$userId])
         ->where('item_id', $id)
         ->first();
 
@@ -120,7 +115,7 @@ class ItemController extends Controller
     ]);
 
     UserItemList::create([
-        'user_id' => auth()->id(), // 現在ログイン中のユーザーID
+        'user_id' => auth()->id(),
         'item_id' => $itemId,
     ]);
 
@@ -130,7 +125,7 @@ class ItemController extends Controller
     public function myList()
 {
     // ログイン中のユーザーに対してマイリストを取得
-    $items = auth()->user()->likes()->paginate(8); // 1ページあたり8アイテム
+    $items = auth()->user()->likes()->paginate(8);
 
     return view('mylist', compact('items'));
 }
@@ -151,7 +146,6 @@ class ItemController extends Controller
         }
 
         try {
-        // 商品データを保存
             $item = Item::create([
                 'item_name' => $request->item_name,
                 'brand' => $request->brand,
@@ -161,7 +155,6 @@ class ItemController extends Controller
                 'user_id' => $userId,
             ]);
 
-        // カテゴリーと商品の状態をitem_category_conditionテーブルに保存
             if ($request->filled('category_ids') && $request->filled('condition_id')) {
                 foreach ($request->category_ids as $categoryId) {
                     ItemCategoryCondition::create([

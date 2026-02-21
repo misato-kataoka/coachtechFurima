@@ -58,11 +58,6 @@
     margin: 0 0 20px 0;
 }
 
-/*h2,
-h3 {
-    text-align: center;
-}*/
-
 .item-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -106,8 +101,6 @@ h3 {
 
 .item-title {
     padding: 8px 10px;
-    /* 上下左右の余白 */
-
     /* 文字がはみ出した場合に「...」で省略する設定 */
     white-space: nowrap;
     overflow: hidden;
@@ -117,22 +110,11 @@ h3 {
     font-size: 18px;
     font-weight: bold;
     color: #333;
-    text-align: left;/* テキストを左揃えに */
+    text-align: left;
 
     /* 不要なスタイルをリセット */
     margin: 0;
 }
-
-/*.item-title {
-    margin: 10px 0 0;
-    font-size: 18px;
-    margin-top: 0;
-    color: #333;
-    text-align: left;
-    position: relative;
-    text-decoration: none;
-    z-index: 1;
-}*/
 
 .sold-overlay {
     position: absolute;

@@ -16,7 +16,7 @@
     <header class="header">
         <div class="header__inner">
 
-            {{-- ★★★ 1. ロゴグループ ★★★ --}}
+            {{--   ロゴグループ  --}}
             <div class="header__logo">
                 <a href="/">
                     <img src="{{ asset('image/logo.png') }}" alt="COACHTECH Logo" />
@@ -24,7 +24,7 @@
             </div>
 
             <div class="header__utility-group">
-            {{-- ★★★ 2. 検索グループ（ログイン時のみ表示） ★★★ --}}
+            {{--   検索グループ（ログイン時のみ表示）  --}}
                 @auth
                 <div class="header__search">
                     <form action="{{ route('item.search') }}" method="GET">
@@ -35,7 +35,7 @@
                 </div>
                 @endauth
 
-            {{-- ★★★ 3. ナビゲーショングループ ★★★ --}}
+            {{--   ナビゲーショングループ  --}}
                 <nav class="header__nav">
                     @if (Auth::check())
                         {{-- ログインしている場合のナビゲーション --}}

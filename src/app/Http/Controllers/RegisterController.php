@@ -22,7 +22,6 @@ class RegisterController extends Controller
     {
         $validatedData = $request->validated();
 
-        // ユーザー情報をセッションに保存
         //session([
         $user = User::create([
             'username' => $validatedData['username'],
@@ -34,23 +33,12 @@ class RegisterController extends Controller
 
         Auth::login($user);
 
-        // 住所入力フォームへのリダイレクト
-        //return redirect()->route('address.form');
-
         // 認証メールを送ったことをユーザーに知らせるページへリダイレクト
         return redirect()->route('verification.notice');
     }
 
     public function showAddressForm()
     {
-
-    // 会員登録フローに必要な情報がセッションに存在するか確認
-        //if (!session()->has('username') || !session()->has('email') || !session()->has('password')) {
-    // 必要な情報がセッションになければ、登録の初期段階（会員登録フォーム）に戻す
-        //return redirect()->route('register')->with('error', '登録情報が不足しています。お手数ですが、最初からやり直してください。');
-    //}
-        //$user = null;
-        //$username_from_session = session('username');
         $user = Auth::user();
         $username_from_session = $user->username;
 
@@ -59,12 +47,6 @@ class RegisterController extends Controller
 
     public function storeAddress(AddressRequest $request)
     {
-        //\Log::info('storeAddress method called.');
-
-        //$username = session('username');
-        //$email = session('email');
-        //$password = session('password');
-
         $user = Auth::user();
         if (!$user) {
             // 万が一ユーザーが取得できない場合は、ログインページに戻す
@@ -83,27 +65,12 @@ class RegisterController extends Controller
                     \Log::error('Failed to store image, store() returned falsy value.');
                 }
             } catch (\Exception $e) {
-                \Log::error('Exception during image store: ' . $e->getMessage()); // 例外が発生した場合
+                \Log::error('Exception during image store: ' . $e->getMessage());
             }
         } else {
-            \Log::info('No image file in the request.'); // ファイルが存在しない場合
+            \Log::info('No image file in the request.');
         }
 
-    // 新しいユーザーを作成
-    /*try{
-    $user = User::create([
-        'username' => $username,
-        'email' => $email,
-        'password' => Hash::make($password),
-        'post_code' => $request->post_code,
-        'address' => $request->address,
-        'building' => $request->building,
-        'profile_pic' => $profilePicPath, // アップロードされた画像のパスを保存
-    ]);
-    \Log::info('User created successfully. User ID: ' . $user->id);
-    } catch (\Exception $e) {
-        \Log::error('Exception during user creation: ' . $e->getMessage());
-    }*/
     // ユーザー情報を「更新 (update)」する
     $user->update([
         'post_code' => $request->post_code,
@@ -111,10 +78,6 @@ class RegisterController extends Controller
         'building' => $request->building,
         'profile_pic' => $profilePicPath,
     ]);
-
-        //Auth::login($user);
-
-        //session()->forget(['username', 'email', 'password']);
 
         return redirect('/mypage')->with('success', '登録が完了しました。');
     }

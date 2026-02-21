@@ -54,7 +54,6 @@
 
 .product-card {
     width: calc(25% - 20px);
-    /* 最大4列 */
     margin-bottom: 20px;
     text-align: center;
     position: relative;
@@ -90,7 +89,6 @@
     margin-top: 10px;
 }
 
-/* ページネーションのスタイル */
 .pagination {
     margin-top: 20px;
     display: flex;

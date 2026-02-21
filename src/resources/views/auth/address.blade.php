@@ -12,7 +12,6 @@
         @csrf
         <div class="profile-pic">
             <div class="image-placeholder">
-                {{-- プレビュー画像を表示するためのimgタグを追加 --}}
                 <img id="imagePreview"
                      src="{{ isset($user) && $user->profile_pic ? asset('storage/' . $user->profile_pic) : '' }}"
                      alt="プロフィール画像プレビュー" />
@@ -78,9 +77,7 @@
 
         // --- イベントリスナーの登録 ---
         const imageUpload = document.getElementById('imageUpload');
-        // imageUpload要素（ファイル選択）に変更があったら、previewImage関数を実行する
         imageUpload.addEventListener('change', previewImage);
-
 
         // --- ページ読み込み時の画像表示制御 ---
         const imagePreview = document.getElementById('imagePreview');

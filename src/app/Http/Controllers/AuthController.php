@@ -52,7 +52,6 @@ class AuthController extends Controller
             return redirect()->route('home');
         }
 
-        // 認証に失敗した場合、エラーメッセージをセッションにフラッシュしてログインページにリダイレクト
         return back()->withErrors([
             'email' => 'ログイン情報が登録されていません。',
         ])->withInput();

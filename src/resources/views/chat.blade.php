@@ -3,7 +3,6 @@
 @section('css')
 <link rel="stylesheet" href="{{ asset('css/chat.css') }}">
 <style>
-    /* 編集フォーム用の簡単なスタイル */
     .edit-form { display: none; margin-top: 5px; }
     .edit-form textarea { width: 100%; box-sizing: border-box; }
 </style>
@@ -11,18 +10,14 @@
 
 @section('content')
 <main class="main-container">
-        <!-- サイドバー（スマホでは非表示を想定） -->
         <aside class="sidebar">
-            {{-- サイドバーのタイトル --}}
             <h3 class="sidebar-title">その他の取引</h3>
 
             {{-- 商品リストのコンテナ --}}
             <ul class="other-chats-list">
-            {{-- コントローラーから渡された$otherChatItemsをループ処理 --}}
                 @forelse ($otherChatItems as $otherItem)
                     <li>
                         <a href="{{ route('chat.show', ['item' => $otherItem->id]) }}" class="other-chat-link">
-                            {{-- 商品名を表示 --}}
                             <span class="other-chat-link__name">{{ $otherItem->item_name }}</span>
                     
                             {{-- 未読メッセージ数が1以上あれば、バッジを表示する --}}
@@ -52,9 +47,7 @@
                 @endphp
 
              {{-- $otherUserが存在する場合のみ名前を表示 --}}
-                {{-- アイコンの表示 --}}
                 @php
-                // 表示するアイコンのパスを決定する
                 // $otherUser が存在し、かつ profile_pic がある場合はその画像
                 // それ以外の場合は default-icon.png を使う
                     $iconPath = ($otherUser && $otherUser->profile_pic)
@@ -65,12 +58,15 @@
              
                 <h1>「{{ $otherUser ? $otherUser->username : '相手' }}」さんとの取引画面</h1>
                 
-                @if ($isAlreadyRated)
-                    {{-- 評価済みの場合のボタン --}}
-                    <button class="btn btn-complete" disabled>評価済みです</button>
-                @else
-                    {{-- 未評価の場合のボタン (これまで通り) --}}
-                    <button class="btn btn-complete">取引を完了する</button>
+                {{-- もし、ログイン中のユーザーが「購入者」の場合のみ、以下のボタンを表示する --}}
+                @if ($item->buyer_id == Auth::id())
+                    @if ($isAlreadyRated)
+                        {{-- 評価済みの場合のボタン --}}
+                        <button class="btn btn-complete" disabled>評価済みです</button>
+                    @else
+                        {{-- 未評価の場合のボタン --}}
+                        <button class="btn btn-complete">取引を完了する</button>
+                    @endif
                 @endif
             </div>
 
@@ -88,16 +84,15 @@
             @foreach($chats as $chat)
                 {{-- もし、メッセージの投稿者IDが、ログインしている自分のIDと「同じ」なら --}}
                 @if($chat->user_id == Auth::id())
-                    <!-- ★★★自分のメッセージ (右側)★★★ -->
+                    <!-- 自分のメッセージ (右側) -->
                     <div class="message message--self" id="chat-{{ $chat->id }}">
                         <div class="message__content">
                             <p class="message__username">{{ $chat->user->username }}</p>
                             <div class="message__bubble">
-                                {{-- ★★★ 画像がある場合は画像を表示 ★★★ --}}
                                 @if($chat->image_path)
                                     <img src="{{ asset('storage/' . $chat->image_path) }}" alt="投稿画像" class="message-image">
                                 @endif
-                                {{-- ★★★ メッセージがある場合はメッセージを表示 ★★★ --}}
+
                                 @if($chat->message)
                                     <p class="message-text">{{ $chat->message }}</p>
                                 @endif
@@ -109,7 +104,7 @@
                                     <textarea name="message" rows="3">{{ $chat->message }}</textarea>
 
                                     <div class="edit-image-controls">
-                                        {{-- もし、このメッセージに元々画像があれば、プレビューと削除チェックボックスを表示 --}}
+
                                         @if($chat->image_path)
                                         <div class="current-image-preview">
                                             <img src="{{ asset('storage/' . $chat->image_path) }}" alt="現在の画像">
@@ -147,7 +142,7 @@
                         </div>
                     </div>
                 @else
-                    {{-- もし、メッセージの投稿者IDが、自分のものでは「ない」なら --}}
+                    {{-- もし、メッセージの投稿者IDが、自分のものでないなら --}}
                     <!-- 相手のメッセージ (左側) -->
                     <div class="message message--other">
                         <div class="message__avatar {{ $chat->user->profile_pic ? '' : 'message__avatar--default' }}">
@@ -156,11 +151,11 @@
                         <div class="message__content">
                             <p class="message__username">{{ $chat->user->username }}</p>
                             <div class="message__bubble">
-                                {{--  画像がある場合は画像を表示  --}}
+
                                 @if($chat->image_path)
                                     <img src="{{ asset('storage/' . $chat->image_path) }}" alt="投稿画像" class="message-image">
                                 @endif
-                                {{--  メッセージがある場合はメッセージを表示  --}}
+
                                 @if($chat->message)
                                     <p>{{ $chat->message }}</p>
                                 @endif
@@ -215,7 +210,7 @@
             
             <p class="rating-modal__subtitle">今回の取引相手はどうでしたか？</p>
 
-            {{-- ★★★ 5段階評価の星 ★★★ --}}
+            {{--  5段階評価の星  --}}
             <div class="rating-stars">
                 <span class="star" data-value="1">★</span>
                 <span class="star" data-value="2">★</span>
@@ -286,7 +281,7 @@ $(function() {
         messageContent.find('.message__actions').show();
     });
 
-    // 編集フォームが送信された時の処理 (Ajax)
+    // 編集フォームが送信された時の処理
     $('.message-area').on('submit', '.edit-form', function(e) {
     e.preventDefault(); // フォームのデフォルト送信をキャンセル
 
@@ -294,27 +289,24 @@ $(function() {
     const url = form.attr('action');
 
     // 1. new FormData() でフォーム要素から基本データを作成
-    //    これには message と image (ファイル) が含まれます
     const formData = new FormData(this);
 
-    // 2.【最重要】_methodを手動で追加
+    // 2._methodを手動で追加
     const method = form.find('input[name="_method"]').val();
     formData.append('_method', method);
 
     // 3.【重要】remove_imageの値を手動で設定
-    //    チェックボックスの状態に応じて 'true' または 'false' の【文字列】を設定
     const isRemoveChecked = form.find('input[name="remove_image"]').is(':checked');
-    // formData.set() を使うことで、キーが存在しない場合でも確実に追加/上書き
     formData.set('remove_image', isRemoveChecked ? 'true' : 'false');
 
 
     // 4. Ajaxで送信
     $.ajax({
-        type: 'POST', // typeは'POST'のまま。Laravelは_methodを見て判断します。
+        type: 'POST',
         url: url,
         data: formData,
-        processData: false, // FormDataを送信するため必須
-        contentType: false, // FormDataを送信するため必須
+        processData: false,
+        contentType: false,
         success: function(response) {
             // Controllerからのレスポンスが成功(success: true)の場合
             if (response.success) {
@@ -327,7 +319,7 @@ $(function() {
                 if (updatedChat.message) {
                     messageTextElement.text(updatedChat.message).show();
                 } else {
-                    messageTextElement.hide().text(''); // テキストがなければ隠す
+                    messageTextElement.hide().text('');
                 }
 
                 // --- 画像の更新 ---
@@ -339,7 +331,7 @@ $(function() {
                         // 既存のimgタグがあればsrcを更新
                         imageElement.attr('src', imageUrl).show();
                     } else {
-                        // 既存のimgタグがなければ、新しくprepend（先頭に追加）
+                        // 既存のimgタグがなければ、新しくprepend
                         messageBubble.prepend(`<img src="${imageUrl}" alt="投稿画像" class="message-image">`);
                     }
                 } else {
@@ -356,7 +348,6 @@ $(function() {
 
                 console.log(response.message); // "メッセージを更新しました。"
             } else {
-                 // Controllerが success: false で返した場合 (例: メッセージと画像が両方空)
                 alert(response.message);
             }
         },
@@ -387,7 +378,6 @@ $(function() {
     const submitButton = $('.btn-submit-rating');
     const ratingErrors = $('#rating-errors');
 
-    // === 関数定義 ===
     function openRatingModal() {
         ratingModal.css('display', 'flex');
     }
@@ -439,7 +429,7 @@ $(function() {
         $.ajax({
             url: postUrl,
             type: 'POST',
-            headers: { // ←【追記】
+            headers: { 
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },  
             data: formData,

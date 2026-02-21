@@ -25,14 +25,14 @@ use Illuminate\Http\Request;
 |
 */
 
-// ユーザー登録のルートAuth->Registerに変更
+// ユーザー登録のルート
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register.form');
 Route::post('/register', [RegisterController::class, /*'storeUser'*/'register'])->name('register');
 
 // 住所入力ページへのルート
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/address/form', [RegisterController::class, 'showAddressForm'])->name('address.form'); // 認証済みユーザーのみ
-    Route::post('/address', [RegisterController::class, 'storeAddress'])->name('address.store')/*->middleware('auth')*/; // 住所情報保存のルート
+    Route::get('/address/form', [RegisterController::class, 'showAddressForm'])->name('address.form');
+    Route::post('/address', [RegisterController::class, 'storeAddress'])->name('address.store');
 });
 
 //ログアウト機能
@@ -80,7 +80,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // 1. 商品購入ページの表示
     Route::get('/purchase/{item_id}', [OrdersController::class, 'show'])->name('purchase.show');
 
-    // 2. Stripe Checkoutセッション作成 (JavaScriptから非同期で呼ばれる)
+    // 2. Stripe Checkoutセッション作成
     Route::post('/create-checkout-session', [OrdersController::class, 'createCheckoutSession'])->name('checkout.create');
 
     // 3. 決済成功時のリダイレクト先
@@ -105,7 +105,6 @@ Route::get('/', [ItemController::class, 'index'])->name('home');
 
 // マイページへのルート
 Route::middleware(['auth', 'verified'])->group(function () {
-    //Route::get('/mypage', [UserController::class, 'show'])->name('mypage');
     Route::get('/mypage', [MypageController::class, 'index'])->name('mypage');
     Route::get('/mypage/profile/edit', [UserController::class, 'edit'])->name('address.edit'); // プロフィール編集
     Route::post('/mypage/profile/store', [UserController::class, 'store'])->name('profile.store');
@@ -118,7 +117,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/chat/{chat_id}', [ChatController::class, 'destroy'])->name('chat.destroy');
     Route::patch('/chat/{chat_id}', [ChatController::class, 'update'])->name('chat.update');
     Route::get('/items/{item}/chat', [ChatController::class, 'show'])->name('chat.show');
-    // POST: 特定の商品のチャットにメッセージを投稿する
     Route::post('/item/{item}/chat', [ChatController::class, 'store'])->name('chat.store');
 });
 

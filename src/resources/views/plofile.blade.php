@@ -58,7 +58,6 @@
         @endforelse
     </div>
 
-    <!-- ページネーション -->
     <div class="pagination">
         <div id="listed-pagination">
             {{ $listedItems->links() }}
@@ -72,9 +71,9 @@
 function showTab(tabName) {
     const tabs = document.querySelectorAll('.product-list');
     tabs.forEach(tab => {
-        tab.style.display = 'none'; // すべてのタブを非表示に
+        tab.style.display = 'none';
     });
-    document.getElementById(tabName).style.display = 'block'; // 選択されたタブのみ表示
+    document.getElementById(tabName).style.display = 'block';
 
     const tabButtons = document.querySelectorAll('.tab-button');
     tabButtons.forEach(button => {

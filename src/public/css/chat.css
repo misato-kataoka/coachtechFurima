@@ -2,13 +2,13 @@
     display: flex;
     max-width: none !important;
     transition: max-width 0.3s ease-in-out; 
-    height: calc(100vh - 80px); /* 画面の高さからヘッダーの高さ(80px)を引いた分 */
-    overflow: hidden;           /* このコンテナ自体はスクロールさせない */
+    height: calc(100vh - 80px); 
+    overflow: hidden;
 }
 
 .sidebar {
     width: 250px;
-    flex-shrink: 0; /* サイドバーの幅を固定 */
+    flex-shrink: 0;
     background-color: #777;
     color: #fff;
     padding: 20px;
@@ -39,8 +39,8 @@
 /* 各商品へのリンク */
 .other-chat-link {
     display: flex;
-    justify-content: space-between; /* ★追加: 中の要素を両端に寄せる */
-    align-items: center;          /* ★追加: 中の要素を上下中央に揃える */
+    justify-content: space-between;
+    align-items: center;
     
     padding: 10px 14px;
     background-color: #e9ecef;
@@ -49,14 +49,7 @@
     border-radius: 6px;
     font-size: 20px;
     font-weight: 500;
-    /* text-align: center; は不要になるので削除 */
-    margin-bottom: 30px;
-    
-    /* はみ出した文字を「...」で省略 (Flexboxの子要素に適用するため、移動します) */
-    /* white-space: nowrap; */ /* ← 移動 */
-    /* overflow: hidden; */     /* ← 移動 */
-    /* text-overflow: ellipsis; */ /* ← 移動 */
-    
+    margin-bottom: 30px; 
     transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 
@@ -68,27 +61,25 @@
 
 /* 商品名のスタイル */
 .other-chat-link__name {
-    /* はみ出した文字を「...」で省略する設定をこちらに移動 */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin-right: 8px; /* バッジとの間に余白を設ける */
+    margin-right: 8px;
 }
 
 /* 未読バッジのスタイル */
 .other-chat-link__badge {
     /* 基本的なスタイル */
-    background-color: #ef4444; /* 目立つ赤色 */
+    background-color: #ef4444;
     color: white;
-    font-size: 14px;           /* 文字サイズを少し小さく */
+    font-size: 14px; 
     font-weight: bold;
     padding: 2px 8px;
-    border-radius: 12px;       /* 角を丸くしてカプセル型に */
-    
+    border-radius: 12px;   
     /* 幅と配置 */
-    min-width: 24px;           /* 1桁でも形が崩れないように最小幅を指定 */
+    min-width: 24px;
     text-align: center;
-    flex-shrink: 0;            /* ★重要: バッジが商品名に押されて縮まないようにする */
+    flex-shrink: 0;/* バッジが商品名に押されて縮まないようにする */
 }
 
 /* 他に取引がない場合のメッセージ */
@@ -106,7 +97,7 @@
     background-color: transparent;
     display: flex;
     flex-direction: column;
-    min-width: 0; /* flexアイテムが縮小できるように */
+    min-width: 0;
     height: 100%;
 }
 
@@ -128,7 +119,7 @@
 }
 
 .chat-header-icon {
-    object-fit: cover;     /* 画像の比率を保ったまま領域を埋める */
+    object-fit: cover; /* 画像の比率を保ったまま領域を埋める */
 }
 
 
@@ -201,10 +192,10 @@
 
 /* 個々のメッセージのコンテナ */
 .message {
-    display: flex; /* ★超重要: アイコンとコンテンツを横に並べる */
-    align-items: flex-start; /* 上揃えにする */
+    display: flex;
+    align-items: flex-start;
     margin-bottom: 20px;
-    max-width: 100%; /* はみ出し防止 */
+    max-width: 100%;
 }
 
 /* アイコンのラッパー */
@@ -235,13 +226,13 @@
     font-size: 16px;
     color: #555;
     font-weight: bold;
-    margin-bottom: 5px; /* 吹き出しとの隙間 */
+    margin-bottom: 5px;
 }
 
 .message__bubble {
     background-color: #e0e0e0;
     padding: 10px 15px;
-    border-radius: 6px; /* 画像に合わせて四角く */
+    border-radius: 6px;
     max-width: 450px;
     word-wrap: break-word;
 }
@@ -252,44 +243,44 @@
 }
 
 .message-image {
-    max-width: 100%;       /* 吹き出しの幅に合わせる */
-    height: auto;          /* 高さは自動調整 */
-    border-radius: 6px;    /* 吹き出しの角丸と合わせる */
-    display: block;        /* 画像下の余白をなくす */
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
+    display: block;
 }
 
 /* テキストと画像が両方ある場合の調整 */
 .message-image + .message-text {
-    margin-top: 10px; /* 画像とテキストの間に少し隙間をあける */
+    margin-top: 10px;
 }
 
 /* 画像のみの場合、吹き出しのパディングをなくす */
 .message__bubble:has(.message-image:only-child) {
     padding: 0;
-    background-color: transparent; /* 背景も透明にする */
+    background-color: transparent;
 }
 
 /* --- 左右の配置調整 --- */
 
 /* 相手のメッセージ (左側) */
 .message--other .message__avatar {
-    margin-right: 15px; /* アイコンとコンテンツの間の隙間 */
+    margin-right: 15px;
 }
 .message--other .message__content {
-    align-items: flex-start; /* 中身を左揃え */
+    align-items: flex-start;
 }
 
 /* 自分のメッセージ (右側) */
 .message--self {
-    justify-content: flex-end; /* 全体を右に寄せる */ 
+    justify-content: flex-end;
 }
 .message--self .message__avatar {
-    order: 2; /* ★重要: アイコンの表示順を2番目にする */
-    margin-left: 15px; /* アイコンとコンテンツの間の隙間 */
+    order: 2;
+    margin-left: 15px;
 }
 .message--self .message__content {
-    order: 1; /* ★重要: コンテンツの表示順を1番目にする */
-    align-items: flex-end; /* 中身を右揃え */
+    order: 1;
+    align-items: flex-end;
 }
 .message--self .message__bubble {
     background-color: #e0e0e0;
@@ -344,7 +335,7 @@
 }
 .remove-image-wrapper label {
     font-size: 13px;
-    color: #e53e3e; /* 赤色にして注意を引く */
+    color: #e53e3e;
     cursor: pointer;
 }
 
@@ -364,7 +355,7 @@
 .btn-change-image:hover {
     background-color: #e0e0e0;
 }
-/* 実際のinput[type=file]は非表示にする */
+
 .edit-image-input {
     display: none;
 }
@@ -412,24 +403,24 @@
 }
 
 .validation-errors {
-  margin-bottom: 1rem; /* 下側の余白 */
-  padding: 0.25rem; /* 内側の余白 */
-  border: 1px solid #e53e3e; /* 赤系の枠線 */
-  background-color: #fff5f5; /* 薄い赤系の背景色 */
-  border-radius: 0.25rem; /* 角を少し丸める */
+  margin-bottom: 1rem;
+  padding: 0.25rem;
+  border: 1px solid #e53e3e;
+  background-color: #fff5f5;
+  border-radius: 0.25rem;
 }
 
 /* エラーリスト（ul）のスタイル */
 .validation-errors ul {
   margin: 0;
-  padding-left: 1.25rem; /* 左側の箇条書きの点のスペース */
-  list-style-type: disc; /* 箇条書きの点を表示 */
+  padding-left: 1.25rem;
+  list-style-type: disc;
 }
 
 /* 各エラーメッセージ（li）のスタイル */
 .validation-error-message {
-  color: #c53030; /* 文字色を赤系に */
-  font-weight: bold; /* 文字を太字に */
+  color: #c53030;
+  font-weight: bold;
 }
 
 /* エラーメッセージ間の余白（任意） */
@@ -457,7 +448,7 @@
 
 /* モーダルの本体 */
 .rating-modal__content {
-    background-color: #faf7de; /* デザインに合わせた薄いベージュ色 */
+    background-color: #faf7de;
     width: 90%;
     max-width: 560px;
     border: 1px solid #999797;
@@ -550,84 +541,28 @@
 /* ======================================= */
 
 /* --- 1. PCサイズ (1400px - 1540px) --- */
-/* この幅では、サイドバーを表示したまま全体のコンテナ幅を広げます */
 @media screen and (min-width: 1400px) and (max-width: 1540px) {
     .main-container {
-        /*
-         * 画面幅いっぱいに広げるのではなく、
-         * 少しマージンを残すために95%などに設定します。
-         * または固定値で max-width: 1380px; などと指定しても良いでしょう。
-         */
         max-width: 1380px;
     }
 }
 
 /* --- 2. タブレットサイズ (768px - 850px) --- */
-/* この幅では、サイドバーを非表示にし、チャットウィンドウを画面全体に広げます */
 @media screen and (min-width: 768px) and (max-width: 850px) {
     .sidebar {
-        /*
-         * display: none; だと急に消えるので、
-         * widthを0にして見えなくすることで、アニメーションの余地を残します。
-         */
         width: 0;
-        padding: 20px 0; /* 横パディングをなくす */
-        overflow: hidden; /* はみ出した内容を隠す */
-        visibility: hidden; /* スクリーンリーダーなどからも隠す */
+        padding: 20px 0;
+        overflow: hidden;
+        visibility: hidden;
     }
 
     .main-container {
-        /* タブレット幅では、左右のマージンを少しだけにする */
         padding: 0 15px;
-        max-width: 100%; /* 最大幅の制限を解除 */
-        box-sizing: border-box; /* paddingを含めて幅を計算 */
+        max-width: 100%;
+        box-sizing: border-box;
     }
 
     .message__bubble {
-        /* 画面幅が狭くなるので、吹き出しの最大幅も少し狭めます */
         max-width: 350px;
-    }
-}
-
-
-/* --- 3. スマホサイズ (767px以下) --- */
-/* 768px未満の画面幅で適用されるスタイル。タブレットの設定を継承しつつ、さらに調整します。*/
-@media screen and (max-width: 767px) {
-    .sidebar {
-        display: none; /* スマホでは完全に非表示 */
-    }
-
-    .main-container {
-        padding: 0; /* 画面いっぱいに表示 */
-    }
-
-    .chat-header h1 {
-        font-size: 14px; /* タイトルをさらに小さく */
-    }
-    .btn-complete {
-        padding: 6px 12px;
-        font-size: 12px;
-    }
-
-    .item-info {
-        padding: 15px;
-    }
-    .item-info__image {
-        width: 60px;
-        height: 60px;
-    }
-
-    .message-area {
-        padding: 15px;
-    }
-
-    /* メッセージ入力欄の画像追加ボタンのテキストを非表示にする例 */
-    .image-upload-label {
-        font-size: 0; /* テキストを消す */
-        padding: 8px;
-    }
-    .image-upload-label::before {
-        content: "🖼️"; /* 絵文字やアイコンフォントで代替 */
-        font-size: 16px;
     }
 }
