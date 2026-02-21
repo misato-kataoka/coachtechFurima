@@ -21,7 +21,7 @@ class UsersTableSeeder extends Seeder
             'email'     => 'testuser@example.com',
             'password'  => Hash::make('password123'),
             'email_verified_at' => now(),
-            'profile_pic'=>'profiles/E3lD5ZJ1AiDxebllSUPQs9U1udoNtpufwcWVZnyY.png',
+            'profile_pic'=>'profiles/man.png',
             'post_code' => '123-4567',
             'address'   => '東京都サンプル区1-1-1',
             'building'  => 'テストビル101',

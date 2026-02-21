@@ -423,7 +423,16 @@ $(function() {
         e.preventDefault();
         submitButton.prop('disabled', true).text('送信中...');
         
-        const formData = $(this).serialize();
+         // ログインユーザーが出品者かどうかをBladeで判定
+        const isSeller = {{ Auth::id() == $item->user_id ? 'true' : 'false' }};
+
+        // フォームデータを一度、配列/オブジェクト形式で取得
+        let formData = $(this).serializeArray();
+
+        // もし出品者からの送信であれば、is_seller_rating=true の情報を追加
+        if (isSeller) {
+            formData.push({ name: "is_seller_rating", value: "true" });
+        }
         const postUrl = `/item/{{ $item->id }}/rating`;
 
         $.ajax({

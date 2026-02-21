@@ -120,8 +120,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/item/{item}/chat', [ChatController::class, 'store'])->name('chat.store');
 });
 
-// 評価を保存するためのルート
-Route::post('/item/{item}/rating', [RatingController::class, 'store'])->name('rating.store')->middleware('auth');
+Route::middleware(['auth', 'verified'])->group(function () {
+    // 【既存】購入者が「出品者」を評価するためのルート
+    Route::post('/item/{item}/rating', [RatingController::class, 'store'])->name('rating.store');
+    // 【追加】出品者が「購入者」を評価するためのルート
+    Route::post('/purchase/{purchase}/rating', [RatingController::class, 'storeForSeller'])->name('rating.store.seller');
+});
 
 //商品登録のルート
 Route::middleware(['auth'])->group(function () {

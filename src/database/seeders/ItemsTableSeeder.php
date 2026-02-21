@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
 use App\Models\Item;
 
@@ -15,6 +17,23 @@ class ItemsTableSeeder extends Seeder
      */
     public function run()
     {
+        File::cleanDirectory(storage_path('app/public/images'));
+        // コピー先のディレクトリを準備
+        Storage::disk('public')->makeDirectory('images');
+        Storage::disk('public')->makeDirectory('profiles');
+
+        // コピー元のパス
+        $sourcePath = resource_path('seed_images');
+        $profileSourcePath = resource_path('seed_profiles');
+
+        // コピー先のパス
+        $destinationPath = storage_path('app/public/images');
+        $profileDestinationPath = storage_path('app/public/profiles');
+    
+        // ファイルをコピー
+        File::copyDirectory($sourcePath, $destinationPath);
+        File::copyDirectory($profileSourcePath, $profileDestinationPath);
+
         Item::create([
                 'user_id' => 1,
                 'buyer_id' => 2,
