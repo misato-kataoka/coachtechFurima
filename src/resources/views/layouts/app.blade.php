@@ -23,6 +23,7 @@
                 </a>
             </div>
 
+            @section('header_content')
             <div class="header__utility-group">
             {{--   検索グループ（ログイン時のみ表示）  --}}
                 @auth
@@ -52,6 +53,7 @@
                     @endif
                 </nav>
             </div>
+            @show
 
         </div>
     </header>

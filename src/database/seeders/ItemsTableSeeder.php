@@ -42,27 +42,27 @@ class ItemsTableSeeder extends Seeder
                 'brand' => 'アルマーニ',
                 'price' => 15000,
                 'description' => 'スタイリッシュなデザインのメンズ腕時計',
-                'status' => 'on_sale',
+                'status' => 'in_progress',
             ]);
             Item::create([
                 'user_id' => 2,
-                'buyer_id' => null,
+                'buyer_id' => 1,
                 'image' => 'images/HDD+Hard+Disk.jpg',
                 'item_name' => 'HDD',
                 'brand' => 'BUFFALO',
                 'price' => 5000,
                 'description' => '高速で信頼性の高いハードディスク',
-                'status' => 'on_sale',
+                'status' => 'in_progress',
             ]);
             Item::create([
                 'user_id' => 1,
-                'buyer_id' => null,
+                'buyer_id' => 3,
                 'image' => 'images/onion.jpg',
                 'item_name' => '玉ねぎ3束',
                 'brand' => 'JA',
                 'price' => 300,
                 'description' => '新鮮な玉ねぎ3束のセット',
-                'status' => 'on_sale',
+                'status' => 'in_progress',
             ]);
             Item::create([
                 'user_id' => 1,
@@ -76,7 +76,7 @@ class ItemsTableSeeder extends Seeder
             ]);
             Item::create([
                 'user_id' => 2,
-                'buyer_id' => null,
+                'buyer_id' => 3,
                 'image' => 'images/Laptop.jpg',
                 'item_name' => 'ノートPC',
                 'brand' => 'DELL',

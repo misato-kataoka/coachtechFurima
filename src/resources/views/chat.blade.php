@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+@section('header_content')
+@endsection
+
 @section('css')
 <link rel="stylesheet" href="{{ asset('css/chat.css') }}">
 <style>
@@ -288,7 +291,7 @@ $(function() {
     const form = $(this);
     const url = form.attr('action');
 
-    // 1. new FormData() でフォーム要素から基本データを作成
+    // 1.フォーム要素から基本データを作成
     const formData = new FormData(this);
 
     // 2._methodを手動で追加
@@ -297,8 +300,7 @@ $(function() {
 
     // 3.【重要】remove_imageの値を手動で設定
     const isRemoveChecked = form.find('input[name="remove_image"]').is(':checked');
-    formData.set('remove_image', isRemoveChecked ? 'true' : 'false');
-
+    formData.set('remove_image', isRemoveChecked ? 1 : 0);
 
     // 4. Ajaxで送信
     $.ajax({
