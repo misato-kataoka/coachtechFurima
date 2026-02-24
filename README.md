@@ -43,25 +43,19 @@ STRIPE_SECRET=sk_test_51RRVovH1ap6ABKzg5R9B8ykI65tfvTttnAGKPKddAWvG606XMgkbXmRNJ
   php artisan key:generate
 ```
 
-6. マイグレーションの実行
+6. マイグレーションとシーディングの実行
 
 ```
-  php artisan migrate
+  php artisan migrate:refresh --seed
 ```
 
-7. シーディングを実行する
-
-```
-  php artisan db:seed
-```
-
-8. シンボリックリンクの作成
+7. シンボリックリンクの作成
 
 ```
   php artisan storage:link
 ```
 
-9. ディレクトリの権限を変更
+8. ディレクトリの権限を変更
 
 ```
   chmod -R 777 storage
